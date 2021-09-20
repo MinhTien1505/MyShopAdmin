@@ -19,7 +19,9 @@
             aria-expanded="false"
             aria-controls="collapseLayouts"
           >
-            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+            <div class="sb-nav-link-icon">
+              <i class="fas fa-list"></i>
+            </div>
             Manage Products
             <div class="sb-sidenav-collapse-arrow">
               <i class="fas fa-angle-down"></i>
@@ -32,7 +34,7 @@
             data-parent="#sidenavAccordion"
           >
             <nav class="sb-sidenav-menu-nested nav">
-              <a class="nav-link">Product list</a>
+              <a href="/dashboard/products" class="nav-link">Product list </a>
               <a class="nav-link" href="#">Light Sidenav</a>
             </nav>
           </div>
