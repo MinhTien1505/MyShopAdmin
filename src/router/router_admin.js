@@ -1,10 +1,10 @@
-import Login from "../../pages/Admin/Login.vue";
-import Dashboard from "../../pages/Admin/Dashboard.vue";
-import Products from "../../pages/Admin/Products.vue";
-import CreateProduct from "../../pages/Admin/CreateProduct.vue";
-import EditProduct from "../../pages/Admin/EditProduct.vue";
-import PageNotFound from "../../components/PageNotFound.vue";
-import DashboardContent from "../../pages/Admin/DashboardContent.vue";
+import Login from "../pages/Login.vue";
+import Dashboard from "../pages/Dashboard.vue";
+import Products from "../pages/Products.vue";
+import CreateProduct from "../pages/CreateProduct.vue";
+import EditProduct from "../pages/EditProduct.vue";
+import PageNotFound from "../components/PageNotFound.vue";
+import DashboardContent from "../pages/DashboardContent.vue";
 
 const routerAdmin = [
   {

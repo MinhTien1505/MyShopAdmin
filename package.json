@@ -9,7 +9,12 @@
   },
   "dependencies": {
     "axios": "^0.21.4",
+    "chart.js": "^2.8.0",
     "core-js": "^3.6.5",
+    "datatables.net": "^1.10.20",
+    "datatables.net-bs4": "^1.10.20",
+    "datatables.net-dt": "^1.10.20",
+    "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuetify": "^2.4.0"

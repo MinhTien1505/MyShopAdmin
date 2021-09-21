@@ -127,7 +127,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../../../public/assets/Admin/css/styles.css";
+@import "../../public/assets/css/styles.css";
 @import url(https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css);
 
 .btn-login-container {

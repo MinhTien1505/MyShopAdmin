@@ -7,9 +7,7 @@
       <!-- MAIN CONTENT Start -->
       <div id="layoutSidenav_content">
         <main>
-          <div class="container-fluid">
             <router-view></router-view>
-          </div>
         </main>
       </div>
       <!-- MAIN CONTENT End -->
@@ -18,19 +16,20 @@
 </template>
 
 <script>
-import AdminNavbar from "../../components/Admin/AdminNarbar.vue";
-import AdminSidebar from "../../components/Admin/AdminSidebar.vue";
-import "../../assets/Admin/js/scripts";
+import AdminNavbar from "../components/AdminNarbar.vue";
+import AdminSidebar from "../components/AdminSidebar.vue";
+import "../assets/scripts/scripts";
 
 export default {
+  name: 'App',
   components: {
     AdminNavbar,
     AdminSidebar,
   },
-};
+}
 </script>
 
 <style scoped>
-@import "../../../public/assets/Admin/css/styles.css";
+@import "../../public/assets/css/styles.css";
 @import url(https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css);
 </style>

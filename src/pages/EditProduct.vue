@@ -1,5 +1,7 @@
 <template>
     <!-- MAIN CONTENT Start -->
-    <h1>EDIT PRODUCT</h1>
+    <div class="container-fluid">
+        <h1>EDIT PRODUCT</h1>
+    </div>
     <!-- MAIN CONTENT End -->
 </template>

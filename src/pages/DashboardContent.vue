@@ -9,14 +9,17 @@
         <!-- Primary card -->
         <CardPrimary></CardPrimary>
       </div>
+
       <div class="col-xl-3 col-md-6">
         <!-- Warning card -->
         <CardWarning></CardWarning>
       </div>
+
       <div class="col-xl-3 col-md-6">
         <!-- Success card -->
         <CardSuccess></CardSuccess>
       </div>
+
       <div class="col-xl-3 col-md-6">
         <!-- Danger card -->
         <CardDanger></CardDanger>
@@ -38,14 +41,14 @@
 </template>
 
 <script>
-import AdminTable from "../../components/Admin/AdminTable.vue";
+import AdminTable from "../components/AdminTable.vue";
 
-import CardPrimary from "../../components/Admin/CardPrimary.vue";
-import CardWarning from "../../components/Admin/CardWarning.vue";
-import CardSuccess from "../../components/Admin/CardSuccess.vue";
-import CardDanger from "../../components/Admin/CardDanger.vue";
-import ChartArea from "../../components/Admin/ChartArea.vue";
-import ChartBar from "../../components/Admin/ChartBar.vue";
+import CardPrimary from "../components/CardPrimary.vue";
+import CardWarning from "../components/CardWarning.vue";
+import CardSuccess from "../components/CardSuccess.vue";
+import CardDanger from "../components/CardDanger.vue";
+import ChartArea from "../components/ChartArea.vue";
+import ChartBar from "../components/ChartBar.vue";
 
 export default {
   components: {
@@ -61,6 +64,6 @@ export default {
 </script>
 
 <style scoped>
-@import "../../../public/assets/Admin/css/styles.css";
+@import "../../public/assets/css/styles.css";
 @import url(https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css);
 </style>

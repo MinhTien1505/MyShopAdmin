@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import AdminNavbar from '../../components/Admin/AdminNarbar.vue';
-import AdminSidebar from '../../components/Admin/AdminSidebar.vue';
+import AdminNavbar from '../components/AdminNarbar.vue';
+import AdminSidebar from '../components/AdminSidebar.vue';
 
 export default {
     components: {
@@ -23,6 +23,6 @@ export default {
 </script>
 
 <style scoped>
-    @import '../../../public/assets/Admin/css/styles.css';
+    @import '../../public/assets/css/styles.css';
     @import url(https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css);
 </style>

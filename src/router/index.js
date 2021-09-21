@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import routerAdmin from "./Admin/index";
+import routerAdmin from "./router_admin";
 // import routerShop from "./Shop/index";
 Vue.use(VueRouter);
 
