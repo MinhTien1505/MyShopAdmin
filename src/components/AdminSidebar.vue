@@ -4,12 +4,12 @@
       <div class="sb-sidenav-menu">
         <div class="nav">
           <div class="sb-sidenav-menu-heading">Core</div>
-          <a class="nav-link" href="/">
+          <router-link class="nav-link" to="/dashboard/">
             <div class="sb-nav-link-icon">
               <i class="icofont icofont-home"></i>
             </div>
             Dashboard
-          </a>
+          </router-link>
           <div class="sb-sidenav-menu-heading">Manage</div>
           <a
             class="nav-link collapsed"
@@ -34,7 +34,9 @@
             data-parent="#sidenavAccordion"
           >
             <nav class="sb-sidenav-menu-nested nav">
-              <a href="/dashboard/products" class="nav-link">Product list </a>
+              <router-link to="/dashboard/products" class="nav-link"
+                >Product list
+              </router-link>
               <a class="nav-link" href="#">Light Sidenav</a>
             </nav>
           </div>
