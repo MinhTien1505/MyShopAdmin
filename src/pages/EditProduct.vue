@@ -18,7 +18,8 @@
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Price</label>
             <div class="col-sm-10">
-              <input class="form-control" v-model="product.price" required />
+              <!-- <input class="form-control" v-model="product.price" required /> -->
+              <InputVND v-model="product.price"/>
             </div>
           </div>
           <div class="form-group row">
@@ -98,7 +99,12 @@
 
 <script>
 import axios from "axios";
+import InputVND from "../components/InputVND.vue"
+
 export default {
+  components: {
+    InputVND,
+  },
   data: () => ({
     previewImage: null,
     snackbar: false,

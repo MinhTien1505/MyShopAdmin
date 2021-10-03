@@ -7,6 +7,10 @@ import PageNotFound from "../components/PageNotFound.vue";
 import DashboardContent from "../pages/DashboardContent.vue";
 import Warehouse from "../pages/Warehouse.vue";
 
+import Users from "../pages/user/Users.vue";
+import CreateUser from "../pages/user/CreateUser.vue";
+import EditUser from "../pages/user/EditUser.vue";
+
 const routerAdmin = [
   {
     path: "/",
@@ -32,14 +36,22 @@ const routerAdmin = [
     },
     children: [
       { path: "", name: "DashboardHome", component: DashboardContent },
+
+      // Manage product
       { path: "products", name: "ListProduct", component: Products },
-      {
-        path: "create-product",
-        name: "CreateProduct",
-        component: CreateProduct,
-      },
+      { path: "create-product", name: "CreateProduct", component: CreateProduct,},
       { path: "edit-product", name: "EditProduct", component: EditProduct },
+<<<<<<< HEAD
       { path: "warehouse", name: "Warehouse", component: Warehouse },
+=======
+
+      // Manage user
+      { path: "users", name: "ListUser", component: Users },
+      { path: "create-user", name: "CreateUser", component: CreateUser },
+      { path: "edit-user", name: "EditUser", component: EditUser },
+
+      // Error
+>>>>>>> origin/quynh
       { path: "*", name: "PageNotFound", component: PageNotFound },
     ],
   },
