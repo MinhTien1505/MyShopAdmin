@@ -25,9 +25,9 @@
             <label class="col-sm-2 col-form-label">Category</label>
             <div class="col-sm-10">
               <select class="form-control" v-model="product.category" required>
-                <option v-for="item in categories" :value="item" :key="item">{{
-                  item
-                }}</option>
+                <option v-for="item in categories" :value="item" :key="item">
+                  {{ item }}
+                </option>
               </select>
             </div>
           </div>
@@ -107,15 +107,17 @@ export default {
     product: {
       name: "",
       price: "",
+      quantity: "",
       description: "",
       image: "",
       category: "",
       group: "",
     },
-    categories: ["Vegetables", "Fruit"],
+    categories: [],
   }),
   created() {
     this.getProductByID();
+    this.gettAllCategory();
   },
   methods: {
     selectImage() {
@@ -186,14 +188,26 @@ export default {
           console.log(err);
         });
     },
+    async gettAllCategory() {
+      await axios
+        .get("http://localhost:5000/api/getallcategory")
+        .then((res) => {
+          for (let item of res.data) {
+            this.categories.push(item.name);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>
 
 <style>
 .imagePreviewWrapper {
-  width: 85%;
-  height: 300px;
+  width: 80%;
+  height: 225px;
   display: block;
   border: 1px solid rgb(97, 179, 218);
   margin: 0 auto 10px;

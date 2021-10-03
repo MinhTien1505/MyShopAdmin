@@ -5,6 +5,7 @@ import CreateProduct from "../pages/CreateProduct.vue";
 import EditProduct from "../pages/EditProduct.vue";
 import PageNotFound from "../components/PageNotFound.vue";
 import DashboardContent from "../pages/DashboardContent.vue";
+import Warehouse from "../pages/Warehouse.vue";
 
 const routerAdmin = [
   {
@@ -38,6 +39,7 @@ const routerAdmin = [
         component: CreateProduct,
       },
       { path: "edit-product", name: "EditProduct", component: EditProduct },
+      { path: "warehouse", name: "Warehouse", component: Warehouse },
       { path: "*", name: "PageNotFound", component: PageNotFound },
     ],
   },

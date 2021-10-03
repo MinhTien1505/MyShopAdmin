@@ -8,6 +8,7 @@ const routes = [...routerAdmin];
 
 const router = new VueRouter({
   mode: "history",
+  linkExactActiveClass: "is-active",
   base: process.env.BASE_URL,
   routes,
 });

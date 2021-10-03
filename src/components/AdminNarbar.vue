@@ -68,7 +68,7 @@ export default {
   methods: {
     logout() {
       sessionStorage.removeItem("admin_login");
-      this.$router.push("/admin");
+      this.$router.push("/");
     },
   },
 };

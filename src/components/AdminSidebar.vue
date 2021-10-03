@@ -34,10 +34,15 @@
             data-parent="#sidenavAccordion"
           >
             <nav class="sb-sidenav-menu-nested nav">
-              <router-link to="/dashboard/products" class="nav-link"
-                >Product list
+              <router-link to="/dashboard/products" class="nav-link">
+                <i class="fas fa-list-ol mr-1"></i> Product list
               </router-link>
-              <a class="nav-link" href="#">Light Sidenav</a>
+              <router-link to="/dashboard/warehouse" class="nav-link">
+                <i class="fas fa-warehouse mr-1"></i> Warehouse</router-link
+              >
+              <router-link to="/dashboard/warehouse" class="nav-link">
+                <i class="fas fa-cart-plus mr-1"></i> Category</router-link
+              >
             </nav>
           </div>
           <a
