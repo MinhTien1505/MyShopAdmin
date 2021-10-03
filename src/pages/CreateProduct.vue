@@ -18,7 +18,7 @@
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Price</label>
             <div class="col-sm-10">
-              <input
+              <!-- <input
                 class="form-control"
                 type="text"
                 @change="format_curency($event)"
@@ -26,7 +26,9 @@
                 required
                 pattern="^(0|[1-9][0-9]*)$"
                 title="Price should a number!"
-              />
+              /> -->
+
+              <InputVND v-model="product.price"/>
             </div>
           </div>
           <div class="form-group row">
@@ -98,7 +100,11 @@
 
 <script>
 import axios from "axios";
+import InputVND from "../components/InputVND.vue"
 export default {
+  components: {
+    InputVND,
+  },
   data: () => ({
     previewImage: null,
     snackbar: false,
@@ -111,6 +117,7 @@ export default {
       group: "",
     },
     categories: ["Vegetables", "Fruit"],
+    isInputActive: false,
   }),
   methods: {
     selectImage() {

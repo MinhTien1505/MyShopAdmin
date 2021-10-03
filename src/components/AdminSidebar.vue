@@ -11,14 +11,13 @@
             Dashboard
           </router-link>
           <div class="sb-sidenav-menu-heading">Manage</div>
-          <a
-            class="nav-link collapsed"
+
+          <!-- <a class="nav-link collapsed"
             href="#"
             data-toggle="collapse"
             data-target="#collapseLayouts"
             aria-expanded="false"
-            aria-controls="collapseLayouts"
-          >
+            aria-controls="collapseLayouts">
             <div class="sb-nav-link-icon">
               <i class="fas fa-list"></i>
             </div>
@@ -27,19 +26,34 @@
               <i class="fas fa-angle-down"></i>
             </div>
           </a>
-          <div
-            class="collapse"
+          <div class="collapse"
             id="collapseLayouts"
             aria-labelledby="headingOne"
-            data-parent="#sidenavAccordion"
-          >
+            data-parent="#sidenavAccordion">
             <nav class="sb-sidenav-menu-nested nav">
               <router-link to="/dashboard/products" class="nav-link"
                 >Product list
               </router-link>
               <a class="nav-link" href="#">Light Sidenav</a>
             </nav>
-          </div>
+          </div> -->
+
+          <router-link class="nav-link" to="/dashboard/products">
+            <div class="sb-nav-link-icon">
+              <!-- <i class="icofont icofont-home"></i> -->
+              <i class="fas fa-cube"></i>
+            </div>
+            Manage Products
+          </router-link>
+
+          <router-link class="nav-link" to="/dashboard/users/">
+            <div class="sb-nav-link-icon">
+              <!-- <i class="icofont icofont-home"></i> -->
+              <i class="fas fa-users"></i>
+            </div>
+            Manage Users
+          </router-link>
+
           <a
             class="nav-link collapsed"
             href="#"
