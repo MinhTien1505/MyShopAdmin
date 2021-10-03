@@ -28,7 +28,7 @@
                 title="Price should a number!"
               /> -->
 
-              <InputVND v-model="product.price"/>
+              <InputVND v-model="product.price" />
             </div>
           </div>
           <div class="form-group row">
@@ -180,7 +180,7 @@
 
 <script>
 import axios from "axios";
-import InputVND from "../components/InputVND.vue"
+import InputVND from "../components/InputVND.vue";
 export default {
   components: {
     InputVND,
@@ -200,12 +200,7 @@ export default {
       category: "",
       group: "",
     },
-<<<<<<< HEAD
     categories: [],
-=======
-    categories: ["Vegetables", "Fruit"],
-    isInputActive: false,
->>>>>>> origin/quynh
   }),
   created() {
     this.gettAllCategory();
