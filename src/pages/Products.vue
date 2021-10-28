@@ -26,7 +26,7 @@
                 <th>Image</th>
                 <th>Description</th>
                 <th>Category</th>
-                <th>Group</th>
+                <th>Calo/100g</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -46,7 +46,7 @@
                   </td>
                   <td>{{ product.description.substring(0, 100) + " ..." }}</td>
                   <td>{{ product.category }}</td>
-                  <td>{{ product.group }}</td>
+                  <td>{{ product.calo }}</td>
                   <td>
                     <button
                       class="btn btn-info mb-2"
