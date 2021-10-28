@@ -67,7 +67,13 @@ export default {
   components: {},
   methods: {
     logout() {
-      sessionStorage.removeItem("admin_login");
+      if(sessionStorage.getItem("admin_login")) {
+        sessionStorage.removeItem("admin_login");
+      } 
+      if (sessionStorage.getItem("shipper_login")) {
+        sessionStorage.removeItem("shipper_login");
+      }
+      
       this.$router.push("/");
     },
   },

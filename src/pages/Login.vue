@@ -112,9 +112,18 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
-          let admin_login = JSON.stringify(res.data.accessToken);
-          sessionStorage.setItem("admin_login", admin_login);
-          this.$router.push({ name: "DashboardHome" });
+          
+
+          if (res.data.role == 'Admin') {
+            let admin_login = JSON.stringify(res.data.accessToken);
+            sessionStorage.setItem("admin_login", admin_login);
+            this.$router.push({ name: "DashboardHome" });
+          } else if (res.data.role == 'shipper') {
+            let shipper_login = JSON.stringify(res.data.accessToken);
+            sessionStorage.setItem("shipper_login", shipper_login);
+            this.$router.push({ name: "ShipperHome" });
+          }
+          
         })
         .catch((err) => {
           console.log(err);

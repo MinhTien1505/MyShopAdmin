@@ -9,7 +9,13 @@ import Warehouse from "../pages/Warehouse.vue";
 
 import Users from "../pages/user/Users.vue";
 import CreateUser from "../pages/user/CreateUser.vue";
-import EditUser from "../pages/user/EditUser.vue";
+// import EditUser from "../pages/user/EditUser.vue";
+import ViewUser from "../pages/user/ViewUser.vue";
+
+import Orders from "../pages/order/Orders.vue";
+import ViewOrder from "../pages/order/ViewOrder.vue";
+
+import TabOrders from "../pages/order/OrdersTab.vue";
 
 const routerAdmin = [
   {
@@ -17,10 +23,12 @@ const routerAdmin = [
     name: "Login",
     component: Login,
     beforeEnter: (to, from, next) => {
-      if (!sessionStorage.getItem("admin_login")) {
-        next();
-      } else {
+      if (sessionStorage.getItem("admin_login")) {
         next("/dashboard");
+      } else if (sessionStorage.getItem("shipper_login")) {
+        next("/shipper/dashboard");
+      } else {
+        next();
       }
     },
   },
@@ -50,10 +58,17 @@ const routerAdmin = [
       // Manage user
       { path: "users", name: "ListUser", component: Users },
       { path: "create-user", name: "CreateUser", component: CreateUser },
-      { path: "edit-user", name: "EditUser", component: EditUser },
+      // { path: "edit-user", name: "EditUser", component: EditUser },
+      { path: "view-user", name: "ViewUser", component: ViewUser },
+
+      // Manage order
+      { path: "orders", name: "ListOrder", component: Orders },
+      { path: "view-order", name: "ViewOrder", component: ViewOrder },
+
+      { path: "taborders", name: "TabOrders", component: TabOrders },
 
       // Error
-      { path: "*", name: "PageNotFound", component: PageNotFound },
+      { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
     ],
   },
 ];

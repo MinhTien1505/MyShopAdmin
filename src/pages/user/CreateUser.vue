@@ -1,6 +1,5 @@
 <template>
     <div class="container-fluid">
-        
         <form @submit.prevent="submitForm" enctype="multipart/form-data">
             <v-row>
                 <v-col cols="7">
@@ -42,6 +41,27 @@
                                     id="confirm-password"
                                     required/>
                             <p class="error-msg" id="confirm-msg">This is required</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Role: </label>
+                        <div class="col-sm-8">
+                            <!-- <input type="radio"
+                                    class="radio-input"
+                                    value="customer"
+                                    v-model="user.position"
+                                    @change="check()"
+                                    :checked="user.position == 'customer'"/> 
+                            <label for="customer">Customer</label> -->
+                                    
+                            <input type="radio"
+                                    class="radio-input"
+                                    value="shipper"
+                                    v-model="user.position"
+                                    @change="check()"
+                                    :checked="user.position == 'shipper'"/>
+                            <label for="shipper">Shipper</label>
                         </div>
                     </div>
 
@@ -146,7 +166,7 @@ export default {
             password: "",
             full_name: "",
             email: "",
-            position: "customer",
+            position: "shipper",
             birthdate: "",
             address: "",
             phone: "",
@@ -162,6 +182,9 @@ export default {
         isInputActive: false,
     }),
     methods: {
+        check() {
+            console.log('Position: ' + this.user.position);
+        },
         selectImage() {
             this.$refs.fileInput.click();
         },
@@ -320,7 +343,7 @@ export default {
             });
 
             if (this.error_exist) {
-                await axios.post("http://localhost:5000/api/createuser", formData)
+                await axios.post("http://localhost:5000/api/createShipper", formData)
                 .then((res) => {
                     this.$router.push({
                         name: "ListUser",
@@ -371,6 +394,8 @@ export default {
 </script>
 
 <style scoped>
+    
+
     .row label.col-form-label {
         /* display: block; */
         text-align: right;
@@ -458,5 +483,14 @@ export default {
     .submit-disable {
         opacity: 50%;
     }
+
+    .row input[type=radio] {
+        width: fit-content;
+        margin: 0 1rem;
+    }
+
+    /* .radio-input {
+        width: auto;
+    } */
 
 </style>

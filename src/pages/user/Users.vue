@@ -90,11 +90,18 @@
                 </td>
                 <td>
                   <div class="actions-in-table">
-                    <button
+                    <!-- <button
                       class="btn-in-table btn-edit"
                       @click="editUser(user._id)"
                     >
                       <i class="fas fa-pencil-alt"></i> Edit
+                    </button> -->
+
+                    <button
+                      class="btn-in-table btn-edit"
+                      @click="viewUser(user._id)"
+                    >
+                      <i class="fas fa-eye"></i> View
                     </button>
 
                     <button
@@ -272,9 +279,9 @@ export default {
     addUser() {
       this.$router.push({ name: "CreateUser" });
     },
-    editUser(user_id) {
+    viewUser(user_id) {
       this.$router.push({
-        name: "EditUser",
+        name: "ViewUser",
         params: { user_id: user_id },
       });
     },
@@ -297,11 +304,6 @@ export default {
       let config = {
         headers: { Authorization: "bearer " + token },
       };
-
-      // let status = "disable";
-      // const formData = new FormData();
-      // formData.append("status", status);
-      // console.log(formData.getAll('status'));
 
       this.msg_snackbar = "";
       await axios

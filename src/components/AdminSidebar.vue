@@ -56,10 +56,16 @@
 
           <router-link class="nav-link" to="/dashboard/users/">
             <div class="sb-nav-link-icon">
-              <!-- <i class="icofont icofont-home"></i> -->
               <i class="fas fa-users"></i>
             </div>
             Manage Users
+          </router-link>
+
+          <router-link class="nav-link" to="/dashboard/taborders/">
+            <div class="sb-nav-link-icon">
+              <i class="fas fa-receipt"></i> 
+            </div>
+            Manage Orders
           </router-link>
 
           <a

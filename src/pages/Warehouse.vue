@@ -19,7 +19,7 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Status</th>
-                <th>Quantity total</th>
+                <th>Quantity remaining</th>
                 <th>Quantity sold</th>
                 <th>Action</th>
               </tr>
@@ -42,7 +42,7 @@
                   </td>
                   <td>
                     <p
-                      v-if="product.quantity_total == 0"
+                      v-if="!product.quantity_remaining || product.quantity_remaining == 0"
                       class="text-danger text-uppercase font-weight-bold"
                     >
                       Out of stock
@@ -55,7 +55,7 @@
                     </p>
                   </td>
                   <td>
-                    <p class="text-center">{{ product.quantity_total }}</p>
+                    <p class="text-center">{{ product.quantity_remaining }}</p>
                   </td>
                   <td>
                     <p class="text-center">{{ product.quantity_sold }}</p>
@@ -65,7 +65,7 @@
                       data-toggle="modal"
                       data-target="#exampleModalCenter"
                       class="btn btn-success mb-2"
-                      @click="add(product._id, product.quantity_total)"
+                      @click="add(product._id, product.quantity_remaining)"
                     >
                       <i class="fas fa-plus"></i> Add quantity
                     </button>
@@ -210,18 +210,20 @@ export default {
           console.log(err);
         });
     },
-    add(product_id, quantity_total) {
+    add(product_id, quantity_remaining) {
       this.id_add = product_id;
-      this.quantity = quantity_total;
+      this.quantity = quantity_remaining;
     },
     async addQuantity() {
       let token = JSON.parse(sessionStorage.getItem("admin_login"));
       let config = {
         headers: { Authorization: "bearer " + token },
       };
-      let quantity_total = Number(this.quantity) + Number(this.quantity_input);
+      let quantity_remaining = Number(this.quantity) + Number(this.quantity_input);
       const formData = new FormData();
-      formData.append("quantity_total", quantity_total);
+
+      formData.append("quantity_remaining", quantity_remaining);
+
       await axios
         .patch(
           `http://localhost:5000/api/products/${this.id_add}`,
