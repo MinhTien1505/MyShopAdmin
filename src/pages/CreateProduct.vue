@@ -46,6 +46,17 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Calo</label>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                v-model="product.calo"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-sm-2 col-form-label">Category</label>
             <div class="col-sm-10">
               <select
@@ -196,6 +207,7 @@ export default {
       price: "",
       quantity: "",
       description: "",
+      calo: "",
       image: "",
       category: "",
       group: "",
@@ -236,6 +248,7 @@ export default {
       const formData = new FormData();
       formData.append("name", this.product.name);
       formData.append("price", this.product.price);
+      formData.append("calo", this.product.calo);
       formData.append("image", this.product.image);
       formData.append("description", this.product.description);
       formData.append("quantity_total", Number(this.product.quantity));
