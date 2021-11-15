@@ -1,87 +1,83 @@
 <template>
-  <div class="bg-login">
-    <div id="layoutAuthentication">
-      <div id="layoutAuthentication_content">
-        <main>
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-lg-5">
-                <div class="card shadow-lg border-0 rounded-lg mt-5">
-                  <div class="card-header">
-                    <h3 class="text-center font-weight-light my-4">Login</h3>
-                  </div>
-                  <div class="card-body">
-                    <v-form
-                      ref="form"
-                      @submit.prevent="submitForm"
-                      enctype="/multipart/form-data"
-                    >
-                      <div class="form-group">
-                        <label class="small mb-1">Uername</label>
-                        <input
-                          class="form-control py-4"
-                          v-model="username"
-                          placeholder="Enter username"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <label class="small mb-1">Password</label>
-                        <input
-                          class="form-control py-4"
-                          v-model="password"
-                          type="password"
-                          placeholder="Enter password"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                          <input
-                            class="custom-control-input"
-                            id="rememberPasswordCheck"
-                            type="checkbox"
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="rememberPasswordCheck"
-                            >Remember password</label
-                          >
-                        </div>
-                      </div>
-                      <div
-                        class="btn-login-container"
-                        style="display: flex; justify-content: right;"
-                      >
-                        <button class="btn btn-primary pl-4 pr-4">Login</button>
-                      </div>
-                      <v-snackbar
-                        v-model="snackbar"
-                        color="success"
-                        timeout="3000"
-                        :multi-line="true"
-                        outlined
-                        class="pb-5"
-                      >
-                        {{ message }}
+  <div class="limiter">
+    <loading-overlay
+      :active="isLoading"
+      :is-full-page="true"
+      :loader="loader"
+      :opacity="opacity"
+      :width="width"
+      :height="height"
+      background-color="#C0C0C0"
+    />
+    <div class="container-login100">
+      <div class="wrap-login100">
+        <div class="login100-pic js-tilt" data-tilt>
+          <img src="../../public/assets_login/images/img-01.png" alt="IMG" />
+        </div>
 
-                        <template v-slot:action="{ attrs }">
-                          <v-btn
-                            color="red"
-                            fab
-                            text
-                            v-bind="attrs"
-                            @click="snackbar = false"
-                          >
-                            <v-icon>mdi-close</v-icon>
-                          </v-btn>
-                        </template>
-                      </v-snackbar>
-                    </v-form>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <form @submit.prevent="submitForm" class="login100-form validate-form">
+          <span class="login100-form-title">
+            Admin Login
+          </span>
+
+          <div
+            class="wrap-input100 validate-input"
+            data-validate="Valid email is required: ex@abc.xyz"
+          >
+            <input
+              class="input100"
+              type="text"
+              name="email"
+              placeholder="Username"
+              required
+              v-model="username"
+            />
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+              <i class="fa fa-user" aria-hidden="true"></i>
+            </span>
           </div>
-        </main>
+
+          <div
+            class="wrap-input100 validate-input"
+            data-validate="Password is required"
+          >
+            <input
+              class="input100"
+              type="password"
+              name="pass"
+              placeholder="Password"
+              required
+              v-model="password"
+            />
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+              <i class="fa fa-lock" aria-hidden="true"></i>
+            </span>
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn">
+              Login
+            </button>
+          </div>
+
+          <div class="text-center p-t-12">
+            <span class="txt1">
+              Forgot
+            </span>
+            <a class="txt2" href="#">
+              Username / Password?
+            </a>
+          </div>
+
+          <div class="text-center p-t-136">
+            <a class="txt2" href="#">
+              Create your Account
+              <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -92,19 +88,21 @@ import axios from "axios";
 export default {
   data() {
     return {
-      snackbar: false,
-      message: "",
       username: "",
       password: "",
+
+      isLoading: true,
+      loader: "spinner",
+      opacity: 1,
+      width: 100,
+      height: 100,
     };
+  },
+  mounted() {
+    this.isLoading = false;
   },
   methods: {
     async submitForm() {
-      if (!this.username || !this.password) {
-        this.snackbar = true;
-        this.message = "Please enter uername and password!";
-        return;
-      }
       await axios
         .post("http://localhost:5000/api/loginadmin", {
           username: this.username,
@@ -112,23 +110,37 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
-          
 
-          if (res.data.role == 'Admin') {
+          if (res.data.role == "Admin") {
             let admin_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("admin_login", admin_login);
             this.$router.push({ name: "DashboardHome" });
-          } else if (res.data.role == 'shipper') {
+            this.$notify({
+              group: "foo",
+              type: "success",
+              title: "Login",
+              text: "Logged in successfully!",
+            });
+          } else if (res.data.role == "shipper") {
             let shipper_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("shipper_login", shipper_login);
             this.$router.push({ name: "ShipperHome" });
+            this.$notify({
+              group: "foo",
+              type: "success",
+              title: "Login",
+              text: "Logged in successfully!",
+            });
           }
-          
         })
         .catch((err) => {
           console.log(err);
-          this.snackbar = true;
-          this.message = "Username or passwrod incorect!";
+          this.$notify({
+            group: "foo",
+            type: "error",
+            title: "Login",
+            text: "Username or password is incorect!",
+          });
         });
     },
   },
@@ -136,15 +148,13 @@ export default {
 </script>
 
 <style scoped>
-@import "../../public/assets/css/styles.css";
-@import url(https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css);
+@import "../../public/assets_login/css/util.css";
+@import "../../public/assets_login/css/main.css";
+.vue-notification {
+  padding: 20px;
+  margin: 0 5px 5px;
+  margin-bottom: 55px;
 
-.btn-login-container {
-  display: flex;
-  justify-content: right;
-}
-
-.bg-login {
-  background-color: #6ba6e6e5;
+  font-size: 15px;
 }
 </style>

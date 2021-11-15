@@ -41,8 +41,9 @@
               <router-link to="/dashboard/warehouse" class="nav-link">
                 <i class="fas fa-warehouse mr-1"></i> Warehouse</router-link
               >
-              <router-link to="/dashboard/warehouse" class="nav-link">
-                <i class="fas fa-cart-plus mr-1"></i> Category</router-link
+              <router-link to="/dashboard/menu" class="nav-link">
+                <i class="fas fa-cart-plus mr-1"></i> Suggested
+                menu</router-link
               >
             </nav>
           </div>
@@ -63,7 +64,7 @@
 
           <router-link class="nav-link" to="/dashboard/taborders/">
             <div class="sb-nav-link-icon">
-              <i class="fas fa-receipt"></i> 
+              <i class="fas fa-receipt"></i>
             </div>
             Manage Orders
           </router-link>

@@ -1,6 +1,16 @@
 <template>
   <!-- <div class="container-fluid"> -->
+
   <div class="card mb-4">
+    <loading-overlay
+      :active="isLoading"
+      :is-full-page="true"
+      :loader="loader"
+      :opacity="opacity"
+      :width="width"
+      :height="height"
+      background-color="#C0C0C0"
+    />
     <div class="card-header">
       <i class="fas fa-users"></i>
       Manage Users
@@ -240,10 +250,16 @@ export default {
         btn: "",
         status: "",
       },
+      isLoading: true,
+      loader: "spinner",
+      opacity: 1,
+      width: 100,
+      height: 100,
     };
   },
   mounted() {
     this.getAllUser();
+    this.isLoading = false;
   },
   methods: {
     getImage(name) {

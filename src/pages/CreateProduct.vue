@@ -251,15 +251,21 @@ export default {
       formData.append("calo", this.product.calo);
       formData.append("image", this.product.image);
       formData.append("description", this.product.description);
-      formData.append("quantity_total", Number(this.product.quantity));
+      formData.append("quantity_remaining", Number(this.product.quantity));
       formData.append("category", this.product.category);
       formData.append("group", this.product.group);
       axios
         .post("http://localhost:5000/api/createproduct", formData, config)
         .then((res) => {
+          console.log(res.data);
           this.$router.push({
             name: "ListProduct",
-            params: { message: res.data.message },
+          });
+          this.$notify({
+            group: "foo",
+            type: "success",
+            title: "Create product",
+            text: "Create product successfully!",
           });
         })
         .catch((err) => {

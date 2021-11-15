@@ -1,5 +1,14 @@
 <template>
   <div class="container-fluid">
+    <loading-overlay
+      :active="isLoading"
+      :is-full-page="true"
+      :loader="loader"
+      :opacity="opacity"
+      :width="width"
+      :height="height"
+      background-color="#C0C0C0"
+    />
     <div class="card mb-4">
       <div class="card-header">
         <i class="fas fa-table mr-1"></i>
@@ -42,7 +51,10 @@
                   </td>
                   <td>
                     <p
-                      v-if="!product.quantity_remaining || product.quantity_remaining == 0"
+                      v-if="
+                        !product.quantity_remaining ||
+                          product.quantity_remaining == 0
+                      "
                       class="text-danger text-uppercase font-weight-bold"
                     >
                       Out of stock
@@ -150,13 +162,11 @@
           </v-snackbar>
           <v-snackbar
             v-model="snackbar1"
-            color="success"
             timeout="3000"
             :multi-line="true"
             outlined
           >
-            Add product quantity successfully!
-
+            <p class="text-success">Add product quantity successfully!</p>
             <template v-slot:action="{ attrs }">
               <v-btn
                 color="red"
@@ -191,10 +201,16 @@ export default {
       id_add: "",
       quantity: 0,
       snackbar1: false,
+      isLoading: true,
+      loader: "spinner",
+      opacity: 1,
+      width: 100,
+      height: 100,
     };
   },
   mounted() {
     this.getAllProduct();
+    this.isLoading = false;
   },
   methods: {
     getAllProduct() {
@@ -219,7 +235,8 @@ export default {
       let config = {
         headers: { Authorization: "bearer " + token },
       };
-      let quantity_remaining = Number(this.quantity) + Number(this.quantity_input);
+      let quantity_remaining =
+        Number(this.quantity) + Number(this.quantity_input);
       const formData = new FormData();
 
       formData.append("quantity_remaining", quantity_remaining);

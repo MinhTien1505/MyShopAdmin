@@ -1,5 +1,14 @@
 <template>
   <div class="container-fluid">
+    <loading-overlay
+      :active="isLoading"
+      :is-full-page="true"
+      :loader="loader"
+      :opacity="opacity"
+      :width="width"
+      :height="height"
+      background-color="#C0C0C0"
+    />
     <div class="card mb-4">
       <div class="card-header">
         <i class="fas fa-table mr-1"></i>
@@ -7,16 +16,43 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <div class="text-right mt-3 mb-3">
-            <button class="btn btn-success" @click="addProduct()">
-              Add product
-            </button>
+          <div class="d-flex justify-content-between mb-2">
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group w-50">
+                  <label for="sel1">Select category:</label>
+                  <select
+                    class="form-control"
+                    id="sel1"
+                    @change="changeCategory($event.target.value)"
+                  >
+                    <option>ALL</option>
+                    <option
+                      v-for="item in categories"
+                      :value="item"
+                      :key="item"
+                    >
+                      {{ item }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-right">
+                  <button class="btn btn-success" @click="addProduct()">
+                    <i class="fas fa-plus-circle"></i>
+                    Add product
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <table
             class="table table-bordered"
             id="dataTable"
             width="100%"
+            ref="formContainer"
             cellspacing="0"
           >
             <thead>
@@ -110,49 +146,6 @@
               </div>
             </div>
           </div>
-          <v-snackbar
-            v-model="snackbar"
-            color="success"
-            v-if="this.$route.params.message"
-            timeout="3000"
-            :multi-line="true"
-            outlined
-          >
-            {{ this.$route.params.message }}
-
-            <template v-slot:action="{ attrs }">
-              <v-btn
-                color="red"
-                fab
-                text
-                v-bind="attrs"
-                @click="snackbar = false"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </template>
-          </v-snackbar>
-          <v-snackbar
-            v-model="snackbar1"
-            color="success"
-            timeout="3000"
-            :multi-line="true"
-            outlined
-          >
-            Deleted product successfully!
-
-            <template v-slot:action="{ attrs }">
-              <v-btn
-                color="red"
-                fab
-                text
-                v-bind="attrs"
-                @click="snackbar1 = false"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </template>
-          </v-snackbar>
         </div>
       </div>
     </div>
@@ -170,17 +163,57 @@ export default {
   data() {
     return {
       data: [],
-      snackbar: true,
       id_delete: "",
-      snackbar1: false,
+      isLoading: true,
+      loader: "spinner",
+      opacity: 1,
+      width: 100,
+      height: 100,
+      categories: [],
+      fullPage: false,
     };
   },
   mounted() {
     this.getAllProduct();
+    this.isLoading = false;
+  },
+  created() {
+    this.gettAllCategory();
   },
   methods: {
-    getAllProduct() {
-      axios
+    changeCategory(value) {
+      let loader = this.$loading.show({
+        // Optional parameters
+        container: this.fullPage ? null : this.$refs.formContainer,
+        canCancel: false,
+      });
+      if (value == "ALL") {
+        this.getAllProduct().then((res) => {
+          console.log(res);
+          loader.hide();
+        });
+        return;
+      }
+      this.getAllProduct().then((res) => {
+        console.log(res);
+        this.data = this.data.filter((item) => item.category == value);
+        loader.hide();
+      });
+    },
+    async gettAllCategory() {
+      await axios
+        .get("http://localhost:5000/api/getallcategory")
+        .then((res) => {
+          for (let item of res.data) {
+            this.categories.push(item.name);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async getAllProduct() {
+      await axios
         .get("http://localhost:5000/api/getallproducts")
         .then((response) => {
           this.data = response.data;
@@ -221,7 +254,12 @@ export default {
         .then((res) => {
           console.log(res);
           this.getAllProduct();
-          this.snackbar1 = true;
+          this.$notify({
+            group: "foo",
+            type: "success",
+            title: "Delete product",
+            text: "Deleted product successfully!",
+          });
         })
         .catch((err) => {
           console.log(err);

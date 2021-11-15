@@ -71,6 +71,7 @@ const routerAdmin = [
       { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
     ],
   },
+  { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
 ];
 
 export default routerAdmin;
