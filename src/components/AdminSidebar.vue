@@ -69,6 +69,13 @@
             Manage Orders
           </router-link>
 
+          <router-link class="nav-link" to="/dashboard2/">
+            <div class="sb-nav-link-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            Test Group
+          </router-link>
+
           <a
             class="nav-link collapsed"
             href="#"

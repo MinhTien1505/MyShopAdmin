@@ -17,6 +17,12 @@ import ViewOrder from "../pages/order/ViewOrder.vue";
 
 import TabOrders from "../pages/order/OrdersTab.vue";
 
+import Groups from "../pages/group/Groups.vue";
+import CreateGroup from "../pages/group/CreateGroup.vue";
+
+import Dashboard2 from "../pages/Dashboard2.vue";
+import ViewGroup from "../pages/group/ViewGroup.vue";
+
 const routerAdmin = [
   {
     path: "/",
@@ -69,6 +75,24 @@ const routerAdmin = [
 
       // Error
       { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
+    ],
+  },
+  {
+    path: "/dashboard2",
+    component: Dashboard2,
+    beforeEnter: (to, from, next) => {
+      if (!sessionStorage.getItem("admin_login")) {
+        next("/admin");
+      } else {
+        next();
+      }
+    },
+    children: [
+      { path: "home", name: "Dashboard2-Home"},
+      // Manage group
+      { path: "groups", name: "ListGroup", component: Groups },
+      { path: "create-group", name: "CreateGroup", component: CreateGroup },
+      { path: "view-group", name: "ViewGroup", component: ViewGroup },
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },

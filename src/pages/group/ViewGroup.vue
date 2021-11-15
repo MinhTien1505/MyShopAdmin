@@ -1,0 +1,526 @@
+<template>
+  <v-container class="pa-6">
+    <!-- <v-row>
+      <h3 class="pa-4">Create New Group</h3>
+    </v-row> -->
+    <v-row>
+      <v-col cols="6">
+        <h4 style="background-color: #E3DFB5; padding: 8px 16px">Information</h4>
+        <v-card flat>
+          <v-card-text>
+            <v-text-field
+              ref="title"
+              v-model="group.title"
+              :rules="[() => !!group.title || 'This field is required']"
+              :error-messages="errorMessages"
+              label="Title"
+              placeholder="Group's Title"
+              outlined
+              required
+            ></v-text-field>
+            <v-textarea
+              ref="description"
+              v-model="group.description"
+              :rules="[() => !!group.description || 'This field is required']"
+              :error-messages="errorMessages"
+              label="Description"
+              auto-grow
+              outlined
+              rows="5"
+              row-height="15"
+              required
+              counter
+              maxlength="3000"
+            ></v-textarea>
+
+            <v-row>
+              <v-col cols="8" class="pb-0">
+                <v-text-field
+                  ref="price"
+                  :value="total_price | toNum"
+                  @input="value => total_price = value"
+                  :rules="[() => !!total_price || 'This field is required']"
+                  :error-messages="errorMessages"
+                  label="Price"
+                  suffix="vnd"
+                  placeholder="Group's Price"
+                  outlined
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4" class="pb-0">
+                <v-btn @click="calcPrice()" height="32" class="mt-3" small color="#EEE558" depressed>
+                  Calc Price
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="8" class="pb-0">
+                <v-text-field
+                  ref="calo"
+                  :value="total_calo | toNum"
+                  @input="value => total_calo = value"
+                  :rules="[() => !!total_calo || 'This field is required']"
+                  :error-messages="errorMessages"
+                  label="Calorie"
+                  suffix="kCal"
+                  placeholder="Group's Calorie"
+                  outlined
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="4" class="pb-0">
+                <v-btn @click="calcCalo()" height="32" class="mt-3" small color="#A9CBB7" depressed>
+                  Calc Calo
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <h4 style="background-color: #DCCCFF; padding: 8px 16px">Image</h4>
+        <v-card flat>
+          <v-card-text>
+            <div>
+              <img class="image-placeholder"
+                v-if="previewImage == ''"
+                id="image-preview"
+                src="../../../public/assets/assets/img/food-preview.png"
+              />
+              <img class="image-placeholder"
+                v-else-if="previewImage != old_image"
+                id="image-preview"
+                @click="selectImage"
+                :src="`${previewImage}`"
+              />
+              <img class="image-placeholder"
+                v-else
+                id="image-preview"
+                @click="selectImage"
+                :src="`/group/${previewImage}`"
+              />
+            </div>
+            <div class="text-center">
+              <label class="upload-img" for="upload-photo" style="backgroud-color: #675E55">
+                <i class="fas fa-upload"></i> Upload image here!
+              </label>
+              <input
+                type="file"
+                name="photo"
+                id="upload-photo"
+                accept="image/*"
+                ref="fileInput"
+                @input="pickFile"
+                @change="selectedFile"
+              />
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row class="mb-4">
+      <v-col cols="6">
+        <h4 style="background-color: #D9F1E9; padding: 8px 16px">Available Products</h4>
+        <v-card outlined>
+          <v-card-title>
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+            <v-btn class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3" depressed color="#009EFB" dark @click="addProduct()">Add</v-btn>
+          </v-card-title>
+          <v-data-table 
+            :headers="headers" 
+            :items="productList" 
+            dense 
+            fixed-header 
+            height="300px"
+            item-key="_id"
+            show-select
+            v-model="addSelected"
+            :single-select="singleSelect">
+          </v-data-table>
+          <!-- <v-card-actions>
+            <v-spacer></v-spacer>            
+            <v-btn class="pl-6 pr-6 pt-1 pb-1" depressed color="#009EFB" dark @click="addProduct()">Add</v-btn>
+          </v-card-actions> -->
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <h4 style="background-color: #F1FBBA; padding: 8px 16px">Group's Materials</h4>
+        <v-card outlined>
+          <v-card-title>
+            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+            <v-btn class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3" depressed color="#A0A77C" dark @click="removeProduct()">Remove</v-btn>
+          </v-card-title>
+          <v-data-table 
+            :headers="headers" 
+            :items="material" 
+            dense 
+            fixed-header 
+            height="300px"
+            item-key="_id"
+            show-select
+            v-model="removeSelected"
+            :single-select="singleSelect">
+          </v-data-table>
+          <!-- <v-card-actions>
+            <v-spacer></v-spacer>            
+            <v-btn class="pa-4" depressed color="#899878" dark @click="removeProduct()">Remove</v-btn>
+          </v-card-actions> -->
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-divider></v-divider>
+    <v-row>
+      <v-col>
+        <div class="text-center p-3">
+          <v-btn class="ma-2" outlined @click="cancel()">
+            Cancel
+          </v-btn>
+
+          <v-btn class="ma-2" depressed color="#C161E4" dark @click="submit()">
+            Update
+          </v-btn>
+
+          <v-btn class="ma-2" depressed color="#E3DFB5" @click="reset()">
+            Reset
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      {{ text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </v-container>
+</template>
+
+<script>
+
+import axios from "axios";
+export default {
+  data() {
+    return {
+      previewImage: "",
+      group: {
+        _id: "",
+        title: "",
+        description: "",
+        price: "",
+        calo: "",
+        image: "",
+        material: [],
+      },
+      productList: [],
+      headers: [
+        // { text: 'Image', value: 'image' },
+        { text: 'Name', value: 'name' },
+        { text: 'Category', value: 'category' },
+        { text: 'Price', value: 'price' },
+        { text: 'Calo', value: 'calo' },
+      ],
+      search: "",
+      singleSelect: false,
+      addSelected: [],
+      removeSelected: [],
+      material: [],
+      errorMessages: '',
+      total_price: 0,
+      total_calo: 0,
+
+      snackbar: false,
+      text: 'My timeout is set to 2000.',
+      timeout: 2000,
+
+      old_image: '',
+    };
+  },
+  created() {
+    this.getAllProduct();
+    this.getGroupByID();
+  },
+  filters: {
+    toVND: function(value) {
+      if (typeof value !== "number") {
+          value = parseInt(value);
+      }
+      var formatter = new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+          minimumFractionDigits: 0,
+      });
+      return formatter.format(value);
+    },
+    toNum: function(value) {
+      if (typeof value !== "number") {
+          value = parseInt(value);
+      }
+      var formatter = new Intl.NumberFormat();
+      return formatter.format(value);
+    },
+  },
+  methods: {
+    async getGroupByID() {
+      await axios.get(`http://localhost:5000/api/group/${this.$route.params.group_id}`)
+        .then((res) => {
+            this.group = res.data;
+            this.previewImage = this.group.image;
+            this.total_price = this.group.price;
+            this.total_calo = this.group.calo;
+            this.old_image = this.group.image;
+            this.material = [];
+
+            this.group.material.forEach((item) => {
+              this.material.push(item.product);
+            })
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+    },
+    selectImage() {
+      this.$refs.fileInput.click();
+    },
+    pickFile() {
+      let input = this.$refs.fileInput;
+      let file = input.files;
+      if (file && file[0]) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewImage = e.target.result;
+        };
+        reader.readAsDataURL(file[0]);
+        this.$emit("input", file[0]);
+      }
+    },
+    selectedFile(e) {
+      this.group.image = e.target.files[0];
+    },
+    getAllProduct() {
+      axios
+        .get("http://localhost:5000/api/getallproducts")
+        .then((response) => {
+          this.productList = response.data.filter((item) => item.status == 'Enable');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    addProduct() {
+      console.log(this.addSelected);
+      let merge = [...new Set([...this.material,...this.addSelected])];
+      this.material = merge;
+      console.log(this.material);
+    },
+    removeProduct() {
+      console.log(this.removeSelected);
+      let result = this.material.filter((item) => !this.removeSelected.includes(item));
+      this.material = result;
+      console.log(this.material);
+    },
+    calcPrice() {
+      let price = 0;
+      this.material.forEach((item) => {
+        price += parseInt(item.price);
+      })
+      this.total_price = price;
+    },
+    calcCalo() {
+      let calo = 0;
+      this.material.forEach((item) => {
+        calo += parseFloat(item.calo);
+      })
+      this.total_calo = calo;
+    },
+    async submit () {
+      if(!this.hasEmptyField()) {
+        this.group.material = [];
+        this.material.forEach((item) => {
+          this.group.material.push({product: item._id});
+        })
+        
+        this.group.price = this.total_price.toString();
+        this.group.calo = this.total_calo.toString();
+
+        let token = JSON.parse(sessionStorage.getItem("admin_login"));
+        let config = {
+          headers: { Authorization: "bearer " + token },
+        };
+
+        const formData = new FormData();
+        formData.append('title', this.group.title);
+        formData.append('description', this.group.description);
+        formData.append('price', this.group.price);
+        formData.append('calo', this.group.calo);
+        formData.append('material', JSON.stringify(this.group.material));
+        formData.append('image', this.group.image);
+        formData.append('old_image', this.old_image);
+
+        console.log(this.group.title);
+        console.log(this.group.description);
+        console.log(this.group.price);
+        console.log(this.group.calo);
+        console.log(this.group.material);
+        console.log(this.group.image);
+        console.log(token);
+
+        await axios
+        .patch(`http://localhost:5000/api/group/update/${this.group._id}`, formData, config)
+        .then((responese) => {
+          this.text = responese.data.message;
+          this.snackbar = true;
+          this.getGroupByID();
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.text = error.message;
+          this.snackbar = true;
+        })
+      }
+    },
+    hasEmptyField() {
+      if(this.group.title == '' || this.group.description == '' || this.group.image == '') {
+        this.text = "Please enter the information completely!";
+        this.snackbar = true;
+        return true;
+      } else {
+        return false;
+      }
+    },
+    reset() {
+      this.$refs["title"].reset();
+      this.$refs["description"].reset();
+      this.$refs["price"].reset();
+      this.$refs["calo"].reset();
+
+      this.group.title = "";
+      this.group.description = "";
+      this.group.price = "";
+      this.group.calo = "";
+      this.group.image = "";
+      this.group.material = [];
+      this.previewImage = "";
+      this.addSelected = [];
+      this.removeSelected = [];
+      this.material = [];
+      this.total_price = 0;
+      this.total_calo = 0;
+    },
+    cancel() {
+      this.$router.back();
+    }
+  },
+};
+</script>
+
+<style scoped>
+
+button {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.row label.col-form-label {
+  /* display: block; */
+  text-align: right;
+}
+
+.row input {
+  width: 100%;
+}
+
+h3 {
+  text-align: right;
+}
+
+.image-placeholder {
+  width: 250px;
+  height: 250px;
+  display: block;
+  border: 1px solid #212529;
+  border-radius: 4px;
+  /* padding-top: 10px; */
+  margin: 0px auto 10px;
+
+  background-color: #21252910;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+label.upload-img {
+  cursor: pointer;
+  background-color: #242424;
+  padding: 8px 15px;
+  color: #ffffff;
+  border: 1px solid #212529;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+#upload-photo {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.btn-create-new {
+  margin-left: 16px;
+  padding: 8px 16px;
+  background-color: #4c6ef5;
+  color: #ffffff;
+  border: 1px solid #4c6ef5;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.btn-create-new i {
+  padding-right: 8px;
+}
+
+.btn-cancel {
+  margin-left: 16px;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: #4c6ef5;
+  border: 1px solid #4c6ef5;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.btn-cancel i {
+  padding-right: 8px;
+}
+
+.error-msg {
+  display: none;
+  text-align: left;
+  margin-right: 24px;
+  padding-top: 8px;
+  font-weight: 400;
+
+  word-break: break-word;
+}
+
+.submit-disable {
+  opacity: 50%;
+}
+
+.image-product-in-table {
+  width: 64px;
+  height: 64px;
+  object-fit: scale-down;
+}
+</style>
