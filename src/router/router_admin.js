@@ -1,8 +1,8 @@
 import Login from "../pages/Login.vue";
 import Dashboard from "../pages/Dashboard.vue";
 import Products from "../pages/Products.vue";
-import CreateProduct from "../pages/CreateProduct.vue";
-import EditProduct from "../pages/EditProduct.vue";
+import CreateProduct1 from "../pages/CreateProduct.vue";
+//import EditProduct1 from "../pages/EditProduct.vue";
 import PageNotFound from "../components/PageNotFound.vue";
 import DashboardContent from "../pages/DashboardContent.vue";
 import Warehouse from "../pages/Warehouse.vue";
@@ -22,6 +22,12 @@ import CreateGroup from "../pages/group/CreateGroup.vue";
 
 import Dashboard2 from "../pages/Dashboard2.vue";
 import ViewGroup from "../pages/group/ViewGroup.vue";
+
+import ProductList from "../pages/product/ProductList.vue";
+import CreateProduct from "../pages/product/CreateProduct.vue";
+import EditProduct from "../pages/product/EditProduct.vue";
+import WareHourse from "../pages/product/WareHouse.vue";
+import DashBoard from "../pages/dashboard/DashBoard.vue";
 
 const routerAdmin = [
   {
@@ -56,9 +62,9 @@ const routerAdmin = [
       {
         path: "create-product",
         name: "CreateProduct",
-        component: CreateProduct,
+        component: CreateProduct1,
       },
-      { path: "edit-product", name: "EditProduct", component: EditProduct },
+      // { path: "edit-product", name: "EditProduct", component: EditProduct },
       { path: "warehouse", name: "Warehouse", component: Warehouse },
 
       // Manage user
@@ -88,11 +94,23 @@ const routerAdmin = [
       }
     },
     children: [
-      { path: "home", name: "Dashboard2-Home"},
+      { path: "home", name: "Dashboard2-Home", component: DashBoard },
       // Manage group
       { path: "groups", name: "ListGroup", component: Groups },
       { path: "create-group", name: "CreateGroup", component: CreateGroup },
       { path: "view-group", name: "ViewGroup", component: ViewGroup },
+      { path: "product-list", name: "ProductList", component: ProductList },
+      { path: "product-list/:id", name: "EditProduct", component: EditProduct },
+      {
+        path: "create-product",
+        name: "CreateProduct",
+        component: CreateProduct,
+      },
+      {
+        path: "warehourse",
+        name: "WareHourse",
+        component: WareHourse,
+      },
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },

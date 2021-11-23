@@ -1,14 +1,5 @@
 <template>
   <div class="limiter">
-    <loading-overlay
-      :active="isLoading"
-      :is-full-page="true"
-      :loader="loader"
-      :opacity="opacity"
-      :width="width"
-      :height="height"
-      background-color="#C0C0C0"
-    />
     <div class="container-login100">
       <div class="wrap-login100">
         <div class="login100-pic js-tilt" data-tilt>
@@ -77,6 +68,9 @@
               <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
             </a>
           </div>
+          <v-overlay :value="overlay">
+            <v-progress-circular indeterminate size="64"></v-progress-circular>
+          </v-overlay>
         </form>
       </div>
     </div>
@@ -90,19 +84,12 @@ export default {
     return {
       username: "",
       password: "",
-
-      isLoading: true,
-      loader: "spinner",
-      opacity: 1,
-      width: 100,
-      height: 100,
+      overlay: false,
     };
-  },
-  mounted() {
-    this.isLoading = false;
   },
   methods: {
     async submitForm() {
+      this.overlay = true;
       await axios
         .post("http://localhost:5000/api/loginadmin", {
           username: this.username,
@@ -110,11 +97,11 @@ export default {
         })
         .then((res) => {
           console.log(res.data);
-
+          this.overlay = false;
           if (res.data.role == "Admin") {
             let admin_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("admin_login", admin_login);
-            this.$router.push({ name: "DashboardHome" });
+            this.$router.push({ name: "Dashboard2-Home" });
             this.$notify({
               group: "foo",
               type: "success",
@@ -134,6 +121,7 @@ export default {
           }
         })
         .catch((err) => {
+          this.overlay = false;
           console.log(err);
           this.$notify({
             group: "foo",
