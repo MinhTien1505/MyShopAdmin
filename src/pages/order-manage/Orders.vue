@@ -1,0 +1,153 @@
+<template>
+  <v-container class="pa-6">
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
+
+    <v-row align="center">
+      <h3 class="ma-2">Manage Group</h3>
+    </v-row>
+
+    <v-row>
+      <v-card width="100%" class="ma-2" outlined>
+        <v-tabs background-color="primary" dark>
+          <v-tab>All</v-tab>
+          <v-tab>Pending</v-tab>
+          <v-tab>Appproved</v-tab>
+          <v-tab>Pick-up</v-tab>
+          <v-tab>Delivering</v-tab>
+          <v-tab>Received</v-tab>
+          <v-tab>Cancel</v-tab>
+
+          <v-tab-item>
+            <TabOrder :action="true" :orders="data" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :action="true" :orders="pendingOrder" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :orders="approvedOrder" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :action="true" :orders="pickUpOrder" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :orders="deliveringOrder" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :orders="receivedOrder" />
+          </v-tab-item>
+
+          <v-tab-item>
+            <TabOrder :orders="cancelOrder" />
+          </v-tab-item>
+        </v-tabs>
+      </v-card>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+import axios from "axios";
+import TabOrder from "../../components/TabOrder.vue";
+
+export default {
+  components: {
+    TabOrder,
+  },
+  data() {
+    return {
+      overlay: false,
+      data: [],
+    };
+  },
+  computed: {
+    pendingOrder() {
+      return this.data.filter((item) => item.status == "Pending");
+    },
+    approvedOrder() {
+      return this.data.filter((item) => item.status == "Approved");
+    },
+    pickUpOrder() {
+      return this.data.filter((item) => item.status == "Pick-up");
+    },
+    deliveringOrder() {
+      return this.data.filter((item) => item.status == "Delivering");
+    },
+    receivedOrder() {
+      return this.data.filter((item) => item.status == "Received");
+    },
+    cancelOrder() {
+      return this.data.filter((item) => item.status == "Cancel");
+    },
+  },
+  mounted() {
+    this.getAllOrders();
+  },
+  filters: {
+    toCODE: function (value) {
+      return "#O" + value.substring(0, 5);
+    },
+    toVND: function (value) {
+      if (typeof value !== "number") {
+        value = parseInt(value);
+      }
+      var formatter = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+        minimumFractionDigits: 0,
+      });
+      return formatter.format(value);
+    },
+    toDateTime: function (value) {
+      var date = new Date(value);
+      var options = {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+        timeZone: "Asia/Ho_Chi_Minh",
+      };
+      return new Intl.DateTimeFormat("en-BG", options).format(date);
+    },
+  },
+  methods: {
+    getAllOrders() {
+      this.overlay = true;
+
+      axios
+        .get("http://localhost:5000/api/getAllOrders")
+        .then((response) => {
+          this.data = response.data;
+          this.overlay = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.overlay = false;
+        });
+      
+    },
+  },
+};
+</script>
+
+<style scoped>
+.card {
+  border: none;
+}
+
+.card-body {
+  padding: 0 1.5rem;
+}
+</style>

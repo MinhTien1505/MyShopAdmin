@@ -16,7 +16,7 @@
         <v-btn
           color="success"
           class="white--text"
-          to="/dashboard2/create-product"
+          to="/dashboard/create-product"
         >
           <v-icon left dark>
             mdi-plus
@@ -208,7 +208,7 @@ export default {
     },
     editProduct(value) {
       const id = value._id;
-      this.$router.push(`/dashboard2/product-list/${id}`);
+      this.$router.push(`/dashboard/product-list/${id}`);
     },
   },
   created() {

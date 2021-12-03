@@ -1,11 +1,7 @@
 <template>
   <v-container class="pa-6">
-    <!-- <v-row>
-      <h3 class="pa-4">Create New Group</h3>
-    </v-row> -->
     <v-row>
       <v-col cols="6">
-        <h4 style="background-color: #E3DFB5; padding: 8px 16px">Information</h4>
         <v-card flat>
           <v-card-text>
             <v-text-field
@@ -38,7 +34,7 @@
                 <v-text-field
                   ref="price"
                   :value="total_price | toNum"
-                  @input="value => total_price = value"
+                  @input="value => temp_price = value"
                   :rules="[() => !!total_price || 'This field is required']"
                   :error-messages="errorMessages"
                   label="Price"
@@ -244,7 +240,20 @@ export default {
       timeout: 2000,
 
       old_image: '',
+
+      temp_price: 0,
     };
+  },
+  watch: {
+    temp_price: function() {
+      if (!this.temp_price) {
+        console.log("Empty");
+      } else {
+        console.log("Change");
+        let v = String(this.temp_price);
+        this.total_price = parseInt(v.replace(/,/g, ''));
+      }
+    }
   },
   created() {
     this.getAllProduct();
@@ -263,11 +272,18 @@ export default {
       return formatter.format(value);
     },
     toNum: function(value) {
-      if (typeof value !== "number") {
+      if (!value) {
+        console.log("Is NaN: " + value);
+        return value;
+      } else {
+        if (typeof value !== "number") {
           value = parseInt(value);
+          console.log("Input Value: ------" + value);
+        }
+        var result = Number(value).toLocaleString();
+        console.log("Format Value: ------" + result);
+        return result;
       }
-      var formatter = new Intl.NumberFormat();
-      return formatter.format(value);
     },
   },
   methods: {
@@ -399,10 +415,10 @@ export default {
       }
     },
     reset() {
-      this.$refs["title"].reset();
-      this.$refs["description"].reset();
-      this.$refs["price"].reset();
-      this.$refs["calo"].reset();
+      this.$refs["title"].resetValidation();
+      this.$refs["description"].resetValidation();
+      this.$refs["price"].resetValidation();
+      this.$refs["calo"].resetValidation();
 
       this.group.title = "";
       this.group.description = "";

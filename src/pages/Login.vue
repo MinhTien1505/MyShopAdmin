@@ -101,7 +101,7 @@ export default {
           if (res.data.role == "Admin") {
             let admin_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("admin_login", admin_login);
-            this.$router.push({ name: "Dashboard2-Home" });
+            this.$router.push({ name: "Home" });
             this.$notify({
               group: "foo",
               type: "success",
@@ -111,7 +111,7 @@ export default {
           } else if (res.data.role == "shipper") {
             let shipper_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("shipper_login", shipper_login);
-            this.$router.push({ name: "ShipperHome" });
+            this.$router.push({ name: "ShipperListOrder" });
             this.$notify({
               group: "foo",
               type: "success",

@@ -1,12 +1,6 @@
 <template>
   <v-container class="pa-6">
     <v-row align="center">
-      <!-- <v-btn @click="addGroup()" class="ma-6" 
-        depressed
-        color="primary">
-        Create New Group
-        <v-icon>mdi-plus</v-icon>
-      </v-btn> -->
       <h3 class="ma-2">Manage Group</h3>
       <v-spacer></v-spacer>
       <v-btn
@@ -25,54 +19,63 @@
     </v-row>
     <v-row>
       <v-card width="100%" class="ma-2" outlined>
-      <v-data-table 
-        :headers="headers" 
-        :items="groupList" 
-        item-key="_id"
-        >
-        <template v-slot:item="row">
-          <tr >
-            <td class="select-row" @click="goGroup(row.item._id)">
-              <img class="image-in-table" 
-                :src="`/group/${ row.item.image }`"/>
-            </td>
-            <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.title }}</td>
-            
-            <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.price | toVND }}</td>
-            <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.calo | toNum }}</td>
+        
+        <v-data-table 
+          :headers="headers" 
+          :items="groupList" 
+          item-key="_id"
+          >
+          <template v-slot:item="row">
+            <tr >
+              <td class="select-row" @click="goGroup(row.item._id)">
+                <img class="image-in-table" 
+                  :src="`/group/${ row.item.image }`"/>
+              </td>
+              <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.title }}</td>
+              
+              <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.price | toVND }}</td>
+              <td class="select-row" @click="goGroup(row.item._id)">{{ row.item.calo | toNum }}</td>
 
-            <td class="select-row" @click="goGroup(row.item._id)">
-              <v-chip v-if="row.item.status == 'Enable'"
-                class="ma-2 pl-4 pr-4"
-                color="green"
-                small
-                text-color="white"
-              >
-                {{ row.item.status }}
-              </v-chip>
+              <td class="select-row" @click="goGroup(row.item._id)">
+                <v-chip v-if="row.item.status == 'Enable'"
+                  class="ma-2 pl-4 pr-4"
+                  color="green"
+                  small
+                  text-color="white"
+                >
+                  {{ row.item.status }}
+                </v-chip>
 
-              <v-chip v-else
-                class="ma-2 pl-4 pr-4"
-                small
-                text-color="white"
-              >
-                {{ row.item.status }}
-              </v-chip>
-            </td>
+                <v-chip v-else
+                  class="ma-2 pl-4 pr-4"
+                  small
+                  text-color="white"
+                >
+                  {{ row.item.status }}
+                </v-chip>
+              </td>
 
-            <td>
-              <v-btn v-if="row.item.status == 'Enable'" @click="updateStatus(row.item, 'Disable')" small dark depressed>
-                <v-icon left>mdi-lock</v-icon>
-                Disable
-              </v-btn>
-              <v-btn v-if="row.item.status == 'Disable'" @click="updateStatus(row.item, 'Enable')" small dark color="red" depressed>
-                <v-icon left>mdi-lock-open-variant</v-icon>
-                Enable
-              </v-btn>
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
+              <td>
+                <v-btn v-if="row.item.status == 'Enable'" @click="updateStatus(row.item, 'Disable')" small dark depressed>
+                  <v-icon left>mdi-lock</v-icon>
+                  Disable
+                </v-btn>
+                <v-btn v-if="row.item.status == 'Disable'" @click="updateStatus(row.item, 'Enable')" small dark color="red" depressed>
+                  <v-icon left>mdi-lock-open-variant</v-icon>
+                  Enable
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+          <template v-slot:no-data>
+              <v-overlay :value="overlay">
+                <v-progress-circular
+                  indeterminate
+                  size="64"
+                ></v-progress-circular>
+              </v-overlay>
+            </template>
+        </v-data-table>
       </v-card>
       <v-snackbar
         v-model="snackbar"
@@ -99,6 +102,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      overlay: true,
       previewImage: "",
       groupList: [],
       headers: [

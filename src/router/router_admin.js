@@ -1,33 +1,30 @@
 import Login from "../pages/Login.vue";
-import Dashboard from "../pages/Dashboard.vue";
-import Products from "../pages/Products.vue";
-import CreateProduct1 from "../pages/CreateProduct.vue";
-//import EditProduct1 from "../pages/EditProduct.vue";
 import PageNotFound from "../components/PageNotFound.vue";
-import DashboardContent from "../pages/DashboardContent.vue";
-import Warehouse from "../pages/Warehouse.vue";
 
-import Users from "../pages/user/Users.vue";
-import CreateUser from "../pages/user/CreateUser.vue";
-// import EditUser from "../pages/user/EditUser.vue";
-import ViewUser from "../pages/user/ViewUser.vue";
+// Vuetify dashboard
+import Dashboard from "../pages/Dashboard.vue";
 
-import Orders from "../pages/order/Orders.vue";
-import ViewOrder from "../pages/order/ViewOrder.vue";
 
-import TabOrders from "../pages/order/OrdersTab.vue";
-
-import Groups from "../pages/group/Groups.vue";
-import CreateGroup from "../pages/group/CreateGroup.vue";
-
-import Dashboard2 from "../pages/Dashboard2.vue";
-import ViewGroup from "../pages/group/ViewGroup.vue";
+// Group manage
+import Groups from "../pages/group-manage/Groups.vue";
+import CreateGroup from "../pages/group-manage/CreateGroup.vue";
+import ViewGroup from "../pages/group-manage/ViewGroup.vue";
 
 import ProductList from "../pages/product/ProductList.vue";
 import CreateProduct from "../pages/product/CreateProduct.vue";
 import EditProduct from "../pages/product/EditProduct.vue";
 import WareHourse from "../pages/product/WareHouse.vue";
-import DashBoard from "../pages/dashboard/DashBoard.vue";
+
+import Home from "../pages/dashboard/Home.vue";
+
+// User manage
+import ListUsers from "../pages/user-manage/Users.vue";
+import CreateUser from "../pages/user-manage/CreateUser.vue";
+import ViewUser from "../pages/user-manage/ViewUser.vue";
+
+// Order manage
+import ListOrders from "../pages/order-manage/Orders.vue";
+import ViewOrder from "../pages/order-manage/ViewOrder.vue";
 
 const routerAdmin = [
   {
@@ -55,62 +52,25 @@ const routerAdmin = [
       }
     },
     children: [
-      { path: "", name: "DashboardHome", component: DashboardContent },
-
-      // Manage product
-      { path: "products", name: "ListProduct", component: Products },
-      {
-        path: "create-product",
-        name: "CreateProduct",
-        component: CreateProduct1,
-      },
-      // { path: "edit-product", name: "EditProduct", component: EditProduct },
-      { path: "warehouse", name: "Warehouse", component: Warehouse },
-
-      // Manage user
-      { path: "users", name: "ListUser", component: Users },
-      { path: "create-user", name: "CreateUser", component: CreateUser },
-      // { path: "edit-user", name: "EditUser", component: EditUser },
-      { path: "view-user", name: "ViewUser", component: ViewUser },
-
-      // Manage order
-      { path: "orders", name: "ListOrder", component: Orders },
-      { path: "view-order", name: "ViewOrder", component: ViewOrder },
-
-      { path: "taborders", name: "TabOrders", component: TabOrders },
-
-      // Error
-      { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
-    ],
-  },
-  {
-    path: "/dashboard2",
-    component: Dashboard2,
-    beforeEnter: (to, from, next) => {
-      if (!sessionStorage.getItem("admin_login")) {
-        next("/admin");
-      } else {
-        next();
-      }
-    },
-    children: [
-      { path: "home", name: "Dashboard2-Home", component: DashBoard },
+      { path: "home", name: "Home", component: Home },
       // Manage group
       { path: "groups", name: "ListGroup", component: Groups },
       { path: "create-group", name: "CreateGroup", component: CreateGroup },
       { path: "view-group", name: "ViewGroup", component: ViewGroup },
+      // Manage product
       { path: "product-list", name: "ProductList", component: ProductList },
       { path: "product-list/:id", name: "EditProduct", component: EditProduct },
-      {
-        path: "create-product",
-        name: "CreateProduct",
-        component: CreateProduct,
-      },
-      {
-        path: "warehourse",
-        name: "WareHourse",
-        component: WareHourse,
-      },
+      { path: "create-product", name: "CreateProduct", component: CreateProduct, },
+      { path: "warehourse", name: "WareHourse", component: WareHourse, },
+
+      // Manage user
+      { path: "users", name: "ListUser", component: ListUsers },
+      { path: "create-user", name: "CreateUser", component: CreateUser },
+      { path: "view-user", name: "ViewUser", component: ViewUser },
+
+      // Manage order
+      { path: "orders", name: "ListOrder", component: ListOrders },
+      { path: "view-order", name: "ViewOrder", component: ViewOrder },
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },

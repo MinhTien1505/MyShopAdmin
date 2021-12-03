@@ -1,8 +1,5 @@
 <template>
   <v-container class="pa-6">
-    <!-- <v-row>
-      <h3 class="pa-4">Create New Group</h3>
-    </v-row> -->
     <v-row>
       <v-col cols="6">
         <h4 style="background-color: #E3DFB5; padding: 8px 16px">Information</h4>
@@ -38,8 +35,8 @@
                 <v-text-field
                   ref="price"
                   :value="total_price | toNum"
-                  @input="value => total_price = value"
-                  :rules="[() => !!total_price || 'This field is required']"
+                  @input="value => temp_price = value"
+                  :rules="[() => !!temp_price || 'This field is required']"
                   :error-messages="errorMessages"
                   label="Price"
                   suffix="vnd"
@@ -55,10 +52,23 @@
               </v-col>
             </v-row>
             <v-row>
+              <!-- <v-col cols="8" class="pb-0">
+                <v-text-field
+                  ref="calo"
+                  v-model="total_calo"
+                  :rules="[() => !!total_calo || 'This field is required']"
+                  :error-messages="errorMessages"
+                  label="Calorie"
+                  suffix="kCal"
+                  placeholder="Group's Calorie"
+                  outlined
+                  required
+                ></v-text-field>
+              </v-col> -->
               <v-col cols="8" class="pb-0">
                 <v-text-field
                   ref="calo"
-                  :value="total_calo | toNum"
+                  :value="total_calo"
                   @input="value => total_calo = value"
                   :rules="[() => !!total_calo || 'This field is required']"
                   :error-messages="errorMessages"
@@ -132,10 +142,6 @@
             v-model="addSelected"
             :single-select="singleSelect">
           </v-data-table>
-          <!-- <v-card-actions>
-            <v-spacer></v-spacer>            
-            <v-btn class="pa-4" depressed color="#ABE2CE" @click="addProduct()">Add</v-btn>
-          </v-card-actions> -->
         </v-card>
       </v-col>
       <v-col cols="6">
@@ -156,10 +162,6 @@
             v-model="removeSelected"
             :single-select="singleSelect">
           </v-data-table>
-          <!-- <v-card-actions>
-            <v-spacer></v-spacer>            
-            <v-btn class="pa-4" depressed color="#A9EA43" @click="removeProduct()">Remove</v-btn>
-          </v-card-actions> -->
         </v-card>
       </v-col>
     </v-row>
@@ -236,7 +238,20 @@ export default {
       snackbar: false,
       text: 'My timeout is set to 2000.',
       timeout: 2000,
+
+      temp_price: 0,
     };
+  },
+  watch: {
+    temp_price: function() {
+      if (!this.temp_price) {
+        console.log("Empty");
+      } else {
+        console.log("Change");
+        let v = String(this.temp_price);
+        this.total_price = parseInt(v.replace(/,/g, ''));
+      }
+    }
   },
   created() {
     this.getAllProduct();
@@ -244,7 +259,8 @@ export default {
   filters: {
     toVND: function(value) {
       if (typeof value !== "number") {
-          value = parseInt(value);
+        console.log("Is Nan");
+        value = parseInt(value);
       }
       var formatter = new Intl.NumberFormat("vi-VN", {
           style: "currency",
@@ -254,11 +270,20 @@ export default {
       return formatter.format(value);
     },
     toNum: function(value) {
-      if (typeof value !== "number") {
+      
+      if (!value) {
+        console.log("Is NaN: " + value);
+        return value;
+      } else {
+        if (typeof value !== "number") {
           value = parseInt(value);
+          console.log("Input Value: ------" + value);
+        }
+
+        var result = Number(value).toLocaleString();
+        console.log("Format Value: ------" + result);
+        return result;
       }
-      var formatter = new Intl.NumberFormat();
-      return formatter.format(value);
     },
   },
   methods: {
@@ -339,7 +364,6 @@ export default {
         formData.append('material', JSON.stringify(this.group.material));
         formData.append('image', this.group.image);
 
-
         console.log(this.group.title);
         console.log(this.group.description);
         console.log(this.group.price);
@@ -371,6 +395,11 @@ export default {
       }
     },
     reset() {
+      this.$refs["title"].resetValidation();
+      this.$refs["description"].resetValidation();
+      this.$refs["price"].resetValidation();
+      this.$refs["calo"].resetValidation();
+
       this.group.title = "";
       this.group.description = "";
       this.group.price = "";
@@ -383,11 +412,7 @@ export default {
       this.material = [];
       this.total_price = 0;
       this.total_calo = 0;
-
-      this.$refs["title"].reset();
-      this.$refs["description"].reset();
-      this.$refs["price"].reset();
-      this.$refs["calo"].reset();
+      this.temp_price = 0;
     },
     cancel() {
       this.$router.back();

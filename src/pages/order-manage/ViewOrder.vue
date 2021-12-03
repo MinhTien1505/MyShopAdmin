@@ -1,46 +1,44 @@
 <template>
   <v-container class="pa-6">
-    <v-row class="mb-6" justify="center" no-gutters>
-      <h3 class="pt-4">
+    <v-row align="center" no-gutters>
+      <h3 class="ma-2">
         Order Information
-        <span>
-          <p
-            v-if="order.status == 'Pending'"
-            class="order-status status-pending"
-          >
-            {{ order.status }}
-          </p>
-          <p
-            v-if="order.status == 'Approved'"
-            class="order-status status-approved"
-          >
-            {{ order.status }}
-          </p>
-          <p
-            v-if="order.status == 'Pick-up'"
-            class="order-status status-pick-up"
-          >
-            {{ order.status }}
-          </p>
-          <p
-            v-if="order.status == 'Delivering'"
-            class="order-status status-delivering"
-          >
-            {{ order.status }}
-          </p>
-          <p
-            v-if="order.status == 'Received'"
-            class="order-status status-received"
-          >
-            {{ order.status }}
-          </p>
-          <p v-if="order.status == 'Cancel'" class="order-status status-cancel">
-            {{ order.status }}
-          </p>
-        </span>
       </h3>
+      <p
+        v-if="order.status == 'Pending'"
+        class="order-status status-pending"
+      >
+        {{ order.status }}
+      </p>
+      <p
+        v-if="order.status == 'Approved'"
+        class="order-status status-approved"
+      >
+        {{ order.status }}
+      </p>
+      <p
+        v-if="order.status == 'Pick-up'"
+        class="order-status status-pick-up"
+      >
+        {{ order.status }}
+      </p>
+      <p
+        v-if="order.status == 'Delivering'"
+        class="order-status status-delivering"
+      >
+        {{ order.status }}
+      </p>
+      <p
+        v-if="order.status == 'Received'"
+        class="order-status status-received"
+      >
+        {{ order.status }}
+      </p>
+      <p v-if="order.status == 'Cancel'" class="order-status status-cancel">
+        {{ order.status }}
+      </p>
     </v-row>
-    <v-row class="mb-6" no-gutters>
+    <v-row class="ma-2">
       <v-card class="d-flex align-stretch" outlined>
         <v-col class="pa-2">
           <v-card-title>Order' Info:</v-card-title>
@@ -95,7 +93,6 @@
             </v-list-item-content>
           </v-list-item>
         </v-col>
-
         <v-divider vertical></v-divider>
         <v-col v-if="order.shipper" class="pa-2">
           <v-card-title>Shipper' Info:</v-card-title>
@@ -127,7 +124,7 @@
         </v-col>
       </v-card>
     </v-row>
-    <v-row class="mb-6" no-gutters>
+    <v-row class="ma-2">
       <v-card class="pa-2" width="100%" outlined tile>
         <v-col class="pa-2">
           <v-card-title>Order' Items:</v-card-title>
@@ -152,6 +149,7 @@
                       class="image-product-in-table"
                       :src="`/products/${item.product.image}`"
                     />
+                    <!-- </img> -->
                   </td>
                   <td>{{ item.product.name }}</td>
                   <td>{{ item.product.price | toVND }}</td>
@@ -162,9 +160,7 @@
             </template>
           </v-simple-table>
         </v-col>
-
         <v-divider></v-divider>
-
         <div class="text-right p-3">
           <v-list-item>
             <v-list-item-content>
@@ -180,7 +176,7 @@
         </div>
       </v-card>
     </v-row>
-    <v-row
+    <v-row 
       class="mb-6 p-3"
       no-gutters
       data-app
@@ -191,21 +187,39 @@
           <v-icon dark left>mdi-arrow-left</v-icon> Back
         </v-btn>
       </v-col>
-      <v-col v-if="order.status == 'Approved'" md="auto">
-        <v-btn @click="confirm(order._id, 'Pick-up')" color="#EACE2A">
-          <v-icon left>mdi-truck-fast</v-icon>
-          Pick-up
+      <v-col md="auto">
+        <v-btn
+          @click="confirm(order._id, 'Approved')"
+          :dark="order.status == 'Pending'"
+          color="#F62D51"
+          :disabled="order.status != 'Pending'"
+        >
+          <v-icon left>mdi-checkbox-marked-circle</v-icon>
+          Approved
         </v-btn>
       </v-col>
-
-      <v-col v-if="order.status == 'Pick-up'" md="auto">
-        <v-btn @click="confirm(order._id, 'NO Pick-up')" dark color="#F44336">
+      <v-col md="auto">
+        <v-btn
+          @click="confirm(order._id, 'Cancel')"
+          :dark="order.status == 'Pending'"
+          color="#899878"
+          :disabled="order.status != 'Pending'"
+        >
           <v-icon left>mdi-cancel</v-icon>
-          NO Pick-up
+          Cancel
+        </v-btn>
+      </v-col>
+      <v-col md="auto">
+        <v-btn
+          @click="confirm(order._id, 'Delivery')"
+          color="#EACE2A"
+          :disabled="order.status != 'Pick-up'"
+        >
+          <v-icon left>mdi-truck-fast</v-icon>
+          Delivery
         </v-btn>
       </v-col>
     </v-row>
-
     <v-dialog v-model="visibleDialog" persistent max-width="290">
       <v-card>
         <v-card-title class="text-h5">
@@ -222,18 +236,9 @@
             Disagree
           </v-btn>
           <v-btn
-            v-if="dialogConfirm.action == 'Pick-up'"
             color="green darken-1"
             text
-            @click="pickup()"
-          >
-            Agree
-          </v-btn>
-          <v-btn
-            v-if="dialogConfirm.action == 'NO Pick-up'"
-            color="green darken-1"
-            text
-            @click="cancelPickup()"
+            @click="updateStatus(dialogConfirm.status)"
           >
             Agree
           </v-btn>
@@ -269,6 +274,7 @@ export default {
       phone: "",
       total_price: "",
       orderItems: [],
+      shipper: "",
     },
     snackbar: false,
     snackbar_text: "",
@@ -277,7 +283,6 @@ export default {
 
     visibleDialog: false,
     dialogConfirm: {
-      action: "",
       title: "",
       question: "",
       status: "",
@@ -335,53 +340,30 @@ export default {
     },
     back() {
       this.$router.back();
-      // this.$router.push({ name: "ShipperListOrder" });
+      // this.$router.push({ name: "ListOrder" });
     },
     confirm(order_id, action) {
-      this.dialogConfirm.action = action;
       this.id_selected = order_id;
       this.dialogConfirm.title = `${action} Order`;
       this.dialogConfirm.question = `Are you sure you want to ${action} this Order?`;
       if (action == "Delivery") {
         this.dialogConfirm.status = "Delivering";
-      } else if (action == "NO Pick-up") {
-        this.dialogConfirm.status = "Approved";
       } else {
         this.dialogConfirm.status = action;
       }
       this.visibleDialog = true;
     },
-    async pickup() {
-      let token = JSON.parse(sessionStorage.getItem("shipper_login"));
+    async updateStatus(status) {
+      let token = JSON.parse(sessionStorage.getItem("admin_login"));
       let config = {
         headers: { Authorization: "bearer " + token },
       };
 
+      this.msg_snackbar = "";
       await axios
-        .get(
-          `http://localhost:5000/api/orders/pickup/${this.id_selected}`,
-          config
-        )
-        .then((res) => {
-          console.log(res);
-          this.getOrderByID();
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    async cancelPickup() {
-      let token = JSON.parse(sessionStorage.getItem("shipper_login"));
-      let config = {
-        headers: { Authorization: "bearer " + token },
-      };
-
-      await axios
-        .get(
-          `http://localhost:5000/api/orders/cancelPickup/${this.id_selected}`,
+        .patch(
+          `http://localhost:5000/api/orders/updateStatus/${this.id_selected}`,
+          { status },
           config
         )
         .then((res) => {
@@ -419,57 +401,18 @@ export default {
   white-space: break-spaces;
 }
 
-h3 {
+/* h3 {
   text-align: center;
   margin: 0;
-}
-
-.btn-approved {
-  margin-left: 16px;
-  padding: 8px 16px;
-  background-color: #4c6ef5;
-  color: #ffffff;
-  border: 1px solid #4c6ef5;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.btn-back {
-  margin-left: 16px;
-  padding: 8px 16px;
-  background-color: #ffffff;
-  color: #4c6ef5;
-  border: 1px solid #4c6ef5;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.btn-cancel-order {
-  margin-left: 16px;
-  padding: 8px 16px;
-  background-color: #ffffff;
-  color: #000000;
-  border: 1px solid #92a4a4;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.btn-approved i,
-.btn-back i,
-.btn-cancel-order i {
-  padding-right: 8px;
-}
+} */
 
 .order-status {
-  display: inline-block;
+  /* display: inline-block; */
   padding: 4px 12px;
   border-radius: 4px;
   color: #ffffff;
   /* line-height: 1.25em; */
-  font-size: 0.9em;
+  font-size: 1.2rem;
   text-transform: capitalize;
 }
 
@@ -501,5 +444,9 @@ h3 {
   /* width: 98px; */
   height: 98px;
   object-fit: scale-down;
+}
+
+p {
+  margin: 0;
 }
 </style>

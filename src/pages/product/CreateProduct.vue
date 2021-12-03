@@ -30,7 +30,7 @@
                   outlined
                   dense
                   :value="product.price | toNum"
-                  @input="(value) => (product.price = value)"
+                  @input="value => temp_price = value"
                   :rules="[(v) => !!v || 'Please enter price']"
                   suffix="VND"
                 ></v-text-field>
@@ -64,7 +64,7 @@
             </v-row>
             <v-row class="label_create">
               <v-col cols="2">Category</v-col>
-              <v-col cols="8">
+              <v-col cols="7">
                 <v-combobox
                   dense
                   outlined
@@ -73,11 +73,11 @@
                   :rules="[(v) => !!v || 'Please select category']"
                 ></v-combobox>
               </v-col>
-              <v-col class="add-category" cols="2">
+              <v-col class="add-category" cols="3">
                 <v-dialog
                   v-model="showDialog"
                   transition="dialog-bottom-transition"
-                  max-width="600"
+                  max-width="1000px"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" width="100%" v-bind="attrs" v-on="on"
@@ -88,6 +88,7 @@
                     <v-form
                       class="pt-7"
                       ref="form1"
+                      width="600px"
                       v-model="valid1"
                       lazy-validation
                       @submit.prevent="addCategory()"
@@ -203,9 +204,20 @@ export default {
       category: "",
       group: "",
     },
+    temp_price: 0,
     categories: [],
   }),
-
+  watch: {
+    temp_price: function() {
+      if (!this.temp_price) {
+        console.log("Empty");
+      } else {
+        console.log("Change");
+        let v = String(this.temp_price);
+        this.product.price = v.replace(/,/g, '');
+      }
+    }
+  },
   created() {
     this.gettAllCategory();
   },
