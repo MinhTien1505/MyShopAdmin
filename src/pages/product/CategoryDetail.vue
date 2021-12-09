@@ -100,7 +100,7 @@
         {{ this.$route.params.message }}
 
         <template v-slot:action="{ attrs }">
-          <v-btn fab text v-bind="attrs" @click="snackbar = false">
+          <v-btn color="red" fab text v-bind="attrs" @click="snackbar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
@@ -161,7 +161,8 @@ export default {
         .get("http://localhost:5000/api/getallproducts")
         .then((response) => {
           this.products = response.data.filter(
-            (item) => item.status == "Enable"
+            (item) =>
+              item.status == "Enable" && item.category == this.$route.params.id
           );
           this.overlay = false;
         })

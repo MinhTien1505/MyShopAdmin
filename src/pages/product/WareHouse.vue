@@ -11,7 +11,7 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-    <v-container fluid>
+    <div class="container-fluid">
       <v-row class="mt-1">
         <v-col cols="12">
           <v-data-table
@@ -60,9 +60,7 @@
                 class="ma-2 white--text"
                 @click="addQuantity(item)"
               >
-                <v-icon left dark>
-                  mdi-plus
-                </v-icon>
+                <v-icon left dark> mdi-plus </v-icon>
                 Add quantity
               </v-btn>
             </template>
@@ -91,7 +89,7 @@
           </v-btn>
         </template>
       </v-snackbar>
-    </v-container>
+    </div>
   </v-card>
 </template>
 
@@ -132,7 +130,7 @@ export default {
     ],
   }),
   filters: {
-    toVND: function(value) {
+    toVND: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }
@@ -143,7 +141,7 @@ export default {
       });
       return formatter.format(value);
     },
-    toNum: function(value) {
+    toNum: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }

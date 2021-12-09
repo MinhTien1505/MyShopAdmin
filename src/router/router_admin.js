@@ -4,7 +4,6 @@ import PageNotFound from "../components/PageNotFound.vue";
 // Vuetify dashboard
 import Dashboard from "../pages/Dashboard.vue";
 
-
 // Group manage
 import Groups from "../pages/group-manage/Groups.vue";
 import CreateGroup from "../pages/group-manage/CreateGroup.vue";
@@ -25,6 +24,10 @@ import ViewUser from "../pages/user-manage/ViewUser.vue";
 // Order manage
 import ListOrders from "../pages/order-manage/Orders.vue";
 import ViewOrder from "../pages/order-manage/ViewOrder.vue";
+
+// Category manage
+import Category from "../pages/product/Category.vue";
+import CategoryDetail from "../pages/product/CategoryDetail.vue";
 
 const routerAdmin = [
   {
@@ -60,8 +63,12 @@ const routerAdmin = [
       // Manage product
       { path: "product-list", name: "ProductList", component: ProductList },
       { path: "product-list/:id", name: "EditProduct", component: EditProduct },
-      { path: "create-product", name: "CreateProduct", component: CreateProduct, },
-      { path: "warehourse", name: "WareHourse", component: WareHourse, },
+      {
+        path: "create-product",
+        name: "CreateProduct",
+        component: CreateProduct,
+      },
+      { path: "warehourse", name: "WareHourse", component: WareHourse },
 
       // Manage user
       { path: "users", name: "ListUser", component: ListUsers },
@@ -71,6 +78,14 @@ const routerAdmin = [
       // Manage order
       { path: "orders", name: "ListOrder", component: ListOrders },
       { path: "view-order", name: "ViewOrder", component: ViewOrder },
+
+      // Manage category
+      { path: "category", name: "Category", component: Category },
+      {
+        path: "category/:id",
+        name: "CategoryDetail",
+        component: CategoryDetail,
+      },
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },

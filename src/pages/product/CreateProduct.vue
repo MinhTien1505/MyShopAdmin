@@ -30,7 +30,7 @@
                   outlined
                   dense
                   :value="product.price | toNum"
-                  @input="value => temp_price = value"
+                  @input="(value) => (temp_price = value)"
                   :rules="[(v) => !!v || 'Please enter price']"
                   suffix="VND"
                 ></v-text-field>
@@ -77,7 +77,7 @@
                 <v-dialog
                   v-model="showDialog"
                   transition="dialog-bottom-transition"
-                  max-width="1000px"
+                  max-width="600"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" width="100%" v-bind="attrs" v-on="on"
@@ -88,7 +88,6 @@
                     <v-form
                       class="pt-7"
                       ref="form1"
-                      width="600px"
                       v-model="valid1"
                       lazy-validation
                       @submit.prevent="addCategory()"
@@ -157,7 +156,7 @@
             <v-icon left> mdi-plus </v-icon>Create</v-btn
           >
           <v-btn
-            to="/dashboard2/product-list"
+            @click="cancel()"
             style="text-decoration: none"
             color="warning"
             elevation="2"
@@ -172,9 +171,7 @@
 
         <template v-slot:action="{ attrs }">
           <v-btn icon small v-bind="attrs" @click="snackbar = false">
-            <v-icon>
-              mdi-close
-            </v-icon>
+            <v-icon> mdi-close </v-icon>
           </v-btn>
         </template>
       </v-snackbar>
@@ -208,15 +205,15 @@ export default {
     categories: [],
   }),
   watch: {
-    temp_price: function() {
+    temp_price: function () {
       if (!this.temp_price) {
         console.log("Empty");
       } else {
         console.log("Change");
         let v = String(this.temp_price);
-        this.product.price = v.replace(/,/g, '');
+        this.product.price = v.replace(/,/g, "");
       }
-    }
+    },
   },
   created() {
     this.gettAllCategory();
@@ -297,7 +294,7 @@ export default {
         });
     },
     cancel() {
-      this.$router.push({ name: "ListProduct" });
+      this.$router.push({ name: "ProductList" });
     },
     async addCategory() {
       if (this.$refs.form1.validate()) {
@@ -317,6 +314,7 @@ export default {
             this.gettAllCategory();
             this.product.category = this.newCategory;
             this.showDialog = false;
+            this.newCategory = "";
             this.text = "Added category successfully!";
             this.colorSnackbar = "success";
             this.snackbar = true;
@@ -328,7 +326,7 @@ export default {
     },
   },
   filters: {
-    toVND: function(value) {
+    toVND: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }
@@ -339,7 +337,7 @@ export default {
       });
       return formatter.format(value);
     },
-    toNum: function(value) {
+    toNum: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }

@@ -13,7 +13,7 @@
                 <p class="lead">
                   This requested URL was not found on this server.
                 </p>
-                <router-link to="/dashboard">
+                <router-link to="/dashboard/home">
                   <i class="fas fa-arrow-left mr-1"></i>
                   Return to Dashboard
                 </router-link>

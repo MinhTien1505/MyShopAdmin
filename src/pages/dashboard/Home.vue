@@ -55,7 +55,7 @@ export default {
     console.log(this.nowYear);
   },
   filters: {
-    toVND: function(value) {
+    toVND: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }
@@ -66,7 +66,7 @@ export default {
       });
       return formatter.format(value);
     },
-    toNum: function(value) {
+    toNum: function (value) {
       if (typeof value !== "number") {
         value = parseInt(value);
       }
@@ -92,6 +92,7 @@ export default {
       return color;
     },
     async changeYear() {
+      this.total_revenue = 0;
       let dataValue = [];
       let JanuaryData = 0;
       let FebruaryData = 0;
@@ -111,7 +112,7 @@ export default {
           await axios.get("http://localhost:5000/api/getAllOrders")
         ).data.filter((item) => item.status == "Received");
         const date_value = data.map((item) => {
-          return { total_price: item.total_price, date: item.date };
+          return { total_price: item.total_price, date: item.updatedAt };
         });
         this.dataBarChart = date_value.filter(
           (item) => String(this.getYearhData(item.date)) == this.nowYear
