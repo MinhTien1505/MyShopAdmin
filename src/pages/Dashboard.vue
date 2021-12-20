@@ -84,7 +84,7 @@
 
     <v-app-bar app color="#222831" dark>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Management System</v-toolbar-title>
 
       <v-spacer></v-spacer>
       <span class="mr-2">Admin</span>

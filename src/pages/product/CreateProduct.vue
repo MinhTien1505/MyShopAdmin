@@ -57,6 +57,7 @@
                 <v-text-field
                   outlined
                   dense
+                  suffix="/100Kg"
                   v-model="product.calo"
                   :rules="[(v) => !!v || 'Please enter calo']"
                 ></v-text-field>
@@ -211,7 +212,7 @@ export default {
       } else {
         console.log("Change");
         let v = String(this.temp_price);
-        this.product.price = v.replace(/,/g, "");
+        this.product.price = v.replace(/[&\\#, +()$~%.'":*?<>{}]/g, "");
       }
     },
   },

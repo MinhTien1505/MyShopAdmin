@@ -1,34 +1,21 @@
 <template>
   <!-- <div class="container-fluid"> -->
 
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-row align="center">
       <h3 class="ma-2">Manage Users</h3>
       <v-spacer></v-spacer>
-      <v-btn
-        color="success"
-        class="ma-2 white--text"
-        @click="addUser()"
-      >
+      <v-btn color="success" class="ma-2 white--text" @click="addUser()">
         New
-        <v-icon
-          right
-          dark
-        >
-          mdi-plus
-        </v-icon>
+        <v-icon right dark> mdi-plus </v-icon>
       </v-btn>
     </v-row>
 
     <v-row>
       <v-card width="100%" class="ma-2" outlined>
-        <v-data-table 
-          :headers="headers" 
-          :items="data" 
-          item-key="_id"
-          >
+        <v-data-table :headers="headers" :items="data" item-key="_id">
           <template v-slot:item="row">
-            <tr >
+            <tr>
               <td class="select-row" @click="viewUser(row.item._id)">
                 <img
                   v-if="row.item.avatar == ''"
@@ -42,16 +29,19 @@
                   :src="`/avatar/${row.item.avatar}`"
                 ></v-img>
               </td>
-              <td class="select-row" @click="viewUser(row.item._id)">{{ row.item.username }}</td>
-              
-              <td class="select-row" @click="viewUser(row.item._id)">{{ row.item.full_name }}</td>
-              
+              <td class="select-row" @click="viewUser(row.item._id)">
+                {{ row.item.username }}
+              </td>
+
+              <td class="select-row" @click="viewUser(row.item._id)">
+                {{ row.item.full_name }}
+              </td>
+
               <td class="select-row" @click="viewUser(row.item._id)">
                 <v-chip
                   v-if="row.item.position == 'Admin'"
                   class="ma-2 pl-4 pr-4"
                   color="red"
-                  small
                   text-color="white"
                 >
                   {{ row.item.position }}
@@ -60,7 +50,6 @@
                   v-if="row.item.position == 'customer'"
                   class="ma-2 pl-4 pr-4"
                   color="amber"
-                  small
                   text-color="white"
                 >
                   {{ row.item.position }}
@@ -69,7 +58,6 @@
                   v-if="row.item.position == 'shipper'"
                   class="ma-2 pl-4 pr-4"
                   color="blue"
-                  small
                   text-color="white"
                 >
                   {{ row.item.position }}
@@ -77,18 +65,19 @@
               </td>
 
               <td class="select-row" @click="viewUser(row.item._id)">
-                <v-chip v-if="row.item.status == 'active'"
+                <v-chip
+                  v-if="row.item.status == 'active'"
                   class="ma-2 pl-4 pr-4"
                   color="green"
-                  small
                   text-color="white"
                 >
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip v-else
+                <v-chip
+                  v-else
                   class="ma-2 pl-4 pr-4"
-                  small
+                  color="black"
                   text-color="white"
                 >
                   {{ row.item.status }}
@@ -96,20 +85,22 @@
               </td>
 
               <td>
-                <v-btn v-if="row.item.status == 'active'" 
-                  @click="confirm(row.item._id, 'disable')" 
-                  small 
-                  dark 
-                  depressed>
+                <v-btn
+                  v-if="row.item.status == 'active'"
+                  @click="confirm(row.item._id, 'disable')"
+                  dark
+                  depressed
+                >
                   <v-icon left>mdi-lock</v-icon>
                   Disable
                 </v-btn>
-                <v-btn v-if="row.item.status == 'disable'" 
-                  @click="confirm(row.item._id, 'active')" 
-                  small 
-                  dark 
-                  color="red" 
-                  depressed>
+                <v-btn
+                  v-if="row.item.status == 'disable'"
+                  @click="confirm(row.item._id, 'active')"
+                  dark
+                  color="success"
+                  depressed
+                >
                   <v-icon left>mdi-lock-open-variant</v-icon>
                   Enable
                 </v-btn>
@@ -118,13 +109,13 @@
           </template>
 
           <template v-slot:no-data>
-              <v-overlay :value="overlay">
-                <v-progress-circular
-                  indeterminate
-                  size="64"
-                ></v-progress-circular>
-              </v-overlay>
-            </template>
+            <v-overlay :value="overlay">
+              <v-progress-circular
+                indeterminate
+                size="64"
+              ></v-progress-circular>
+            </v-overlay>
+          </template>
         </v-data-table>
       </v-card>
 
@@ -153,25 +144,17 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      
-      <v-snackbar
-        v-model="snackbar"
-        :timeout="timeout"
-      >
+
+      <v-snackbar v-model="snackbar" :timeout="timeout">
         {{ snackbar_text }}
         <template v-slot:action="{ attrs }">
-          <v-btn
-            color="blue"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-          >
+          <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
             Close
           </v-btn>
         </template>
       </v-snackbar>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -183,12 +166,12 @@ export default {
       data: [],
       overlay: true,
       headers: [
-        { text: 'Avatar', value: 'avatar', width: "10%", align: "left" },
-        { text: 'Username', value: 'username' , width: "25%", align: "left" },
-        { text: 'Fullname', value: 'full-name' , width: "30%", align: "left" },
-        { text: 'Role', value: 'role', width: "15%", align: "left" },
-        { text: 'Status', value: 'status', width: "10%", align: "center" },
-        { text: '', width: "10%" },
+        { text: "Avatar", value: "avatar", width: "10%", align: "left" },
+        { text: "Username", value: "username", width: "25%", align: "left" },
+        { text: "Fullname", value: "full-name", width: "30%", align: "left" },
+        { text: "Role", value: "role", width: "15%", align: "left" },
+        { text: "Status", value: "status", width: "10%", align: "center" },
+        { text: "", width: "10%" },
       ],
       search: "",
 
@@ -276,14 +259,13 @@ export default {
 </script>
 
 <style scoped>
-
 .select-row {
   cursor: pointer;
 }
 
 .avatar-in-table {
-  width: 37px;
-  height: 37px;
+  width: 45px;
+  height: 45px;
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
 }

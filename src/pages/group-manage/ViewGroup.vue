@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-row>
       <v-col cols="6">
         <v-card flat>
@@ -34,7 +34,7 @@
                 <v-text-field
                   ref="price"
                   :value="total_price | toNum"
-                  @input="value => temp_price = value"
+                  @input="(value) => (temp_price = value)"
                   :rules="[() => !!total_price || 'This field is required']"
                   :error-messages="errorMessages"
                   label="Price"
@@ -45,7 +45,14 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="4" class="pb-0">
-                <v-btn @click="calcPrice()" height="32" class="mt-3" small color="#EEE558" depressed>
+                <v-btn
+                  @click="calcPrice()"
+                  height="32"
+                  class="mt-3"
+                  small
+                  color="#EEE558"
+                  depressed
+                >
                   Calc Price
                 </v-btn>
               </v-col>
@@ -55,7 +62,7 @@
                 <v-text-field
                   ref="calo"
                   :value="total_calo | toNum"
-                  @input="value => total_calo = value"
+                  @input="(value) => (total_calo = value)"
                   :rules="[() => !!total_calo || 'This field is required']"
                   :error-messages="errorMessages"
                   label="Calorie"
@@ -66,7 +73,14 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="4" class="pb-0">
-                <v-btn @click="calcCalo()" height="32" class="mt-3" small color="#A9CBB7" depressed>
+                <v-btn
+                  @click="calcCalo()"
+                  height="32"
+                  class="mt-3"
+                  small
+                  color="#A9CBB7"
+                  depressed
+                >
                   Calc Calo
                 </v-btn>
               </v-col>
@@ -75,22 +89,25 @@
         </v-card>
       </v-col>
       <v-col cols="6">
-        <h4 style="background-color: #DCCCFF; padding: 8px 16px">Image</h4>
+        <h4 style="background-color: #dcccff; padding: 8px 16px">Image</h4>
         <v-card flat>
           <v-card-text>
             <div>
-              <img class="image-placeholder"
+              <img
+                class="image-placeholder"
                 v-if="previewImage == ''"
                 id="image-preview"
                 src="../../../public/assets/assets/img/food-preview.png"
               />
-              <img class="image-placeholder"
+              <img
+                class="image-placeholder"
                 v-else-if="previewImage != old_image"
                 id="image-preview"
                 @click="selectImage"
                 :src="`${previewImage}`"
               />
-              <img class="image-placeholder"
+              <img
+                class="image-placeholder"
                 v-else
                 id="image-preview"
                 @click="selectImage"
@@ -98,7 +115,11 @@
               />
             </div>
             <div class="text-center">
-              <label class="upload-img" for="upload-photo" style="backgroud-color: #675E55">
+              <label
+                class="upload-img"
+                for="upload-photo"
+                style="backgroud-color: #675e55"
+              >
                 <i class="fas fa-upload"></i> Upload image here!
               </label>
               <input
@@ -117,22 +138,38 @@
     </v-row>
     <v-row class="mb-4">
       <v-col cols="6">
-        <h4 style="background-color: #D9F1E9; padding: 8px 16px">Available Products</h4>
+        <h4 style="background-color: #d9f1e9; padding: 8px 16px">
+          Available Products
+        </h4>
         <v-card outlined>
           <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
-            <v-btn class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3" depressed color="#009EFB" dark @click="addProduct()">Add</v-btn>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-btn
+              class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3"
+              depressed
+              color="#009EFB"
+              dark
+              @click="addProduct()"
+              >Add</v-btn
+            >
           </v-card-title>
-          <v-data-table 
-            :headers="headers" 
-            :items="productList" 
-            dense 
-            fixed-header 
+          <v-data-table
+            :headers="headers"
+            :items="productList"
+            dense
+            fixed-header
             height="300px"
             item-key="_id"
             show-select
             v-model="addSelected"
-            :single-select="singleSelect">
+            :single-select="singleSelect"
+          >
           </v-data-table>
           <!-- <v-card-actions>
             <v-spacer></v-spacer>            
@@ -141,22 +178,38 @@
         </v-card>
       </v-col>
       <v-col cols="6">
-        <h4 style="background-color: #F1FBBA; padding: 8px 16px">Group's Materials</h4>
+        <h4 style="background-color: #f1fbba; padding: 8px 16px">
+          Group's Materials
+        </h4>
         <v-card outlined>
           <v-card-title>
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
-            <v-btn class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3" depressed color="#A0A77C" dark @click="removeProduct()">Remove</v-btn>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-btn
+              class="pl-6 pr-6 pt-1 pb-1 ml-6 mt-3"
+              depressed
+              color="#A0A77C"
+              dark
+              @click="removeProduct()"
+              >Remove</v-btn
+            >
           </v-card-title>
-          <v-data-table 
-            :headers="headers" 
-            :items="material" 
-            dense 
-            fixed-header 
+          <v-data-table
+            :headers="headers"
+            :items="material"
+            dense
+            fixed-header
             height="300px"
             item-key="_id"
             show-select
             v-model="removeSelected"
-            :single-select="singleSelect">
+            :single-select="singleSelect"
+          >
           </v-data-table>
           <!-- <v-card-actions>
             <v-spacer></v-spacer>            
@@ -169,9 +222,7 @@
     <v-row>
       <v-col>
         <div class="text-center p-3">
-          <v-btn class="ma-2" outlined @click="cancel()">
-            Cancel
-          </v-btn>
+          <v-btn class="ma-2" outlined @click="cancel()"> Cancel </v-btn>
 
           <v-btn class="ma-2" depressed color="#C161E4" dark @click="submit()">
             Update
@@ -183,27 +234,18 @@
         </div>
       </v-col>
     </v-row>
-    <v-snackbar
-      v-model="snackbar"
-      :timeout="timeout"
-    >
+    <v-snackbar v-model="snackbar" :timeout="timeout">
       {{ text }}
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
           Close
         </v-btn>
       </template>
     </v-snackbar>
-  </v-container>
+  </div>
 </template>
 
 <script>
-
 import axios from "axios";
 export default {
   data() {
@@ -221,57 +263,57 @@ export default {
       productList: [],
       headers: [
         // { text: 'Image', value: 'image' },
-        { text: 'Name', value: 'name' },
-        { text: 'Category', value: 'category' },
-        { text: 'Price', value: 'price' },
-        { text: 'Calo', value: 'calo' },
+        { text: "Name", value: "name" },
+        { text: "Category", value: "category" },
+        { text: "Price", value: "price" },
+        { text: "Calo", value: "calo" },
       ],
       search: "",
       singleSelect: false,
       addSelected: [],
       removeSelected: [],
       material: [],
-      errorMessages: '',
+      errorMessages: "",
       total_price: 0,
       total_calo: 0,
 
       snackbar: false,
-      text: 'My timeout is set to 2000.',
+      text: "My timeout is set to 2000.",
       timeout: 2000,
 
-      old_image: '',
+      old_image: "",
 
       temp_price: 0,
     };
   },
   watch: {
-    temp_price: function() {
+    temp_price: function () {
       if (!this.temp_price) {
         console.log("Empty");
       } else {
         console.log("Change");
         let v = String(this.temp_price);
-        this.total_price = parseInt(v.replace(/,/g, ''));
+        this.total_price = parseInt(v.replace(/,/g, ""));
       }
-    }
+    },
   },
   created() {
     this.getAllProduct();
     this.getGroupByID();
   },
   filters: {
-    toVND: function(value) {
+    toVND: function (value) {
       if (typeof value !== "number") {
-          value = parseInt(value);
+        value = parseInt(value);
       }
       var formatter = new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-          minimumFractionDigits: 0,
+        style: "currency",
+        currency: "VND",
+        minimumFractionDigits: 0,
       });
       return formatter.format(value);
     },
-    toNum: function(value) {
+    toNum: function (value) {
       if (!value) {
         console.log("Is NaN: " + value);
         return value;
@@ -288,21 +330,22 @@ export default {
   },
   methods: {
     async getGroupByID() {
-      await axios.get(`http://localhost:5000/api/group/${this.$route.params.group_id}`)
+      await axios
+        .get(`http://localhost:5000/api/group/${this.$route.params.group_id}`)
         .then((res) => {
-            this.group = res.data;
-            this.previewImage = this.group.image;
-            this.total_price = this.group.price;
-            this.total_calo = this.group.calo;
-            this.old_image = this.group.image;
-            this.material = [];
+          this.group = res.data;
+          this.previewImage = this.group.image;
+          this.total_price = this.group.price;
+          this.total_calo = this.group.calo;
+          this.old_image = this.group.image;
+          this.material = [];
 
-            this.group.material.forEach((item) => {
-              this.material.push(item.product);
-            })
+          this.group.material.forEach((item) => {
+            this.material.push(item.product);
+          });
         })
         .catch((err) => {
-            console.log(err.message);
+          console.log(err.message);
         });
     },
     selectImage() {
@@ -327,7 +370,9 @@ export default {
       axios
         .get("http://localhost:5000/api/getallproducts")
         .then((response) => {
-          this.productList = response.data.filter((item) => item.status == 'Enable');
+          this.productList = response.data.filter(
+            (item) => item.status == "Enable"
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -335,13 +380,15 @@ export default {
     },
     addProduct() {
       console.log(this.addSelected);
-      let merge = [...new Set([...this.material,...this.addSelected])];
+      let merge = [...new Set([...this.material, ...this.addSelected])];
       this.material = merge;
       console.log(this.material);
     },
     removeProduct() {
       console.log(this.removeSelected);
-      let result = this.material.filter((item) => !this.removeSelected.includes(item));
+      let result = this.material.filter(
+        (item) => !this.removeSelected.includes(item)
+      );
       this.material = result;
       console.log(this.material);
     },
@@ -349,23 +396,23 @@ export default {
       let price = 0;
       this.material.forEach((item) => {
         price += parseInt(item.price);
-      })
+      });
       this.total_price = price;
     },
     calcCalo() {
       let calo = 0;
       this.material.forEach((item) => {
         calo += parseFloat(item.calo);
-      })
+      });
       this.total_calo = calo;
     },
-    async submit () {
-      if(!this.hasEmptyField()) {
+    async submit() {
+      if (!this.hasEmptyField()) {
         this.group.material = [];
         this.material.forEach((item) => {
-          this.group.material.push({product: item._id});
-        })
-        
+          this.group.material.push({ product: item._id });
+        });
+
         this.group.price = this.total_price.toString();
         this.group.calo = this.total_calo.toString();
 
@@ -375,13 +422,13 @@ export default {
         };
 
         const formData = new FormData();
-        formData.append('title', this.group.title);
-        formData.append('description', this.group.description);
-        formData.append('price', this.group.price);
-        formData.append('calo', this.group.calo);
-        formData.append('material', JSON.stringify(this.group.material));
-        formData.append('image', this.group.image);
-        formData.append('old_image', this.old_image);
+        formData.append("title", this.group.title);
+        formData.append("description", this.group.description);
+        formData.append("price", this.group.price);
+        formData.append("calo", this.group.calo);
+        formData.append("material", JSON.stringify(this.group.material));
+        formData.append("image", this.group.image);
+        formData.append("old_image", this.old_image);
 
         console.log(this.group.title);
         console.log(this.group.description);
@@ -392,21 +439,29 @@ export default {
         console.log(token);
 
         await axios
-        .patch(`http://localhost:5000/api/group/update/${this.group._id}`, formData, config)
-        .then((responese) => {
-          this.text = responese.data.message;
-          this.snackbar = true;
-          this.getGroupByID();
-        })
-        .catch((error) => {
-          console.log(error.message);
-          this.text = error.message;
-          this.snackbar = true;
-        })
+          .patch(
+            `http://localhost:5000/api/group/update/${this.group._id}`,
+            formData,
+            config
+          )
+          .then((responese) => {
+            this.text = responese.data.message;
+            this.snackbar = true;
+            this.getGroupByID();
+          })
+          .catch((error) => {
+            console.log(error.message);
+            this.text = error.message;
+            this.snackbar = true;
+          });
       }
     },
     hasEmptyField() {
-      if(this.group.title == '' || this.group.description == '' || this.group.image == '') {
+      if (
+        this.group.title == "" ||
+        this.group.description == "" ||
+        this.group.image == ""
+      ) {
         this.text = "Please enter the information completely!";
         this.snackbar = true;
         return true;
@@ -435,13 +490,12 @@ export default {
     },
     cancel() {
       this.$router.back();
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
-
 button {
   font-size: 14px;
   font-weight: 600;

@@ -1,10 +1,7 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-overlay :value="overlay">
-      <v-progress-circular
-        indeterminate
-        size="64"
-      ></v-progress-circular>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
     <v-row align="center">
@@ -52,7 +49,7 @@
         </v-tabs>
       </v-card>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -136,7 +133,6 @@ export default {
           console.log(err);
           this.overlay = false;
         });
-      
     },
   },
 };

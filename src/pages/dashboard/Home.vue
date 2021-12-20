@@ -23,7 +23,7 @@
     <bar-chart v-if="loaded" :chartdata="chartdata" :options="options" />
     <v-divider></v-divider>
     <h2 class="text-center mt-5">STATISTICS OF PRODUCTS SOLD</h2>
-    <pie-chart v-if="loaded" :chartdata="chartdata1" :options="options" />
+    <pie-chart v-if="loaded" :chartdata="chartdata1" :options="options1" />
   </div>
 </template>
 
@@ -44,6 +44,22 @@ export default {
     chartdata: null,
     chartdata1: null,
     options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              callback: function (value) {
+                let format = String(value);
+                return format.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              },
+            },
+          },
+        ],
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+    },
+    options1: {
       legend: { display: true },
       responsive: true,
       maintainAspectRatio: false,

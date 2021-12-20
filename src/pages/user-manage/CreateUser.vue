@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <form enctype="multipart/form-data">
       <v-row>
         <v-col cols="7">
@@ -116,16 +116,14 @@
           </div>
 
           <div class="text-right p-3">
-            <v-btn class="ma-2" 
-              outlined 
-              @click="cancel()">
-              Cancel
-            </v-btn>
-            <v-btn class="ma-2" 
-              depressed 
-              color="#FF8D9A" 
-              @click="submit()" 
-              :disabled="isDisabled">
+            <v-btn class="ma-2" outlined @click="cancel()"> Cancel </v-btn>
+            <v-btn
+              class="ma-2"
+              depressed
+              color="#FF8D9A"
+              @click="submit()"
+              :disabled="isDisabled"
+            >
               Create
             </v-btn>
           </div>
@@ -147,7 +145,11 @@
             />
           </div>
           <div class="text-center">
-            <label class="upload-img" for="upload-photo" style="backgroud-color: #675E55">
+            <label
+              class="upload-img"
+              for="upload-photo"
+              style="backgroud-color: #675e55"
+            >
               <i class="fas fa-upload"></i> Upload avatar here!
             </label>
             <input
@@ -163,7 +165,7 @@
         </v-col>
       </v-row>
     </form>
-  </v-container>
+  </div>
 </template>
 
 <script>

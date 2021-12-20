@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-row align="center">
       <h3 class="ma-2">Manage Group</h3>
       <v-spacer></v-spacer>
@@ -87,7 +87,7 @@
         </template>
       </v-snackbar>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
