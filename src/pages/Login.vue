@@ -8,7 +8,7 @@
 
         <form @submit.prevent="submitForm" class="login100-form validate-form">
           <span class="login100-form-title">
-            Admin Login
+            Login
           </span>
 
           <div
@@ -78,7 +78,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import UserAPI from "../api/UserAPI";
+
 export default {
   data() {
     return {
@@ -90,11 +91,7 @@ export default {
   methods: {
     async submitForm() {
       this.overlay = true;
-      await axios
-        .post("http://localhost:5000/api/loginadmin", {
-          username: this.username,
-          password: this.password,
-        })
+      UserAPI.login_admin(this.username, this.password)
         .then((res) => {
           console.log(res.data);
           this.overlay = false;

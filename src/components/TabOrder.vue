@@ -176,7 +176,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import OrderAPI from "../../api/OrderAPI";
+
 export default {
   props: {
     orders: [],
@@ -278,24 +279,19 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      await axios
-        .patch(
-          `http://localhost:5000/api/orders/updateStatus/${this.id_selected}`,
-          { status },
-          config
-        )
-        .then((res) => {
-          console.log(res);
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-
-          this.overlay = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.overlay = false;
-        });
+      OrderAPI.updateStatus(this.id_selected, status, config)
+      .then((res) => {
+        console.log(res);
+        this.visibleDialog = false;
+        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+        this.snackbar = true;
+        this.overlay = false;
+        this.$emit('update-order');
+      })
+      .catch((err) => {
+        console.log(err);
+        this.overlay = false;
+      });
     },
   },
 };

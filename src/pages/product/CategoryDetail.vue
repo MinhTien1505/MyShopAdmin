@@ -110,7 +110,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import ProductAPI from "../../api/ProductAPI";
+
 export default {
   data: () => ({
     overlay: true,
@@ -157,18 +158,17 @@ export default {
   },
   methods: {
     async getAllProduct() {
-      await axios
-        .get("http://localhost:5000/api/getallproducts")
-        .then((response) => {
-          this.products = response.data.filter(
+      ProductAPI.get()
+      .then((response) => {
+        this.products = response.data.filter(
             (item) =>
-              item.status == "Enable" && item.category == this.$route.params.id
+              item.category == this.$route.params.id
           );
           this.overlay = false;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     updateStatus(item) {
       this.$confirm(
@@ -182,23 +182,20 @@ export default {
           headers: { Authorization: "bearer " + token },
         };
         const formData = new FormData();
+
         formData.append("status", status);
-        axios
-          .patch(
-            `http://localhost:5000/api/products/${item._id}`,
-            formData,
-            config
-          )
-          .then((res) => {
-            console.log(res);
-            this.getAllProduct();
-            this.showDialog = false;
-            this.snackbar = true;
-            this.text = "Deleted product successfully!";
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+
+        ProductAPI.update(item._id, formData, config)
+        .then((res) => {
+          console.log(res);
+          this.getAllProduct();
+          this.showDialog = false;
+          this.snackbar = true;
+          this.text = "Deleted product successfully!";
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       });
     },
     editProduct(value) {

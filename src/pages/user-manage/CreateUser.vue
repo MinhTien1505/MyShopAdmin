@@ -169,8 +169,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import $ from "jquery";
+import UserAPI from '../../api/UserAPI';
 
 export default {
   components: {},
@@ -311,7 +311,6 @@ export default {
       console.log("status" + this.user.status);
     },
     async submit() {
-      axios.post;
       const formData = new FormData();
       formData.append("username", this.user.username);
       formData.append("password", this.user.password);
@@ -324,87 +323,48 @@ export default {
       formData.append("avatar", this.user.avatar);
       formData.append("status", this.user.status);
 
-      this.error_exist = true;
-      await axios
-        .get(`http://localhost:5000/api/email-exist/${this.user.email}`)
-        .catch((error) => {
-          console.log(error.response.data.message);
-          if (error.response.data.message) {
-            let msg = error.response.data.message;
-            if (msg == "Email already exists!") {
-              this.email_invalid = false;
-              this.error_exist = false;
-              $("#email-msg")
-                .html(msg)
-                .css({ display: "block", color: "#FF483B" });
-              this.checkSubmit();
-            }
-          }
-        });
+      UserAPI.getUserByEmail(this.user.email)
+      .then((res) => {
+        if(res.data) {
+          this.email_invalid = false;
+          this.error_exist = false;
+          $("#email-msg")
+            .html("Email already exists!")
+            .css({ display: "block", color: "#FF483B" });
+          this.checkSubmit();
+          return;
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
 
-      await axios
-        .get(`http://localhost:5000/api/username-exist/${this.user.username}`)
-        .catch((error) => {
-          console.log(error.response.data.message);
-          if (error.response.data.message) {
-            let msg = error.response.data.message;
-            if (msg == "Username already exists!") {
-              this.username_invalid = false;
-              this.error_exist = false;
-              $("#username-msg")
-                .html(msg)
-                .css({ display: "block", color: "#FF483B" });
-              this.checkSubmit();
-            }
-          }
-        });
+      UserAPI.getUserByUsername(this.user.username)
+      .then((res) => {
+        if(res.data) {
+          this.username_invalid = false;
+          this.error_exist = false;
+          $("#username-msg")
+            .html("Username already exists!")
+            .css({ display: "block", color: "#FF483B" });
+          this.checkSubmit();
+          return;
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
 
-      if (this.error_exist) {
-        await axios
-          .post("http://localhost:5000/api/createShipper", formData)
-          .then((res) => {
-            this.$router.push({
-              name: "ListUser",
-              params: { message: res.data.message },
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    },
-    async createUser() {
-      if (!this.user.avatar) {
-        this.snackbar = true;
-        return;
-      }
-      let token = JSON.parse(sessionStorage.getItem("admin_login"));
-      let config = {
-        headers: { Authorization: "bearer " + token },
-      };
-      const formData = new FormData();
-      formData.append("username", this.user.username);
-      formData.append("password", this.user.password);
-      formData.append("full_name", this.user.full_name);
-      formData.append("email", this.user.email);
-      formData.append("position", this.user.position);
-      formData.append("birthdate", this.user.birthdate);
-      formData.append("address", this.user.address);
-      formData.append("phone", this.user.phone);
-      formData.append("status", this.user.status);
-      formData.append("avatar", this.user.avatar);
-
-      axios
-        .post("http://localhost:5000/api/createUser", formData, config)
-        .then((res) => {
-          this.$router.push({
-            name: "ListUser",
-            params: { message: res.data.message },
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+      UserAPI.createShipper(formData)
+      .then((res) => {
+        this.$router.push({
+          name: "ListUser",
+          params: { message: res.data.message },
         });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     },
     cancel() {
       this.$router.push({ name: "ListUser" });

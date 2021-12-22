@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import GroupAPI from "../../api/GroupAPI";
 export default {
   data() {
     return {
@@ -141,8 +141,8 @@ export default {
       this.$router.push({ name: "CreateGroup" });
     },
     getAllGroup() {
-      axios
-        .get("http://localhost:5000/api/group/all")
+
+      GroupAPI.get_all()
         .then((response) => {
           this.groupList = response.data;
         })
@@ -174,22 +174,17 @@ export default {
       formData.append("old_image", group.image);
       formData.append("status", group.status);
 
-      await axios
-        .patch(
-          `http://localhost:5000/api/group/update/${group._id}`,
-          formData,
-          config
-        )
-        .then((responese) => {
-          this.text = responese.data.message;
-          this.snackbar = true;
-          this.getAllGroup();
-        })
-        .catch((error) => {
-          console.log(error.message);
-          this.text = error.message;
-          this.snackbar = true;
-        });
+      GroupAPI.update(group._id, formData, config)
+      .then((res) => {
+        this.text = res.data.message;
+        this.snackbar = true;
+        this.getAllGroup();
+      })
+      .catch((error) => {
+        console.log(error.message);
+        this.text = error.message;
+        this.snackbar = true;
+      });
     },
   },
 };

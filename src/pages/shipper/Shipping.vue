@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import OrderAPI from "../../api/OrderAPI";
 
 export default {
   data() {
@@ -153,15 +153,18 @@ export default {
   },
   methods: {
     getShippingOrders() {
+      let token = JSON.parse(sessionStorage.getItem("shipper_login"));
+      let config = {
+        headers: { Authorization: "bearer " + token },
+      };
       let status = "Delivering";
-      axios
-        .get(`http://localhost:5000/api/getOrdersByStatus/${status}`)
-        .then((response) => {
-          this.data = response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      OrderAPI.getByShipperAndStatus(status, config)
+      .then((response) => {
+        this.data = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     goOrder(order_id) {
       this.$router.push({

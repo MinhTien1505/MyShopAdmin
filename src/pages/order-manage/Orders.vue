@@ -13,38 +13,38 @@
         <v-tabs background-color="primary" dark>
           <v-tab>All</v-tab>
           <v-tab>Pending</v-tab>
-          <v-tab>Appproved</v-tab>
+          <v-tab>Approved</v-tab>
           <v-tab>Pick-up</v-tab>
           <v-tab>Delivering</v-tab>
           <v-tab>Received</v-tab>
           <v-tab>Cancel</v-tab>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="data" />
+            <TabOrder :action="true" :orders="data" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="pendingOrder" />
+            <TabOrder :action="true" :orders="pendingOrder" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="approvedOrder" />
+            <TabOrder :orders="approvedOrder" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="pickUpOrder" />
+            <TabOrder :action="true" :orders="pickUpOrder" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="deliveringOrder" />
+            <TabOrder :orders="deliveringOrder" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="receivedOrder" />
+            <TabOrder :orders="receivedOrder" @update-order="getAllOrders"/>
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="cancelOrder" />
+            <TabOrder :orders="cancelOrder" @update-order="getAllOrders"/>
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -53,8 +53,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import TabOrder from "../../components/TabOrder.vue";
+import OrderAPI from "../../api/OrderAPI";
 
 export default {
   components: {
@@ -122,17 +122,15 @@ export default {
   methods: {
     getAllOrders() {
       this.overlay = true;
-
-      axios
-        .get("http://localhost:5000/api/getAllOrders")
-        .then((response) => {
-          this.data = response.data;
-          this.overlay = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.overlay = false;
-        });
+      OrderAPI.get()
+      .then((response) => {
+        this.data = response.data;
+        this.overlay = false;
+      })
+      .catch((err) => {
+        console.log(err);
+        this.overlay = false;
+      });
     },
   },
 };

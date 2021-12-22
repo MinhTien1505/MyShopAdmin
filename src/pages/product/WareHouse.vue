@@ -1,7 +1,7 @@
 <template>
   <v-card class="mt-3">
     <v-card-title>
-      <h2>Ware Hourse</h2>
+      <h2>Warehouse</h2>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import ProductAPI from "../../api/ProductAPI";
+
 export default {
   data: () => ({
     valid: false,
@@ -151,16 +152,13 @@ export default {
   },
   methods: {
     async getAllProduct() {
-      await axios
-        .get("http://localhost:5000/api/getallproducts")
-        .then((response) => {
-          this.products = response.data.filter(
-            (item) => item.status == "Enable"
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      ProductAPI.get()
+      .then((response) => {
+        this.products = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     async addQuantity(item) {
       this.$prompt("Enter quantity you want to add").then((text) => {
@@ -175,22 +173,17 @@ export default {
 
           formData.append("quantity_remaining", quantity_remaining);
 
-          axios
-            .patch(
-              `http://localhost:5000/api/products/${item._id}`,
-              formData,
-              config
-            )
-            .then((res) => {
-              console.log(res);
-              this.getAllProduct();
-              this.colorSnackbar = "success";
-              this.text = "Added quantity successfully!";
-              this.snackbar = true;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          ProductAPI.update(item._id, formData, config)
+          .then((res) => {
+            console.log(res);
+            this.getAllProduct();
+            this.colorSnackbar = "success";
+            this.text = "Added quantity successfully!";
+            this.snackbar = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         } else {
           this.colorSnackbar = "error";
           this.text = "Please enter a number!";

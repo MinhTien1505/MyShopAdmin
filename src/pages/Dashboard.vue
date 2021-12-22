@@ -147,9 +147,9 @@ export default {
               link: "/dashboard/product-list",
             },
             {
-              title: "Warehourse",
+              title: "Warehouse",
               icon: "mdi-warehouse",
-              link: "/dashboard/warehourse",
+              link: "/dashboard/warehouse",
             },
             {
               title: "Category",

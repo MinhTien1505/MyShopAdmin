@@ -246,7 +246,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import GroupAPI from "../../api/GroupAPI";
+import ProductAPI from "../../api/ProductAPI";
+
 export default {
   data() {
     return {
@@ -330,23 +332,22 @@ export default {
   },
   methods: {
     async getGroupByID() {
-      await axios
-        .get(`http://localhost:5000/api/group/${this.$route.params.group_id}`)
-        .then((res) => {
-          this.group = res.data;
-          this.previewImage = this.group.image;
-          this.total_price = this.group.price;
-          this.total_calo = this.group.calo;
-          this.old_image = this.group.image;
-          this.material = [];
+      GroupAPI.getGroupById(this.$route.params.group_id)
+      .then((res) => {
+        this.group = res.data;
+        this.previewImage = this.group.image;
+        this.total_price = this.group.price;
+        this.total_calo = this.group.calo;
+        this.old_image = this.group.image;
+        this.material = [];
 
-          this.group.material.forEach((item) => {
-            this.material.push(item.product);
-          });
-        })
-        .catch((err) => {
-          console.log(err.message);
+        this.group.material.forEach((item) => {
+          this.material.push(item.product);
         });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
     },
     selectImage() {
       this.$refs.fileInput.click();
@@ -367,16 +368,14 @@ export default {
       this.group.image = e.target.files[0];
     },
     getAllProduct() {
-      axios
-        .get("http://localhost:5000/api/getallproducts")
-        .then((response) => {
-          this.productList = response.data.filter(
-            (item) => item.status == "Enable"
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      ProductAPI.get()
+      .then((response) => {
+        this.productList = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     addProduct() {
       console.log(this.addSelected);
@@ -438,22 +437,17 @@ export default {
         console.log(this.group.image);
         console.log(token);
 
-        await axios
-          .patch(
-            `http://localhost:5000/api/group/update/${this.group._id}`,
-            formData,
-            config
-          )
-          .then((responese) => {
-            this.text = responese.data.message;
-            this.snackbar = true;
-            this.getGroupByID();
-          })
-          .catch((error) => {
-            console.log(error.message);
-            this.text = error.message;
-            this.snackbar = true;
-          });
+        GroupAPI.update(this.group._id, formData, config)
+        .then((res) => {
+          this.text = res.data.message;
+          this.snackbar = true;
+          this.getGroupByID();
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.text = error.message;
+          this.snackbar = true;
+        });
       }
     },
     hasEmptyField() {

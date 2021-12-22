@@ -257,7 +257,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import OrderAPI from "../../api/OrderAPI";
 
 export default {
   components: {},
@@ -329,18 +329,16 @@ export default {
   mounted() {},
   methods: {
     async getOrderByID() {
-      await axios
-        .get(`http://localhost:5000/api/orders/${this.$route.params.order_id}`)
-        .then((res) => {
-          this.order = res.data;
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      OrderAPI.getById(this.$route.params.order_id)
+      .then((res) => {
+        this.order = res.data;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
     },
     back() {
       this.$router.back();
-      // this.$router.push({ name: "ListOrder" });
     },
     confirm(order_id, action) {
       this.id_selected = order_id;
@@ -360,22 +358,18 @@ export default {
       };
 
       this.msg_snackbar = "";
-      await axios
-        .patch(
-          `http://localhost:5000/api/orders/updateStatus/${this.id_selected}`,
-          { status },
-          config
-        )
-        .then((res) => {
-          console.log(res);
-          this.getOrderByID();
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      OrderAPI.updateStatus(this.id_selected, status, config)
+      .then((res) => {
+        console.log(res);
+        this.getOrderByID();
+        this.visibleDialog = false;
+        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+        this.snackbar = true;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
   },
 };

@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import UserAPI from "../../api/UserAPI";
 
 export default {
   data() {
@@ -196,21 +196,20 @@ export default {
   methods: {
     getImage(name) {
       if (name == "") {
-        // return "@/public/assets/assets/img/account-image-placeholder.jpg";
         return "../../public/assets/assets/img/error-404-monochrome.svg";
       } else {
         return `/avatar/${name}`;
       }
     },
     getAllUser() {
-      axios
-        .get("http://localhost:5000/api/allUsers")
-        .then((response) => {
-          this.data = response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      UserAPI.get_all()
+      .then((response) => {
+        this.data = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     addUser() {
       this.$router.push({ name: "CreateUser" });
@@ -235,24 +234,18 @@ export default {
       };
 
       this.msg_snackbar = "";
-      await axios
-        .patch(
-          `http://localhost:5000/api/updateUserStatus/${this.id_selected}`,
-          { status },
-          config
-        )
-        .then((res) => {
-          console.log(res);
 
-          this.getAllUser();
-
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      UserAPI.updateStatus(this.id_selected, status, config)
+      .then((res) => {
+        console.log(res);
+        this.getAllUser();
+        this.visibleDialog = false;
+        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+        this.snackbar = true;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
   },
 };

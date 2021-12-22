@@ -61,19 +61,6 @@
               </v-col>
             </v-row>
             <v-row>
-              <!-- <v-col cols="8" class="pb-0">
-                <v-text-field
-                  ref="calo"
-                  v-model="total_calo"
-                  :rules="[() => !!total_calo || 'This field is required']"
-                  :error-messages="errorMessages"
-                  label="Calorie"
-                  suffix="kCal"
-                  placeholder="Group's Calorie"
-                  outlined
-                  required
-                ></v-text-field>
-              </v-col> -->
               <v-col cols="8" class="pb-0">
                 <v-text-field
                   ref="calo"
@@ -248,7 +235,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import GroupAPI from "../../api/GroupAPI";
+import ProductAPI from "../../api/ProductAPI";
+
 export default {
   data() {
     return {
@@ -263,7 +252,6 @@ export default {
       },
       productList: [],
       headers: [
-        // { text: 'Image', value: 'image' },
         { text: "Name", value: "name" },
         { text: "Category", value: "category" },
         { text: "Price", value: "price" },
@@ -348,16 +336,13 @@ export default {
       this.group.image = e.target.files[0];
     },
     getAllProduct() {
-      axios
-        .get("http://localhost:5000/api/getallproducts")
-        .then((response) => {
-          this.productList = response.data.filter(
-            (item) => item.status == "Enable"
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      ProductAPI.get()
+      .then((response) => {
+        this.productList = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     addProduct() {
       console.log(this.addSelected);
@@ -418,10 +403,9 @@ export default {
         console.log(this.group.image);
         console.log(token);
 
-        await axios
-          .post("http://localhost:5000/api/group/create", formData, config)
-          .then((responese) => {
-            this.text = responese.data.message;
+        GroupAPI.create(formData, config)
+          .then((res) => {
+            this.text = res.data.message;
             this.snackbar = true;
           })
           .catch((error) => {

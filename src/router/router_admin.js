@@ -12,7 +12,7 @@ import ViewGroup from "../pages/group-manage/ViewGroup.vue";
 import ProductList from "../pages/product/ProductList.vue";
 import CreateProduct from "../pages/product/CreateProduct.vue";
 import EditProduct from "../pages/product/EditProduct.vue";
-import WareHourse from "../pages/product/WareHouse.vue";
+import Warehouse from "../pages/product/Warehouse.vue";
 
 import Home from "../pages/dashboard/Home.vue";
 
@@ -68,7 +68,7 @@ const routerAdmin = [
         name: "CreateProduct",
         component: CreateProduct,
       },
-      { path: "warehourse", name: "WareHourse", component: WareHourse },
+      { path: "warehouse", name: "Warehouse", component: Warehouse },
 
       // Manage user
       { path: "users", name: "ListUser", component: ListUsers },

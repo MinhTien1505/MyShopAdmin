@@ -116,7 +116,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import CategoryAPI from "../../api/CategoryAPI";
+import ProductAPI from "../../api/ProductAPI";
+
 export default {
   data: () => ({
     valid: false,
@@ -138,27 +140,23 @@ export default {
   }),
   methods: {
     async getAllProduct() {
-      await axios
-        .get("http://localhost:5000/api/getallproducts")
-        .then((response) => {
-          this.products = response.data.filter(
-            (item) => item.status == "Enable"
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      ProductAPI.get()
+      .then((response) => {
+        this.products = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
-    async gettAllCategory() {
+    async getAllCategory() {
       this.categories = [];
-      await axios
-        .get("http://localhost:5000/api/getallcategory")
-        .then((res) => {
-          this.categories = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      CategoryAPI.get()
+      .then((res) => {
+        this.categories = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     async addCategory() {
       if (this.$refs.form1.validate()) {
@@ -166,16 +164,12 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        await axios
-          .post(
-            "http://localhost:5000/api/createcategory",
-            { name: this.newCategory },
-            config
-          )
+
+        CategoryAPI.create(this.newCategory, config)
           .then((res) => {
             console.log(res.data);
             this.body = [];
-            this.gettAllCategory().then((res) => {
+            this.getAllCategory().then((res) => {
               console.log(res);
               this.handleCategory();
             });
@@ -218,22 +212,22 @@ export default {
         "Delete",
         "question"
       ).then(() => {
-        axios
-          .delete(`http://localhost:5000/api/category/${item.id}`, config)
-          .then((res) => {
+
+        CategoryAPI.delete(item.id, config)
+        .then((res) => {
+          console.log(res);
+          this.body = [];
+          this.getAllCategory().then((res) => {
             console.log(res);
-            this.body = [];
-            this.gettAllCategory().then((res) => {
-              console.log(res);
-              this.handleCategory();
-            });
-            this.text = "Deleted category successfully!";
-            this.colorSnackbar = "success";
-            this.snackbar = true;
-          })
-          .catch((err) => {
-            console.log(err);
+            this.handleCategory();
           });
+          this.text = "Deleted category successfully!";
+          this.colorSnackbar = "success";
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       });
     },
     detail(item) {
@@ -243,7 +237,7 @@ export default {
   created() {
     this.getAllProduct().then((res) => {
       console.log(res);
-      this.gettAllCategory().then((res) => {
+      this.getAllCategory().then((res) => {
         console.log(res);
         this.handleCategory();
       });

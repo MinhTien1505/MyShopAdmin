@@ -171,7 +171,9 @@
 </template>
 
 <script>
-import axios from "axios";
+import ProductAPI from "../../api/ProductAPI";
+import CategoryAPI from "../../api/CategoryAPI";
+
 export default {
   data: () => ({
     showDialog: false,
@@ -209,7 +211,7 @@ export default {
     },
   },
   created() {
-    this.gettAllCategory();
+    this.getAllCategory();
     this.getProduct();
   },
   methods: {
@@ -246,45 +248,39 @@ export default {
         formData.append("description", this.product.description);
         formData.append("category", this.product.category);
         formData.append("old_image", this.product.image);
-        await axios
-          .patch(
-            `http://localhost:5000/api/products/${this.$route.params.id}`,
-            formData,
-            config
-          )
-          .then((res) => {
-            this.$router.push({
-              name: "ProductList",
-              params: { message: res.data.message },
-            });
-          })
-          .catch((err) => {
-            console.log(err);
+
+        ProductAPI.update(this.$route.params.id, formData, config)
+        .then((res) => {
+          this.$router.push({
+            name: "ProductList",
+            params: { message: res.data.message },
           });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       }
     },
     async getProduct() {
-      await axios
-        .get(`http://localhost:5000/api/products/${this.$route.params.id}`)
-        .then((res) => {
-          this.product = res.data;
-          this.temp_price = parseInt(this.product.price);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      ProductAPI.getProductById(this.$route.params.id)
+      .then((res) => {
+        this.product = res.data;
+        this.temp_price = parseInt(this.product.price);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
-    async gettAllCategory() {
-      await axios
-        .get("http://localhost:5000/api/getallcategory")
-        .then((res) => {
-          for (let item of res.data) {
-            this.categories.push(item.name);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async getAllCategory() {
+      CategoryAPI.get()
+      .then((res) => {
+        for (let item of res.data) {
+          this.categories.push(item.name);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     cancel() {
       this.$router.push({ name: "ProductList" });
@@ -295,25 +291,20 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        await axios
-          .post(
-            "http://localhost:5000/api/createcategory",
-            { name: this.newCategory },
-            config
-          )
-          .then((res) => {
-            console.log(res.data);
-            this.categories = [];
-            this.gettAllCategory();
-            this.product.category = this.newCategory;
-            this.showDialog = false;
-            this.text = "Added category successfully!";
-            this.colorSnackbar = "success";
-            this.snackbar = true;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        CategoryAPI.create(this.newCategory, config)
+        .then((res) => {
+          console.log(res.data);
+          this.categories = [];
+          this.getAllCategory();
+          this.product.category = this.newCategory;
+          this.showDialog = false;
+          this.text = "Added category successfully!";
+          this.colorSnackbar = "success";
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       }
     },
   },

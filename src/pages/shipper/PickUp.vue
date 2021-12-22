@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import OrderAPI from "../../api/OrderAPI";
 
 export default {
   data() {
@@ -212,15 +212,18 @@ export default {
   },
   methods: {
     getPickUpOrders() {
+      let token = JSON.parse(sessionStorage.getItem("shipper_login"));
+      let config = {
+        headers: { Authorization: "bearer " + token },
+      };
       let status = "Pick-up";
-      axios
-        .get(`http://localhost:5000/api/getOrdersByStatus/${status}`)
-        .then((response) => {
-          this.data = response.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      OrderAPI.getByShipperAndStatus(status, config)
+      .then((response) => {
+        this.data = response.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
     goOrder(order_id) {
       this.$router.push({
@@ -248,21 +251,17 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      await axios
-        .get(
-          `http://localhost:5000/api/orders/cancelPickup/${this.id_selected}`,
-          config
-        )
-        .then((res) => {
-          console.log(res);
-          this.getPickUpOrders();
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      OrderAPI.cancel_pickup(this.id_selected, config)
+      .then((res) => {
+        console.log(res);
+        this.getPickUpOrders();
+        this.visibleDialog = false;
+        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+        this.snackbar = true;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     },
   },
 };

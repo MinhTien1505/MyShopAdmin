@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import UserAPI from "../../api/UserAPI";
 
 export default {
   components: {},
@@ -116,14 +116,13 @@ export default {
   },
   methods: {
     async getUserByID() {
-      await axios
-        .get(`http://localhost:5000/api/users/${this.$route.params.user_id}`)
-        .then((res) => {
-          this.user = res.data;
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      UserAPI.getUserById(this.$route.params.user_id)
+      .then((res) => {
+        this.user = res.data;
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
     },
     back() {
       this.$router.back();
