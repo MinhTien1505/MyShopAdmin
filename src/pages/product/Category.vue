@@ -140,23 +140,23 @@ export default {
   }),
   methods: {
     async getAllProduct() {
-      ProductAPI.get()
-      .then((response) => {
-        this.products = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await ProductAPI.get()
+        .then((response) => {
+          this.products = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getAllCategory() {
       this.categories = [];
-      CategoryAPI.get()
-      .then((res) => {
-        this.categories = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await CategoryAPI.get()
+        .then((res) => {
+          this.categories = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async addCategory() {
       if (this.$refs.form1.validate()) {
@@ -165,7 +165,7 @@ export default {
           headers: { Authorization: "bearer " + token },
         };
 
-        CategoryAPI.create(this.newCategory, config)
+        await CategoryAPI.create(this.newCategory, config)
           .then((res) => {
             console.log(res.data);
             this.body = [];
@@ -212,22 +212,21 @@ export default {
         "Delete",
         "question"
       ).then(() => {
-
         CategoryAPI.delete(item.id, config)
-        .then((res) => {
-          console.log(res);
-          this.body = [];
-          this.getAllCategory().then((res) => {
+          .then((res) => {
             console.log(res);
-            this.handleCategory();
+            this.body = [];
+            this.getAllCategory().then((res) => {
+              console.log(res);
+              this.handleCategory();
+            });
+            this.text = "Deleted category successfully!";
+            this.colorSnackbar = "success";
+            this.snackbar = true;
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          this.text = "Deleted category successfully!";
-          this.colorSnackbar = "success";
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
       });
     },
     detail(item) {

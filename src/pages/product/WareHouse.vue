@@ -152,13 +152,13 @@ export default {
   },
   methods: {
     async getAllProduct() {
-      ProductAPI.get()
-      .then((response) => {
-        this.products = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await ProductAPI.get()
+        .then((response) => {
+          this.products = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async addQuantity(item) {
       this.$prompt("Enter quantity you want to add").then((text) => {
@@ -174,16 +174,16 @@ export default {
           formData.append("quantity_remaining", quantity_remaining);
 
           ProductAPI.update(item._id, formData, config)
-          .then((res) => {
-            console.log(res);
-            this.getAllProduct();
-            this.colorSnackbar = "success";
-            this.text = "Added quantity successfully!";
-            this.snackbar = true;
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+            .then((res) => {
+              console.log(res);
+              this.getAllProduct();
+              this.colorSnackbar = "success";
+              this.text = "Added quantity successfully!";
+              this.snackbar = true;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         } else {
           this.colorSnackbar = "error";
           this.text = "Please enter a number!";

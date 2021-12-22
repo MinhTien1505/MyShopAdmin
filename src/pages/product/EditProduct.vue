@@ -249,38 +249,38 @@ export default {
         formData.append("category", this.product.category);
         formData.append("old_image", this.product.image);
 
-        ProductAPI.update(this.$route.params.id, formData, config)
-        .then((res) => {
-          this.$router.push({
-            name: "ProductList",
-            params: { message: res.data.message },
+        await ProductAPI.update(this.$route.params.id, formData, config)
+          .then((res) => {
+            this.$router.push({
+              name: "ProductList",
+              params: { message: res.data.message },
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
+      }
+    },
+    async getProduct() {
+      await ProductAPI.getProductById(this.$route.params.id)
+        .then((res) => {
+          this.product = res.data;
+          this.temp_price = parseInt(this.product.price);
         })
         .catch((err) => {
           console.log(err);
         });
-      }
-    },
-    async getProduct() {
-      ProductAPI.getProductById(this.$route.params.id)
-      .then((res) => {
-        this.product = res.data;
-        this.temp_price = parseInt(this.product.price);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     },
     async getAllCategory() {
-      CategoryAPI.get()
-      .then((res) => {
-        for (let item of res.data) {
-          this.categories.push(item.name);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await CategoryAPI.get()
+        .then((res) => {
+          for (let item of res.data) {
+            this.categories.push(item.name);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     cancel() {
       this.$router.push({ name: "ProductList" });
@@ -291,20 +291,20 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        CategoryAPI.create(this.newCategory, config)
-        .then((res) => {
-          console.log(res.data);
-          this.categories = [];
-          this.getAllCategory();
-          this.product.category = this.newCategory;
-          this.showDialog = false;
-          this.text = "Added category successfully!";
-          this.colorSnackbar = "success";
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        await CategoryAPI.create(this.newCategory, config)
+          .then((res) => {
+            console.log(res.data);
+            this.categories = [];
+            this.getAllCategory();
+            this.product.category = this.newCategory;
+            this.showDialog = false;
+            this.text = "Added category successfully!";
+            this.colorSnackbar = "success";
+            this.snackbar = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
   },

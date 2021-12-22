@@ -1,25 +1,14 @@
 <template>
   <v-container class="pa-6">
     <v-row align="center" no-gutters>
-      <h3 class="ma-2">
-        Order Information
-      </h3>
-      <p
-        v-if="order.status == 'Pending'"
-        class="order-status status-pending"
-      >
+      <h3 class="ma-2">Order Information</h3>
+      <p v-if="order.status == 'Pending'" class="order-status status-pending">
         {{ order.status }}
       </p>
-      <p
-        v-if="order.status == 'Approved'"
-        class="order-status status-approved"
-      >
+      <p v-if="order.status == 'Approved'" class="order-status status-approved">
         {{ order.status }}
       </p>
-      <p
-        v-if="order.status == 'Pick-up'"
-        class="order-status status-pick-up"
-      >
+      <p v-if="order.status == 'Pick-up'" class="order-status status-pick-up">
         {{ order.status }}
       </p>
       <p
@@ -28,10 +17,7 @@
       >
         {{ order.status }}
       </p>
-      <p
-        v-if="order.status == 'Received'"
-        class="order-status status-received"
-      >
+      <p v-if="order.status == 'Received'" class="order-status status-received">
         {{ order.status }}
       </p>
       <p v-if="order.status == 'Cancel'" class="order-status status-cancel">
@@ -176,7 +162,7 @@
         </div>
       </v-card>
     </v-row>
-    <v-row 
+    <v-row
       class="mb-6 p-3"
       no-gutters
       data-app
@@ -329,13 +315,13 @@ export default {
   mounted() {},
   methods: {
     async getOrderByID() {
-      OrderAPI.getById(this.$route.params.order_id)
-      .then((res) => {
-        this.order = res.data;
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+      await OrderAPI.getById(this.$route.params.order_id)
+        .then((res) => {
+          this.order = res.data;
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     },
     back() {
       this.$router.back();
@@ -359,17 +345,17 @@ export default {
 
       this.msg_snackbar = "";
 
-      OrderAPI.updateStatus(this.id_selected, status, config)
-      .then((res) => {
-        console.log(res);
-        this.getOrderByID();
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.updateStatus(this.id_selected, status, config)
+        .then((res) => {
+          console.log(res);
+          this.getOrderByID();
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

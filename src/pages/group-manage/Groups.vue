@@ -140,9 +140,8 @@ export default {
     addGroup() {
       this.$router.push({ name: "CreateGroup" });
     },
-    getAllGroup() {
-
-      GroupAPI.get_all()
+    async getAllGroup() {
+      await GroupAPI.get_all()
         .then((response) => {
           this.groupList = response.data;
         })
@@ -174,17 +173,17 @@ export default {
       formData.append("old_image", group.image);
       formData.append("status", group.status);
 
-      GroupAPI.update(group._id, formData, config)
-      .then((res) => {
-        this.text = res.data.message;
-        this.snackbar = true;
-        this.getAllGroup();
-      })
-      .catch((error) => {
-        console.log(error.message);
-        this.text = error.message;
-        this.snackbar = true;
-      });
+      await GroupAPI.update(group._id, formData, config)
+        .then((res) => {
+          this.text = res.data.message;
+          this.snackbar = true;
+          this.getAllGroup();
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.text = error.message;
+          this.snackbar = true;
+        });
     },
   },
 };

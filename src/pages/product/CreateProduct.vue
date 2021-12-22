@@ -32,7 +32,7 @@
                   :value="product.price | toNum"
                   @input="(value) => (temp_price = value)"
                   :rules="[(v) => !!v || 'Please enter price']"
-                  suffix="VND"
+                  suffix="VND/1KG"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -166,6 +166,9 @@
           >
         </div>
       </v-form>
+      <v-overlay :value="overlay">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
 
       <v-snackbar v-model="snackbar" :color="colorSnackbar" timeout="2000">
         {{ text }}
@@ -186,6 +189,7 @@ import CategoryAPI from "../../api/CategoryAPI";
 
 export default {
   data: () => ({
+    overlay: true,
     showDialog: false,
     snackbar: false,
     colorSnackbar: "",
@@ -249,6 +253,7 @@ export default {
           this.snackbar = true;
           return;
         }
+        this.overlay = true;
         let token = JSON.parse(sessionStorage.getItem("admin_login"));
         let config = {
           headers: { Authorization: "bearer " + token },
@@ -266,35 +271,37 @@ export default {
         formData.append("category", this.product.category);
         formData.append("group", this.product.group);
 
-        ProductAPI.create(formData, config)
-        .then((res) => {
-          console.log(res.data);
-          this.$router.push({
-            name: "ProductList",
+        await ProductAPI.create(formData, config)
+          .then((res) => {
+            console.log(res.data);
+            this.$router.push({
+              name: "ProductList",
+            });
+            this.overlay = false;
+            this.$notify({
+              group: "foo",
+              type: "success",
+              title: "Create product",
+              text: "Create product successfully!",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          this.$notify({
-            group: "foo",
-            type: "success",
-            title: "Create product",
-            text: "Create product successfully!",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
       }
     },
     async getAllCategory() {
       this.categories = [];
-      CategoryAPI.get()
-      .then((res) => {
-        for (let item of res.data) {
-          this.categories.push(item.name);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await CategoryAPI.get()
+        .then((res) => {
+          for (let item of res.data) {
+            this.categories.push(item.name);
+            this.overlay = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     cancel() {
       this.$router.push({ name: "ProductList" });
@@ -305,21 +312,21 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        CategoryAPI.create(this.newCategory, config)
-        .then((res) => {
-          console.log(res.data);
-          this.categories = [];
-          this.getAllCategory();
-          this.product.category = this.newCategory;
-          this.showDialog = false;
-          this.newCategory = "";
-          this.text = "Added category successfully!";
-          this.colorSnackbar = "success";
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+        await CategoryAPI.create(this.newCategory, config)
+          .then((res) => {
+            console.log(res.data);
+            this.categories = [];
+            this.getAllCategory();
+            this.product.category = this.newCategory;
+            this.showDialog = false;
+            this.newCategory = "";
+            this.text = "Added category successfully!";
+            this.colorSnackbar = "success";
+            this.snackbar = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
   },

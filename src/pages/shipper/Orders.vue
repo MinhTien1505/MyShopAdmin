@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-row align="center">
       <h3 class="ma-2">Need To Ship Orders</h3>
     </v-row>
@@ -165,8 +165,11 @@
           </v-snackbar>
         </v-container>
       </v-card>
+      <v-overlay :value="overlay">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -175,6 +178,7 @@ import OrderAPI from "../../api/OrderAPI";
 export default {
   data() {
     return {
+      overlay: true,
       data: [],
       search: "",
       headers: [
@@ -235,15 +239,16 @@ export default {
     },
   },
   methods: {
-    getNeedToShipOrders() {
+    async getNeedToShipOrders() {
       let status = "Approved";
-      OrderAPI.getByStatus(status)
-      .then((response) => {
-        this.data = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.getByStatus(status)
+        .then((response) => {
+          this.data = response.data;
+          this.overlay = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     goOrder(order_id) {
       this.$router.push({
@@ -268,17 +273,17 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      OrderAPI.pickup(this.id_selected, config)
-      .then((res) => {
-        console.log(res);
-        this.getNeedToShipOrders();
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.pickup(this.id_selected, config)
+        .then((res) => {
+          console.log(res);
+          this.getNeedToShipOrders();
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

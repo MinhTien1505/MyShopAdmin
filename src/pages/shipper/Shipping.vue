@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-6">
+  <div class="container-fluid pa-6">
     <v-row align="center">
       <h3 class="ma-2">Shipping Orders</h3>
     </v-row>
@@ -95,8 +95,11 @@
           </template>
         </v-data-table>
       </v-card>
+      <v-overlay :value="overlay">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -105,6 +108,7 @@ import OrderAPI from "../../api/OrderAPI";
 export default {
   data() {
     return {
+      overlay: true,
       data: [],
       search: "",
       headers: [
@@ -152,19 +156,20 @@ export default {
     },
   },
   methods: {
-    getShippingOrders() {
+    async getShippingOrders() {
       let token = JSON.parse(sessionStorage.getItem("shipper_login"));
       let config = {
         headers: { Authorization: "bearer " + token },
       };
       let status = "Delivering";
-      OrderAPI.getByShipperAndStatus(status, config)
-      .then((response) => {
-        this.data = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.getByShipperAndStatus(status, config)
+        .then((response) => {
+          this.data = response.data;
+          this.overlay = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     goOrder(order_id) {
       this.$router.push({

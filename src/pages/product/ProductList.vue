@@ -157,16 +157,16 @@ export default {
   },
   methods: {
     async getAllProduct() {
-      ProductAPI.get()
-      .then((response) => {
-        this.products = response.data;
-        this.overlay = false;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await ProductAPI.get()
+        .then((response) => {
+          this.products = response.data.reverse();
+          this.overlay = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    updateStatus(item) {
+    async updateStatus(item) {
       this.$confirm(
         "Are you sure you want to delete this product?",
         "Delete product",
@@ -181,16 +181,16 @@ export default {
         formData.append("status", status);
 
         ProductAPI.update(item._id, formData, config)
-        .then((res) => {
-          console.log(res);
-          this.getAllProduct();
-          this.showDialog = false;
-          this.snackbar = true;
-          this.text = "Deleted product successfully!";
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+          .then((res) => {
+            console.log(res);
+            this.getAllProduct();
+            this.showDialog = false;
+            this.snackbar = true;
+            this.text = "Deleted product successfully!";
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
     },
     editProduct(value) {

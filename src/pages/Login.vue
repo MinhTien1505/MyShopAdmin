@@ -7,9 +7,7 @@
         </div>
 
         <form @submit.prevent="submitForm" class="login100-form validate-form">
-          <span class="login100-form-title">
-            Login
-          </span>
+          <span class="login100-form-title"> Login </span>
 
           <div
             class="wrap-input100 validate-input"
@@ -48,18 +46,12 @@
           </div>
 
           <div class="container-login100-form-btn">
-            <button class="login100-form-btn">
-              Login
-            </button>
+            <button class="login100-form-btn">Login</button>
           </div>
 
           <div class="text-center p-t-12">
-            <span class="txt1">
-              Forgot
-            </span>
-            <a class="txt2" href="#">
-              Username / Password?
-            </a>
+            <span class="txt1"> Forgot </span>
+            <a class="txt2" href="#"> Username / Password? </a>
           </div>
 
           <div class="text-center p-t-136">
@@ -91,7 +83,7 @@ export default {
   methods: {
     async submitForm() {
       this.overlay = true;
-      UserAPI.login_admin(this.username, this.password)
+      await UserAPI.login_admin(this.username, this.password)
         .then((res) => {
           console.log(res.data);
           this.overlay = false;

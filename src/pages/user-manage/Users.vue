@@ -201,15 +201,14 @@ export default {
         return `/avatar/${name}`;
       }
     },
-    getAllUser() {
-
-      UserAPI.get_all()
-      .then((response) => {
-        this.data = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    async getAllUser() {
+      await UserAPI.get_all()
+        .then((response) => {
+          this.data = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     addUser() {
       this.$router.push({ name: "CreateUser" });
@@ -235,17 +234,17 @@ export default {
 
       this.msg_snackbar = "";
 
-      UserAPI.updateStatus(this.id_selected, status, config)
-      .then((res) => {
-        console.log(res);
-        this.getAllUser();
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await UserAPI.updateStatus(this.id_selected, status, config)
+        .then((res) => {
+          console.log(res);
+          this.getAllUser();
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

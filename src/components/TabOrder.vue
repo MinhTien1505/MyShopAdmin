@@ -1,11 +1,7 @@
 <template>
   <v-card data-app>
-
     <v-overlay :value="overlay">
-      <v-progress-circular
-        indeterminate
-        size="64"
-      ></v-progress-circular>
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
     <v-card-title>
@@ -93,7 +89,8 @@
           </td>
 
           <td v-if="action">
-            <v-btn class="ma-1"
+            <v-btn
+              class="ma-1"
               v-if="row.item.status == 'Pending'"
               @click="confirm(row.item._id, 'Approved')"
               small
@@ -104,7 +101,8 @@
               Approved
             </v-btn>
 
-            <v-btn class="ma-1"
+            <v-btn
+              class="ma-1"
               v-if="row.item.status == 'Pending'"
               @click="confirm(row.item._id, 'Cancel')"
               small
@@ -115,7 +113,8 @@
               Cancel
             </v-btn>
 
-            <v-btn class="ma-1"
+            <v-btn
+              class="ma-1"
               v-if="row.item.status == 'Pick-up'"
               @click="confirm(row.item._id, 'Delivery')"
               small
@@ -176,7 +175,7 @@
 </template>
 
 <script>
-import OrderAPI from "../../api/OrderAPI";
+import OrderAPI from "../api/OrderAPI";
 
 export default {
   props: {
@@ -280,18 +279,18 @@ export default {
       };
 
       OrderAPI.updateStatus(this.id_selected, status, config)
-      .then((res) => {
-        console.log(res);
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-        this.overlay = false;
-        this.$emit('update-order');
-      })
-      .catch((err) => {
-        console.log(err);
-        this.overlay = false;
-      });
+        .then((res) => {
+          console.log(res);
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+          this.overlay = false;
+          this.$emit("update-order");
+        })
+        .catch((err) => {
+          console.log(err);
+          this.overlay = false;
+        });
     },
   },
 };

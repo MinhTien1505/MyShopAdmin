@@ -324,13 +324,13 @@ export default {
   mounted() {},
   methods: {
     async getOrderByID() {
-      OrderAPI.getById(this.$route.params.order_id)
-      .then((res) => {
-        this.order = res.data;
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+      await OrderAPI.getById(this.$route.params.order_id)
+        .then((res) => {
+          this.order = res.data;
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     },
     back() {
       this.$router.back();
@@ -355,17 +355,17 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      OrderAPI.pickup(this.id_selected, config)
-      .then((res) => {
-        console.log(res);
-        this.getOrderByID();
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.pickup(this.id_selected, config)
+        .then((res) => {
+          console.log(res);
+          this.getOrderByID();
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async cancelPickup() {
       let token = JSON.parse(sessionStorage.getItem("shipper_login"));
@@ -373,17 +373,17 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      OrderAPI.cancel_pickup(this.id_selected, config)
-      .then((res) => {
-        console.log(res);
-        this.getOrderByID();
-        this.visibleDialog = false;
-        this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-        this.snackbar = true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      await OrderAPI.cancel_pickup(this.id_selected, config)
+        .then((res) => {
+          console.log(res);
+          this.getOrderByID();
+          this.visibleDialog = false;
+          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
+          this.snackbar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

@@ -20,31 +20,43 @@
           <v-tab>Cancel</v-tab>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="data" @update-order="getAllOrders"/>
+            <TabOrder
+              :action="true"
+              :orders="data"
+              @update-order="getAllOrders"
+            />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="pendingOrder" @update-order="getAllOrders"/>
+            <TabOrder
+              :action="true"
+              :orders="pendingOrder"
+              @update-order="getAllOrders"
+            />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="approvedOrder" @update-order="getAllOrders"/>
+            <TabOrder :orders="approvedOrder" @update-order="getAllOrders" />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :action="true" :orders="pickUpOrder" @update-order="getAllOrders"/>
+            <TabOrder
+              :action="true"
+              :orders="pickUpOrder"
+              @update-order="getAllOrders"
+            />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="deliveringOrder" @update-order="getAllOrders"/>
+            <TabOrder :orders="deliveringOrder" @update-order="getAllOrders" />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="receivedOrder" @update-order="getAllOrders"/>
+            <TabOrder :orders="receivedOrder" @update-order="getAllOrders" />
           </v-tab-item>
 
           <v-tab-item>
-            <TabOrder :orders="cancelOrder" @update-order="getAllOrders"/>
+            <TabOrder :orders="cancelOrder" @update-order="getAllOrders" />
           </v-tab-item>
         </v-tabs>
       </v-card>
@@ -120,17 +132,17 @@ export default {
     },
   },
   methods: {
-    getAllOrders() {
+    async getAllOrders() {
       this.overlay = true;
-      OrderAPI.get()
-      .then((response) => {
-        this.data = response.data;
-        this.overlay = false;
-      })
-      .catch((err) => {
-        console.log(err);
-        this.overlay = false;
-      });
+      await OrderAPI.get()
+        .then((response) => {
+          this.data = response.data;
+          this.overlay = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.overlay = false;
+        });
     },
   },
 };

@@ -12,7 +12,7 @@ import ViewGroup from "../pages/group-manage/ViewGroup.vue";
 import ProductList from "../pages/product/ProductList.vue";
 import CreateProduct from "../pages/product/CreateProduct.vue";
 import EditProduct from "../pages/product/EditProduct.vue";
-import Warehouse from "../pages/product/Warehouse.vue";
+import Warehouse from "../pages/product/WareHouse.vue";
 
 import Home from "../pages/dashboard/Home.vue";
 

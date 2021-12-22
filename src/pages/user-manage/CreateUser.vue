@@ -170,7 +170,7 @@
 
 <script>
 import $ from "jquery";
-import UserAPI from '../../api/UserAPI';
+import UserAPI from "../../api/UserAPI";
 
 export default {
   components: {},
@@ -323,48 +323,48 @@ export default {
       formData.append("avatar", this.user.avatar);
       formData.append("status", this.user.status);
 
-      UserAPI.getUserByEmail(this.user.email)
-      .then((res) => {
-        if(res.data) {
-          this.email_invalid = false;
-          this.error_exist = false;
-          $("#email-msg")
-            .html("Email already exists!")
-            .css({ display: "block", color: "#FF483B" });
-          this.checkSubmit();
-          return;
-        }
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
-
-      UserAPI.getUserByUsername(this.user.username)
-      .then((res) => {
-        if(res.data) {
-          this.username_invalid = false;
-          this.error_exist = false;
-          $("#username-msg")
-            .html("Username already exists!")
-            .css({ display: "block", color: "#FF483B" });
-          this.checkSubmit();
-          return;
-        }
-      })
-      .catch((error) => {
-        console.log(error.response.data.message);
-      });
-
-      UserAPI.createShipper(formData)
-      .then((res) => {
-        this.$router.push({
-          name: "ListUser",
-          params: { message: res.data.message },
+      await UserAPI.getUserByEmail(this.user.email)
+        .then((res) => {
+          if (res.data) {
+            this.email_invalid = false;
+            this.error_exist = false;
+            $("#email-msg")
+              .html("Email already exists!")
+              .css({ display: "block", color: "#FF483B" });
+            this.checkSubmit();
+            return;
+          }
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
         });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+      await UserAPI.getUserByUsername(this.user.username)
+        .then((res) => {
+          if (res.data) {
+            this.username_invalid = false;
+            this.error_exist = false;
+            $("#username-msg")
+              .html("Username already exists!")
+              .css({ display: "block", color: "#FF483B" });
+            this.checkSubmit();
+            return;
+          }
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+        });
+
+      await UserAPI.createShipper(formData)
+        .then((res) => {
+          this.$router.push({
+            name: "ListUser",
+            params: { message: res.data.message },
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     cancel() {
       this.$router.push({ name: "ListUser" });

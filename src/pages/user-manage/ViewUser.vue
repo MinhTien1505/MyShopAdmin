@@ -116,13 +116,13 @@ export default {
   },
   methods: {
     async getUserByID() {
-      UserAPI.getUserById(this.$route.params.user_id)
-      .then((res) => {
-        this.user = res.data;
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+      await UserAPI.getUserById(this.$route.params.user_id)
+        .then((res) => {
+          this.user = res.data;
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     },
     back() {
       this.$router.back();

@@ -126,137 +126,137 @@ export default {
       let DecemberData = 0;
       this.loaded = false;
 
-      OrderAPI.getByStatus("Received")
-      .then((res) => {
-        try {
-          const data = res.data;
+      await OrderAPI.getByStatus("Received")
+        .then((res) => {
+          try {
+            const data = res.data;
 
-          const date_value = data.map((item) => {
-            return { total_price: item.total_price, date: item.updatedAt };
-          });
+            const date_value = data.map((item) => {
+              return { total_price: item.total_price, date: item.updatedAt };
+            });
 
-          this.dataBarChart = date_value.filter(
-            (item) => String(this.getYearData(item.date)) == this.nowYear
-          );
+            this.dataBarChart = date_value.filter(
+              (item) => String(this.getYearData(item.date)) == this.nowYear
+            );
 
-          for (let item of this.dataBarChart) {
-            this.total_revenue += Number(item.total_price);
-            if (this.getMonthData(item.date) == 0) {
-              JanuaryData += Number(item.total_price);
+            for (let item of this.dataBarChart) {
+              this.total_revenue += Number(item.total_price);
+              if (this.getMonthData(item.date) == 0) {
+                JanuaryData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 1) {
+                FebruaryData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 2) {
+                MarchData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 3) {
+                AprilData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 4) {
+                MayData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 5) {
+                JuneData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 6) {
+                JulyData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 7) {
+                AugustData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 8) {
+                SeptemberData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 9) {
+                OctoberData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 10) {
+                NovemberData += Number(item.total_price);
+              }
+              if (this.getMonthData(item.date) == 11) {
+                DecemberData += Number(item.total_price);
+              }
             }
-            if (this.getMonthData(item.date) == 1) {
-              FebruaryData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 2) {
-              MarchData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 3) {
-              AprilData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 4) {
-              MayData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 5) {
-              JuneData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 6) {
-              JulyData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 7) {
-              AugustData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 8) {
-              SeptemberData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 9) {
-              OctoberData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 10) {
-              NovemberData += Number(item.total_price);
-            }
-            if (this.getMonthData(item.date) == 11) {
-              DecemberData += Number(item.total_price);
-            }
+            dataValue = [
+              JanuaryData,
+              FebruaryData,
+              MarchData,
+              AprilData,
+              MayData,
+              JuneData,
+              JulyData,
+              AugustData,
+              SeptemberData,
+              OctoberData,
+              NovemberData,
+              DecemberData,
+            ];
+            this.chartdata = {
+              labels: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ],
+              datasets: [
+                {
+                  label: "VNĐ",
+                  backgroundColor: "#f87979",
+                  data: dataValue,
+                },
+              ],
+            };
+            this.loaded = true;
+          } catch (e) {
+            console.error(e);
+            this.loaded = true;
           }
-          dataValue = [
-            JanuaryData,
-            FebruaryData,
-            MarchData,
-            AprilData,
-            MayData,
-            JuneData,
-            JulyData,
-            AugustData,
-            SeptemberData,
-            OctoberData,
-            NovemberData,
-            DecemberData,
-          ];
-          this.chartdata = {
-            labels: [
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "August",
-              "September",
-              "October",
-              "November",
-              "December",
-            ],
-            datasets: [
-              {
-                label: "VNĐ",
-                backgroundColor: "#f87979",
-                data: dataValue,
-              },
-            ],
-          };
+        })
+        .catch((err) => {
+          console.log(err);
           this.loaded = true;
-        } catch (e) {
-          console.error(e);
-          this.loaded = true;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        this.loaded = true;
-      });
+        });
     },
   },
 
   async mounted() {
-    ProductAPI.get()
-    .then((res) => {
-      try {
-        const pieData = res.data.map((item) => {
-          return { name: item.name, quantity_sold: item.quantity_sold };
-        });
-        let listColor = [];
-        for (let i = 0; i < pieData.length; i++) {
-          listColor.push(this.getRandomColor());
+    await ProductAPI.get()
+      .then((res) => {
+        try {
+          const pieData = res.data.map((item) => {
+            return { name: item.name, quantity_sold: item.quantity_sold };
+          });
+          let listColor = [];
+          for (let i = 0; i < pieData.length; i++) {
+            listColor.push(this.getRandomColor());
+          }
+          this.chartdata1 = {
+            labels: pieData.map((item) => item.name),
+            datasets: [
+              {
+                label: "VNĐ",
+                backgroundColor: listColor,
+                data: pieData.map((item) => item.quantity_sold),
+              },
+            ],
+          };
+        } catch (error) {
+          console.log(error);
         }
-        this.chartdata1 = {
-          labels: pieData.map((item) => item.name),
-          datasets: [
-            {
-              label: "VNĐ",
-              backgroundColor: listColor,
-              data: pieData.map((item) => item.quantity_sold),
-            },
-          ],
-        };
-      } catch (error) {
-        console.log(error);
-      }
-      this.changeYear();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+        this.changeYear();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

@@ -335,14 +335,14 @@ export default {
     selectedFile(e) {
       this.group.image = e.target.files[0];
     },
-    getAllProduct() {
-      ProductAPI.get()
-      .then((response) => {
-        this.productList = response.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    async getAllProduct() {
+      await ProductAPI.get()
+        .then((response) => {
+          this.productList = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     addProduct() {
       console.log(this.addSelected);
@@ -403,7 +403,7 @@ export default {
         console.log(this.group.image);
         console.log(token);
 
-        GroupAPI.create(formData, config)
+        await GroupAPI.create(formData, config)
           .then((res) => {
             this.text = res.data.message;
             this.snackbar = true;
