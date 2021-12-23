@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid mb-10">
     <v-overlay :value="!loaded">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -109,6 +109,52 @@ export default {
       }
       return color;
     },
+    HEX(r, g, b) {
+      var hex = function(x) {
+          x = x.toString(16);
+          if(x.length < 2) return '0' + x;
+          return x.substring(x.length-2, x.length);
+      };
+      var color = hex(r) + hex(g) + hex(b);
+      return '#' + color;
+    },
+    parseRGB(color) {
+      var r = parseInt(color.substring(1,3), 16);
+      var g = parseInt(color.substring(3,5), 16);
+      var b = parseInt(color.substring(5,7), 16);
+      return [r, g, b]
+    },
+    color_ver_gradient(begin, end, num) {
+      var color = [];
+      var ratio = 1/num;
+      var [rb, gb, bb] = this.parseRGB(begin);
+      var [re, ge, be] = this.parseRGB(end);
+
+      for(var i = 0; i < num; i++) {
+          var rt = i*ratio
+          var r = Math.ceil(rb * (1 - rt) + re * rt);
+          var g = Math.ceil(gb * (1 - rt) + ge * rt);
+          var b = Math.ceil(bb * (1 - rt) + be * rt);
+          var c = this.HEX(r, g, b);
+          color.push(c);
+      }
+      return color;
+    },
+    color_ver_gradient_n(primary, num) {
+      var color = [];
+      var no_pri = primary.length;
+      var no_perPri = num/no_pri;
+      var gradient = [];
+      for(var i = 0; i < no_pri - 1; i++) {
+          var begin = primary[i];
+          var end = primary[i + 1];
+          gradient = this.color_ver_gradient(begin, end, no_perPri);
+          color = color.concat(gradient);
+      }
+      gradient = this.color_ver_gradient(primary[no_pri - 1], primary[0], no_perPri);
+      color = color.concat(gradient);
+      return color;
+    },
     async changeYear() {
       this.total_revenue = 0;
       let dataValue = [];
@@ -210,7 +256,7 @@ export default {
               datasets: [
                 {
                   label: "VNĐ",
-                  backgroundColor: "#f87979",
+                  backgroundColor: "#FF6347",
                   data: dataValue,
                 },
               ],
@@ -235,16 +281,27 @@ export default {
           const pieData = res.data.map((item) => {
             return { name: item.name, quantity_sold: item.quantity_sold };
           });
-          let listColor = [];
-          for (let i = 0; i < pieData.length; i++) {
-            listColor.push(this.getRandomColor());
-          }
+          // let listColor = [];
+          // for (let i = 0; i < pieData.length; i++) {
+          //   listColor.push(this.getRandomColor());
+          // }
+
+          var colorGradient = [    
+            //'#00DEFF', 
+            //'#DEFF00',
+            '#FF6347',
+            '#FFFF00',
+            '#40E0D0',
+            '#008080',
+          ];
+          var colors = this.color_ver_gradient_n(colorGradient, pieData.length);
           this.chartdata1 = {
             labels: pieData.map((item) => item.name),
             datasets: [
               {
                 label: "VNĐ",
-                backgroundColor: listColor,
+                // backgroundColor: listColor,
+                backgroundColor: colors,
                 data: pieData.map((item) => item.quantity_sold),
               },
             ],
