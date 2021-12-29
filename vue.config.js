@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     proxy: {
       "^/avatar": {
-        target: "https://shopfreshapi.herokuapp.com",
+        target: "https://shopfreshapi.herokuapp.com/avatar",
         ws: true,
         changeOrigin: true,
       },
