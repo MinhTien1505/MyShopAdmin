@@ -111,7 +111,7 @@
                 v-else
                 id="image-preview"
                 @click="selectImage"
-                :src="`/group/${previewImage}`"
+                :src="`https://shopfreshapi.herokuapp.com/group/${previewImage}`"
               />
             </div>
             <div class="text-center">

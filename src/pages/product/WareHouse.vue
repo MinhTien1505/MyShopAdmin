@@ -29,7 +29,7 @@
               <v-img
                 width="150px"
                 height="150px"
-                :src="`/products/${item.image}`"
+                :src="`https://shopfreshapi.herokuapp.com/products/${item.image}`"
               >
               </v-img>
             </template>

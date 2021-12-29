@@ -121,7 +121,7 @@
           >
             <v-img
               v-if="product.image"
-              :src="`/products/${product.image}`"
+              :src="`https://shopfreshapi.herokuapp.com/products/${product.image}`"
               width="100%"
               height="100%"
               :class="{ showImage: show }"

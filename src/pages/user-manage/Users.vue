@@ -26,7 +26,7 @@
                 <v-img
                   v-else
                   class="avatar-in-table"
-                  :src="`/avatar/${row.item.avatar}`"
+                  :src="`https://shopfreshapi.herokuapp.com/avatar/${row.item.avatar}`"
                 ></v-img>
               </td>
               <td class="select-row" @click="viewUser(row.item._id)">

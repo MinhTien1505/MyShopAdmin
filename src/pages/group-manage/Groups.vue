@@ -14,7 +14,10 @@
           <template v-slot:item="row">
             <tr>
               <td class="select-row" @click="goGroup(row.item._id)">
-                <img class="image-in-table" :src="`/group/${row.item.image}`" />
+                <img
+                  class="image-in-table"
+                  :src="`https://shopfreshapi.herokuapp.com/group/${row.item.image}`"
+                />
               </td>
               <td class="select-row" @click="goGroup(row.item._id)">
                 {{ row.item.title }}
