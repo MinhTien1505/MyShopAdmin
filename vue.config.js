@@ -1,8 +1,13 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
   devServer: {
-    proxy: "https://shopfreshapi.herokuapp.com",
+    proxy: {
+      "^/avatar": {
+        target: "https://shopfreshapi.herokuapp.com",
+        ws: true,
+        changeOrigin: true,
+      },
+    },
     //proxy: "http://localhost:5000",
-    publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   },
 };
