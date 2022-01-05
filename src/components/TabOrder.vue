@@ -224,7 +224,7 @@ export default {
   },
   filters: {
     toCODE: function (value) {
-      return "#O" + value.substring(0, 5);
+      return "#O" + value.slice(-5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {
