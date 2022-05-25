@@ -14,10 +14,7 @@
           <template v-slot:item="row">
             <tr>
               <td class="select-row" @click="goGroup(row.item._id)">
-                <img
-                  class="image-in-table"
-                  :src="`https://shopfreshapi.herokuapp.com/group/${row.item.image}`"
-                />
+                <img class="image-in-table" :src="row.item.image" />
               </td>
               <td class="select-row" @click="goGroup(row.item._id)">
                 {{ row.item.title }}
@@ -146,7 +143,7 @@ export default {
     async getAllGroup() {
       await GroupAPI.get_all()
         .then((response) => {
-          this.groupList = response.data;
+          this.groupList = response.data.reverse();
         })
         .catch((err) => {
           console.log(err);
@@ -166,17 +163,20 @@ export default {
         headers: { Authorization: "bearer " + token },
       };
 
-      const formData = new FormData();
-      formData.append("title", group.title);
-      formData.append("description", group.description);
-      formData.append("price", group.price);
-      formData.append("calo", group.calo);
-      formData.append("material", JSON.stringify(group.material));
-      formData.append("image", group.image);
-      formData.append("old_image", group.image);
-      formData.append("status", group.status);
+      // const formData = new FormData();
+      // formData.append("title", group.title);
+      // formData.append("description", group.description);
+      // formData.append("price", group.price);
+      // formData.append("calo", group.calo);
+      // formData.append("material", JSON.stringify(group.material));
+      // formData.append("image", group.image);
+      // formData.append("old_image", group.image);
+      // formData.append("status", group.status);
 
-      await GroupAPI.update(group._id, formData, config)
+      group.material = JSON.stringify(group.material);
+      console.log(group);
+
+      await GroupAPI.update(group._id, group, config)
         .then((res) => {
           this.text = res.data.message;
           this.snackbar = true;

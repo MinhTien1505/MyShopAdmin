@@ -36,12 +36,7 @@
               {{ item.price | toVND }}
             </template>
             <template v-slot:[`item.image`]="{ item }">
-              <v-img
-                width="150px"
-                height="150px"
-                :src="`https://shopfreshapi.herokuapp.com/products/${item.image}`"
-              >
-              </v-img>
+              <v-img width="150px" height="150px" :src="item.image"> </v-img>
             </template>
             <template v-slot:[`item.description`]="{ item }">
               {{ item.description.substring(0, 100) + " ..." }}
@@ -95,7 +90,7 @@
         color="success"
         v-if="this.$route.params.message"
         timeout="2000"
-        multi-line="true"
+        :multi-line="true"
       >
         {{ this.$route.params.message }}
 

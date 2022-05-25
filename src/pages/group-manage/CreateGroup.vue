@@ -231,16 +231,21 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
 <script>
 import GroupAPI from "../../api/GroupAPI";
 import ProductAPI from "../../api/ProductAPI";
+import uploadFileToCloudinary from "../../common/function";
 
 export default {
   data() {
     return {
+      overlay: false,
       previewImage: "",
       group: {
         title: "",
@@ -373,6 +378,7 @@ export default {
       this.total_calo = calo;
     },
     async submit() {
+      this.overlay = true;
       if (!this.hasEmptyField()) {
         this.group.material = [];
         this.material.forEach((item) => {
@@ -387,32 +393,33 @@ export default {
           headers: { Authorization: "bearer " + token },
         };
 
-        const formData = new FormData();
-        formData.append("title", this.group.title);
-        formData.append("description", this.group.description);
-        formData.append("price", this.group.price);
-        formData.append("calo", this.group.calo);
-        formData.append("material", JSON.stringify(this.group.material));
-        formData.append("image", this.group.image);
+        // const formData = new FormData();
+        // formData.append("title", this.group.title);
+        // formData.append("description", this.group.description);
+        // formData.append("price", this.group.price);
+        // formData.append("calo", this.group.calo);
+        // formData.append("material", JSON.stringify(this.group.material));
+        // formData.append("image", this.group.image);
 
-        console.log(this.group.title);
-        console.log(this.group.description);
-        console.log(this.group.price);
-        console.log(this.group.calo);
-        console.log(this.group.material);
-        console.log(this.group.image);
-        console.log(token);
-
-        await GroupAPI.create(formData, config)
-          .then((res) => {
-            this.text = res.data.message;
-            this.snackbar = true;
-          })
-          .catch((error) => {
-            console.log(error.message);
-            this.text = error.message;
-            this.snackbar = true;
-          });
+        await uploadFileToCloudinary(this.group.image, "groups").then(
+          (fileResponse) => {
+            this.group.image = fileResponse.url;
+            this.group.material = JSON.stringify(this.group.material);
+            GroupAPI.create(this.group, config)
+              .then((res) => {
+                this.reset();
+                this.overlay = false;
+                this.text = res.data.message;
+                this.snackbar = true;
+              })
+              .catch((error) => {
+                this.overlay = false;
+                console.log(error.message);
+                this.text = error.message;
+                this.snackbar = true;
+              });
+          }
+        );
       }
     },
     hasEmptyField() {
