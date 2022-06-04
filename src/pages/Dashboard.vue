@@ -37,7 +37,12 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title v-if="item.badges && notiChat">
+              <v-badge dot color="red">{{ item.title }}</v-badge>
+            </v-list-item-title>
+            <v-list-item-title v-else>
+              {{ item.title }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -114,6 +119,7 @@
 export default {
   data() {
     return {
+      notiChat: true,
       option: ["Settings", "Change Password", "Logout"],
       drawer: null,
       items: [
@@ -142,6 +148,12 @@ export default {
           icon: "mdi-post",
           route: "/dashboard/blogs",
         },
+        {
+          title: "Message",
+          icon: 'mdi-forum',
+          route: "/dashboard/chat",
+          badges: true,
+        }
       ],
       items1: [
         {

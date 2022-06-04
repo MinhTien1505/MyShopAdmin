@@ -33,6 +33,9 @@ import CategoryDetail from "../pages/product/CategoryDetail.vue";
 import Blogs from "../pages/blogs/Blogs.vue";
 import CreatePost from "../pages/blogs/CreatePost.vue";
 import EditPost from "../pages/blogs/EditPost.vue";
+// Message manage
+import AllMessage from "../pages/chat/AllMessage.vue"
+import ChatDetails from "../pages/chat/ChatDetails.vue"
 
 const routerAdmin = [
   {
@@ -107,6 +110,9 @@ const routerAdmin = [
         name: "EditPost",
         component: EditPost,
       },
+      // Manage chat
+      { path: "chat", name: "chat", component: AllMessage },
+      { path: "chat/:id", name: "chatDetails", component: ChatDetails }
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },
