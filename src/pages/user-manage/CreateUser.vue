@@ -165,18 +165,23 @@
         </v-col>
       </v-row>
     </form>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
 import UserAPI from "../../api/UserAPI";
+import uploadFileToCloudinary from "../../common/function";
 
 export default {
   components: {},
   data: () => ({
     previewImage: "",
     snackbar: false,
+    overlay: false,
     user: {
       username: "",
       password: "",
@@ -298,34 +303,12 @@ export default {
         return true;
       }
     },
-    test() {
-      console.log("username" + this.user.username);
-      console.log("password" + this.user.password);
-      console.log("full_name" + this.user.full_name);
-      console.log("email" + this.user.email);
-      console.log("position" + this.user.position);
-      console.log("birthdate" + this.user.birthdate);
-      console.log("address" + this.user.address);
-      console.log("phone" + this.user.phone);
-      console.log("avatar" + this.user.avatar);
-      console.log("status" + this.user.status);
-    },
     async submit() {
-      const formData = new FormData();
-      formData.append("username", this.user.username);
-      formData.append("password", this.user.password);
-      formData.append("full_name", this.user.full_name);
-      formData.append("email", this.user.email);
-      formData.append("position", this.user.position);
-      formData.append("birthdate", this.user.birthdate);
-      formData.append("address", this.user.address);
-      formData.append("phone", this.user.phone);
-      formData.append("avatar", this.user.avatar);
-      formData.append("status", this.user.status);
-
+      this.overlay = true;
       await UserAPI.getUserByEmail(this.user.email)
         .then((res) => {
           if (res.data) {
+            this.overlay = false;
             this.email_invalid = false;
             this.error_exist = false;
             $("#email-msg")
@@ -337,11 +320,13 @@ export default {
         })
         .catch((error) => {
           console.log(error.response.data.message);
+          this.overlay = false;
         });
 
       await UserAPI.getUserByUsername(this.user.username)
         .then((res) => {
           if (res.data) {
+            this.overlay = false;
             this.username_invalid = false;
             this.error_exist = false;
             $("#username-msg")
@@ -353,18 +338,26 @@ export default {
         })
         .catch((error) => {
           console.log(error.response.data.message);
+          this.overlay = false;
         });
-
-      await UserAPI.createShipper(formData)
-        .then((res) => {
-          this.$router.push({
-            name: "ListUser",
-            params: { message: res.data.message },
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      await uploadFileToCloudinary(this.user.avatar, "avatars").then(
+        (fileResponse) => {
+          this.user.avatar = fileResponse.url;
+          console.log(this.user);
+          UserAPI.createShipper(this.user)
+            .then((res) => {
+              this.overlay = false;
+              this.$router.push({
+                name: "ListUser",
+                params: { message: res.data.message },
+              });
+            })
+            .catch((error) => {
+              this.overlay = false;
+              console.log(error);
+            });
+        }
+      );
     },
     cancel() {
       this.$router.push({ name: "ListUser" });

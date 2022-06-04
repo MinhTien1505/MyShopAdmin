@@ -26,7 +26,7 @@
                 <v-img
                   v-else
                   class="avatar-in-table"
-                  :src="`/avatar/${row.item.avatar}`"
+                  :src="row.item.avatar"
                 ></v-img>
               </td>
               <td class="select-row" @click="viewUser(row.item._id)">
@@ -131,7 +131,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="visibleDialog = false">
+            <v-btn color="red darken-1" text @click="visibleDialog = false">
               Disagree
             </v-btn>
             <v-btn

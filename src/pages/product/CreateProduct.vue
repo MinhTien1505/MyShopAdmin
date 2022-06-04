@@ -186,6 +186,7 @@
 <script>
 import ProductAPI from "../../api/ProductAPI";
 import CategoryAPI from "../../api/CategoryAPI";
+import uploadFileToCloudinary from "../../common/function";
 
 export default {
   data: () => ({
@@ -258,36 +259,29 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        const formData = new FormData();
-        formData.append("name", this.product.name);
-        formData.append("price", this.product.price);
-        formData.append("calo", this.product.calo);
-        formData.append("image", this.product.image);
-        formData.append("description", this.product.description);
-        formData.append(
-          "quantity_remaining",
-          Number(this.product.quantity_remaining)
+        await uploadFileToCloudinary(this.product.image, "products").then(
+          (fileResponse) => {
+            this.product.image = fileResponse.url;
+            ProductAPI.create(this.product, config)
+              .then((res) => {
+                console.log(res.data);
+                this.$router.push({
+                  name: "ProductList",
+                });
+                this.overlay = false;
+                this.$notify({
+                  group: "foo",
+                  type: "success",
+                  title: "Create product",
+                  text: "Create product successfully!",
+                });
+              })
+              .catch((err) => {
+                this.overlay = false;
+                console.log(err);
+              });
+          }
         );
-        formData.append("category", this.product.category);
-        formData.append("group", this.product.group);
-
-        await ProductAPI.create(formData, config)
-          .then((res) => {
-            console.log(res.data);
-            this.$router.push({
-              name: "ProductList",
-            });
-            this.overlay = false;
-            this.$notify({
-              group: "foo",
-              type: "success",
-              title: "Create product",
-              text: "Create product successfully!",
-            });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
       }
     },
     async getAllCategory() {

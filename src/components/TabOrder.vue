@@ -13,7 +13,7 @@
         hide-details
       ></v-text-field>
     </v-card-title>
-    <v-data-table :headers="_headers" :items="orders">
+    <v-data-table :headers="_headers" :items="orders" :search="search">
       <template v-slot:item="row">
         <tr class="row-in-order">
           <td @click="goOrder(row.item._id)">{{ row.item._id | toCODE }}</td>
@@ -145,7 +145,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="visibleDialog = false">
+          <v-btn color="red darken-1" text @click="visibleDialog = false">
             Disagree
           </v-btn>
           <v-btn
@@ -224,7 +224,7 @@ export default {
   },
   filters: {
     toCODE: function (value) {
-      return "#O" + value.substring(0, 5);
+      return "#O" + value.slice(-5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {

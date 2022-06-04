@@ -104,14 +104,14 @@
                 v-else-if="previewImage != old_image"
                 id="image-preview"
                 @click="selectImage"
-                :src="`${previewImage}`"
+                :src="previewImage"
               />
               <img
                 class="image-placeholder"
                 v-else
                 id="image-preview"
                 @click="selectImage"
-                :src="`/group/${previewImage}`"
+                :src="previewImage"
               />
             </div>
             <div class="text-center">
@@ -242,16 +242,21 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </div>
 </template>
 
 <script>
 import GroupAPI from "../../api/GroupAPI";
 import ProductAPI from "../../api/ProductAPI";
+import uploadFileToCloudinary from "../../common/function";
 
 export default {
   data() {
     return {
+      overlay: false,
       previewImage: "",
       group: {
         _id: "",
@@ -405,6 +410,7 @@ export default {
       this.total_calo = calo;
     },
     async submit() {
+      this.overlay = true;
       if (!this.hasEmptyField()) {
         this.group.material = [];
         this.material.forEach((item) => {
@@ -419,34 +425,35 @@ export default {
           headers: { Authorization: "bearer " + token },
         };
 
-        const formData = new FormData();
-        formData.append("title", this.group.title);
-        formData.append("description", this.group.description);
-        formData.append("price", this.group.price);
-        formData.append("calo", this.group.calo);
-        formData.append("material", JSON.stringify(this.group.material));
-        formData.append("image", this.group.image);
-        formData.append("old_image", this.old_image);
+        // const formData = new FormData();
+        // formData.append("title", this.group.title);
+        // formData.append("description", this.group.description);
+        // formData.append("price", this.group.price);
+        // formData.append("calo", this.group.calo);
+        // formData.append("material", JSON.stringify(this.group.material));
+        // formData.append("image", this.group.image);
+        // formData.append("old_image", this.old_image);
 
-        console.log(this.group.title);
-        console.log(this.group.description);
-        console.log(this.group.price);
-        console.log(this.group.calo);
-        console.log(this.group.material);
-        console.log(this.group.image);
-        console.log(token);
+        this.group.material = JSON.stringify(this.group.material);
+        await uploadFileToCloudinary(this.group.image, "groups").then(
+          (fileResponse) => {
+            this.group.image = fileResponse.url;
 
-        await GroupAPI.update(this.group._id, formData, config)
-          .then((res) => {
-            this.text = res.data.message;
-            this.snackbar = true;
-            this.getGroupByID();
-          })
-          .catch((error) => {
-            console.log(error.message);
-            this.text = error.message;
-            this.snackbar = true;
-          });
+            GroupAPI.update(this.group._id, this.group, config)
+              .then((res) => {
+                this.overlay = false;
+                this.text = res.data.message;
+                this.snackbar = true;
+                this.getGroupByID();
+              })
+              .catch((error) => {
+                this.overlay = false;
+                console.log(error.message);
+                this.text = error.message;
+                this.snackbar = true;
+              });
+          }
+        );
       }
     },
     hasEmptyField() {

@@ -121,7 +121,7 @@
           >
             <v-img
               v-if="product.image"
-              :src="`/products/${product.image}`"
+              :src="product.image"
               width="100%"
               height="100%"
               :class="{ showImage: show }"
@@ -167,16 +167,22 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
 <script>
 import ProductAPI from "../../api/ProductAPI";
 import CategoryAPI from "../../api/CategoryAPI";
+import uploadFileToCloudinary from "../../common/function";
 
 export default {
   data: () => ({
     showDialog: false,
+    overlay: false,
     snackbar: false,
     show: false,
     colorSnackbar: "",
@@ -185,7 +191,7 @@ export default {
     valid1: false,
     previewImage: null,
     newCategory: "",
-    new_image: "",
+    newImage: "",
     product: {
       name: "",
       price: "",
@@ -232,31 +238,32 @@ export default {
     },
     selectedFile(e) {
       this.show = true;
-      this.new_image = e.target.files[0];
+      this.newImage = e.target.files[0];
     },
     async updateProduct() {
+      this.overlay = true;
       if (this.$refs.form.validate()) {
         let token = JSON.parse(sessionStorage.getItem("admin_login"));
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        const formData = new FormData();
-        formData.append("name", this.product.name);
-        formData.append("price", this.product.price);
-        formData.append("calo", this.product.calo);
-        formData.append("image", this.new_image);
-        formData.append("description", this.product.description);
-        formData.append("category", this.product.category);
-        formData.append("old_image", this.product.image);
-
-        await ProductAPI.update(this.$route.params.id, formData, config)
+        if (this.newImage) {
+          await uploadFileToCloudinary(this.newImage, "products").then(
+            (fileResponse) => {
+              this.product.image = fileResponse.url;
+            }
+          );
+        }
+        await ProductAPI.update(this.$route.params.id, this.product, config)
           .then((res) => {
+            this.overlay = false;
             this.$router.push({
               name: "ProductList",
               params: { message: res.data.message },
             });
           })
           .catch((err) => {
+            this.overlay = false;
             console.log(err);
           });
       }
