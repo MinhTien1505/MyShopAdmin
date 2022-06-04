@@ -29,6 +29,11 @@ import ViewOrder from "../pages/order-manage/ViewOrder.vue";
 import Category from "../pages/product/Category.vue";
 import CategoryDetail from "../pages/product/CategoryDetail.vue";
 
+// Blogs manage
+import Blogs from "../pages/blogs/Blogs.vue";
+import CreatePost from "../pages/blogs/CreatePost.vue";
+import EditPost from "../pages/blogs/EditPost.vue";
+
 const routerAdmin = [
   {
     path: "/",
@@ -85,6 +90,22 @@ const routerAdmin = [
         path: "category/:id",
         name: "CategoryDetail",
         component: CategoryDetail,
+      },
+
+      {
+        path: "blogs",
+        name: "Blogs",
+        component: Blogs,
+      },
+      {
+        path: "/create-post",
+        name: "CreatePost",
+        component: CreatePost,
+      },
+      {
+        path: "/edit-post",
+        name: "EditPost",
+        component: EditPost,
       },
     ],
   },

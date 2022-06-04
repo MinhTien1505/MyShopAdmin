@@ -137,6 +137,11 @@ export default {
           icon: "mdi-receipt",
           route: "/dashboard/orders",
         },
+        {
+          title: "Blogs",
+          icon: "mdi-post",
+          route: "/dashboard/blogs",
+        },
       ],
       items1: [
         {
