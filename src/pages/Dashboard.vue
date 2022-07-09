@@ -38,7 +38,7 @@
 
           <v-list-item-content>
             <v-list-item-title v-if="item.badges && notiChat">
-              <v-badge dot color="red">{{ item.title }}</v-badge>
+              <v-badge dot color="red" :value="!isRead">{{ item.title }}</v-badge>
             </v-list-item-title>
             <v-list-item-title v-else>
               {{ item.title }}
@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -179,6 +180,10 @@ export default {
         },
       ],
     };
+  },
+
+  computed: {
+    ...mapGetters(["isRead"]),
   },
 
   methods: {

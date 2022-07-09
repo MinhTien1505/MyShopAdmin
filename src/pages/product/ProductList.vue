@@ -172,10 +172,8 @@ export default {
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-        const formData = new FormData();
-        formData.append("status", status);
 
-        ProductAPI.update(item._id, formData, config)
+        ProductAPI.update(item._id, { status }, config)
           .then((res) => {
             console.log(res);
             this.getAllProduct();

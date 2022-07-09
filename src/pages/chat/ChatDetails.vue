@@ -3,25 +3,31 @@
     <v-app-bar color="rgba(0,0,0,0)" flat>
       <v-badge bordered bottom color="green" dot offset-x="11" offset-y="13">
         <v-avatar class="mt-n7" size="40" elevation="10">
-          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" />
+          <img :src="this.user.avatar" />
         </v-avatar>
       </v-badge>
       <v-toolbar-title class="title pl-0 ml-2 mt-n4">
-        Fernando Gaucho
+        {{ this.user.full_name }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="black" icon class="mt-n5">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
     </v-app-bar>
-    <div id="message-chat" class="pt-2">
+    <v-card id="message-chat" class="pt-2">
       <template v-for="(chat, index) in chats">
-        <v-app-bar v-if="chat.from === 'me'" flat class="mb-10" :key="index">
+        <v-app-bar
+          v-if="chat.from === 'shop'"
+          flat
+          class="mb-10"
+          :key="index"
+          color="white"
+        >
           <v-spacer></v-spacer>
-          <v-card class="mt-10 mr-2" max-width="350px" color="blue" dark>
+          <v-card class="mt-10 mr-2" max-width="450px" color="blue" dark>
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="mb-4">{{ chat.message }}</div>
+                <div class="mb-2">{{ chat.message }}</div>
                 <v-list-item-subtitle>{{ chat.date }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -35,20 +41,20 @@
             offset-y="10"
           >
             <v-avatar class="mt-n5" size="30" elevation="10">
-              <img :src="chat.avt" />
+              <img src="https://png.pngtree.com/png-vector/20191027/ourlarge/pngtree-fresh-logo-of-green-leaf-ecology-vector-collection-of-bright-and-png-image_1862265.jpg" />
             </v-avatar>
           </v-badge>
         </v-app-bar>
-        <v-app-bar v-else flat class="mb-10" :key="index">
+        <v-app-bar v-else flat class="mb-10" :key="index" color="white">
           <v-badge bordered bottom color="green" dot offset-x="16" offset-y="9">
             <v-avatar class="mt-n5 mr-2" size="30" elevation="10">
               <img :src="chat.avt" />
             </v-avatar>
           </v-badge>
-          <v-card class="mt-10" max-width="350px">
+          <v-card class="mt-10" max-width="450px">
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="mb-4">
+                <div class="mb-2">
                   {{ chat.message }}
                 </div>
                 <v-list-item-subtitle>{{ chat.date }}</v-list-item-subtitle>
@@ -60,12 +66,11 @@
           </v-btn>
         </v-app-bar>
       </template>
-    </div>
+    </v-card>
     <v-app-bar flat>
       <v-text-field
         v-model="message"
         append-outer-icon="mdi-send"
-        filled
         clear-icon="mdi-close-circle"
         clearable
         type="text"
@@ -77,74 +82,87 @@
 </template>
 <script>
 import * as io from "socket.io-client";
+import ChatsAPI from "../../api/ChatsAPI";
+import moment from "moment";
+import UserAPI from "../../api/UserAPI";
 
 export default {
   data: () => ({
     socket: io.connect("http://localhost:5000"),
     message: "",
-    chats: [
-      {
-        from: "me",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-      {
-        from: "me",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-      {
-        from: "client",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-      {
-        from: "client",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-      {
-        from: "me",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-      {
-        from: "client",
-        message: "hello i love you so much",
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
-      },
-    ],
+    user: {},
+    chats: [],
   }),
   mounted() {
     this.scrollToBottom();
-    this.socket.on("USER_INFO", (user) => {
-      console.log(user);
+  },
+  updated() {
+    this.scrollToBottom();
+  },
+  async created() {
+    await this.getUserById();
+    await this.getChatByUser();
+    this.socket.on("pushMessage", (chat) => {
+      this.chats = chat.messages.map((message) => {
+        return {
+          from: message.author,
+          message: message.data.text,
+          avt: this.user.avatar,
+          date: moment(message.data.meta).format("MM-DD-YYYY kk:mm"),
+        };
+      });
+      this.scrollToBottom();
     });
   },
   methods: {
     sendMessage() {
       this.chats.push({
-        from: "me",
+        from: "shop",
         message: this.message,
-        avt: "https://cdn.vuetifyjs.com/images/lists/5.jpg",
-        date: "06-16-2019 12:43",
+        avt: "https://png.pngtree.com/png-vector/20191027/ourlarge/pngtree-fresh-logo-of-green-leaf-ecology-vector-collection-of-bright-and-png-image_1862265.jpg",
+        date: moment(Date.now()).format("MM-DD-YYYY kk:mm"),
+      });
+      this.socket.emit("sendMessageFromShop", {
+        type: "text",
+        author: this.$route.params.id,
+        isShop: true,
+        data: {
+          text: this.message,
+          meta: Date.now(),
+        },
       });
       this.clearMessage();
-      this.scrollToBottom()
+      this.scrollToBottom();
     },
     clearMessage() {
       this.message = "";
     },
     scrollToBottom() {
       let container = document.getElementById("message-chat");
-      container.scrollTop = container.scrollHeight;
-      console.log(container.scrollHeight)
+      if (container) {
+        container.scrollTop = container.scrollHeight
+      }
+    },
+    async getUserById() {
+      await UserAPI.getUserById(this.$route.params.id).then((res) => {
+        this.user = res.data;
+      });
+    },
+    async getChatByUser() {
+      await ChatsAPI.get(this.$route.params.id).then((res) => {
+        if (res.data.chat.length === 0) {
+          this.chats = [];
+        } else {
+          this.chats = res.data.chat.messages.map((message) => {
+            return {
+              from: message.author,
+              message: message.data.text,
+              avt: this.user.avatar,
+              date: moment(message.data.meta).format("MM-DD-YYYY kk:mm"),
+            };
+          });
+        }
+      });
     },
   },
 };

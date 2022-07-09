@@ -133,7 +133,7 @@
                   <td align="center">
                     <img
                       class="image-product-in-table"
-                      :src="`/products/${item.product.image}`"
+                      :src="item.product.image"
                     />
                     <!-- </img> -->
                   </td>

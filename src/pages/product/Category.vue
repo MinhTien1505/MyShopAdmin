@@ -28,7 +28,6 @@
             <v-form
               class="pt-7"
               ref="form1"
-              v-model="valid1"
               lazy-validation
               @submit.prevent="addCategory()"
             >
@@ -122,7 +121,7 @@ import ProductAPI from "../../api/ProductAPI";
 export default {
   data: () => ({
     valid: false,
-    overlay: true,
+    overlay: false,
     showDialog: false,
     snackbar: false,
     search: "",

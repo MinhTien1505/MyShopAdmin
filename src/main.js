@@ -6,6 +6,7 @@ import Notifications from "vue-notification";
 import Loading from "vue-loading-overlay";
 import VueSimpleAlert from "vue-simple-alert";
 import "vue-loading-overlay/dist/vue-loading.css";
+import store from './store'
 
 Vue.use(Notifications);
 Vue.use(Loading);
@@ -16,5 +17,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   vuetify,
-  render: (h) => h(App),
+  store,
+  render: (h) => h(App)
 }).$mount("#app");

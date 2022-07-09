@@ -150,7 +150,7 @@
                   <td align="center">
                     <img
                       class="image-product-in-table"
-                      :src="`https://shopfreshapi.herokuapp.com/products/${item.product.image}`"
+                      :src="item.product.image"
                     />
                   </td>
                   <td>{{ item.product.name }}</td>

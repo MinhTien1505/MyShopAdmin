@@ -26,12 +26,7 @@
               {{ item.price | toVND }}
             </template>
             <template v-slot:[`item.image`]="{ item }">
-              <v-img
-                width="150px"
-                height="150px"
-                :src="`https://shopfreshapi.herokuapp.com/products/${item.image}`"
-              >
-              </v-img>
+              <v-img width="150px" height="150px" :src="item.image"> </v-img>
             </template>
             <template v-slot:[`item.quantity`]="{ item }">
               <v-chip
@@ -169,11 +164,14 @@ export default {
             headers: { Authorization: "bearer " + token },
           };
           let quantity_remaining = Number(item.quantity_remaining) + number;
-          const formData = new FormData();
-
-          formData.append("quantity_remaining", quantity_remaining);
-
-          ProductAPI.update(item._id, formData, config)
+          console.log(quantity_remaining);
+          ProductAPI.update(
+            item._id,
+            {
+              quantity_remaining,
+            },
+            config
+          )
             .then((res) => {
               console.log(res);
               this.getAllProduct();

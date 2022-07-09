@@ -80,7 +80,7 @@
             id="avatar-preview"
             src="../../../public/assets/assets/img/avatar-placeholder.png"
           />
-          <img v-else id="avatar-preview" :src="`/avatar/${user.avatar}`" />
+          <img v-else id="avatar-preview" :src="user.avatar" />
         </div>
       </v-col>
     </v-row>
@@ -94,6 +94,7 @@ export default {
   components: {},
   data: () => ({
     previewImage: "../../../public/assets/assets/img/avatar-placeholder.png",
+    password: "password",
     // snackbar: false,
     user: {
       username: "",

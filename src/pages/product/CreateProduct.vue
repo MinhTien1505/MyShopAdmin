@@ -57,7 +57,7 @@
                 <v-text-field
                   outlined
                   dense
-                  suffix="/100Kg"
+                  suffix="/100g"
                   v-model="product.calo"
                   :rules="[(v) => !!v || 'Please enter calo']"
                 ></v-text-field>
@@ -190,7 +190,7 @@ import uploadFileToCloudinary from "../../common/function";
 
 export default {
   data: () => ({
-    overlay: true,
+    overlay: false,
     showDialog: false,
     snackbar: false,
     colorSnackbar: "",

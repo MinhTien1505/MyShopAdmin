@@ -144,9 +144,11 @@ export default {
       await GroupAPI.get_all()
         .then((response) => {
           this.groupList = response.data.reverse();
+          this.overlay = false
         })
         .catch((err) => {
           console.log(err);
+          this.overlay = false
         });
     },
     goGroup(group_id) {
