@@ -4,34 +4,19 @@
       <h3 class="pt-4">
         Order Information
         <span>
-          <p
-            v-if="order.status == 'Pending'"
-            class="order-status status-pending"
-          >
+          <p v-if="order.status == 'Pending'" class="order-status status-pending">
             {{ order.status }}
           </p>
-          <p
-            v-if="order.status == 'Approved'"
-            class="order-status status-approved"
-          >
+          <p v-if="order.status == 'Approved'" class="order-status status-approved">
             {{ order.status }}
           </p>
-          <p
-            v-if="order.status == 'Pick-up'"
-            class="order-status status-pick-up"
-          >
+          <p v-if="order.status == 'Pick-up'" class="order-status status-pick-up">
             {{ order.status }}
           </p>
-          <p
-            v-if="order.status == 'Delivering'"
-            class="order-status status-delivering"
-          >
+          <p v-if="order.status == 'Delivering'" class="order-status status-delivering">
             {{ order.status }}
           </p>
-          <p
-            v-if="order.status == 'Received'"
-            class="order-status status-received"
-          >
+          <p v-if="order.status == 'Received'" class="order-status status-received">
             {{ order.status }}
           </p>
           <p v-if="order.status == 'Cancel'" class="order-status status-cancel">
@@ -49,7 +34,7 @@
             <v-list-item-content>
               <v-list-item-title>Order:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order._id | toCODE
+                  order._id | toCODE
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -58,7 +43,7 @@
             <v-list-item-content>
               <v-list-item-title>Total Price:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order.total_price | toVND
+                  order.total_price | toVND
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -67,7 +52,7 @@
             <v-list-item-content>
               <v-list-item-title>Date:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order.date | toDateTime
+                  order.date | toDateTime
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -104,7 +89,7 @@
             <v-list-item-content>
               <v-list-item-title>Username:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order.shipper.username
+                  order.shipper.username
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -112,7 +97,7 @@
             <v-list-item-content>
               <v-list-item-title>Fullname:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order.shipper.full_name
+                  order.shipper.full_name
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -120,7 +105,7 @@
             <v-list-item-content>
               <v-list-item-title>Phone:</v-list-item-title>
               <v-list-item-subtitle>{{
-                order.shipper.phone
+                  order.shipper.phone
               }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -148,13 +133,10 @@
                 <tr v-for="(item, i) in order.orderItems" :key="item._id">
                   <td>{{ i + 1 }}</td>
                   <td align="center">
-                    <img
-                      class="image-product-in-table"
-                      :src="item.product.image"
-                    />
+                    <img class="image-product-in-table" :src="item.product.image" />
                   </td>
                   <td>{{ item.product.name }}</td>
-                  <td>{{ item.product.price | toVND }}</td>
+                  <td>{{ Number(item.price) / item.quantity | toVND }}</td>
                   <td>{{ item.quantity }}</td>
                   <td>{{ item.price | toVND }}</td>
                 </tr>
@@ -168,24 +150,15 @@
         <div class="text-right p-3">
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title style="font-size: 1.25rem; font-weight: 400"
-                >Total Price:</v-list-item-title
-              >
-              <v-list-item-subtitle
-                style="font-size: 1.75rem; font-weight: 700"
-                >{{ order.total_price | toVND }}</v-list-item-subtitle
-              >
+              <v-list-item-title style="font-size: 1.25rem; font-weight: 400">Total Price:</v-list-item-title>
+              <v-list-item-subtitle style="font-size: 1.75rem; font-weight: 700">{{ order.total_price | toVND }}
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </div>
       </v-card>
     </v-row>
-    <v-row
-      class="mb-6 p-3"
-      no-gutters
-      data-app
-      style="justify-content: center !important"
-    >
+    <v-row class="mb-6 p-3" no-gutters data-app style="justify-content: center !important">
       <v-col md="auto">
         <v-btn outlined color="#000000" @click="back()">
           <v-icon dark left>mdi-arrow-left</v-icon> Back
@@ -221,20 +194,10 @@
           <v-btn color="green darken-1" text @click="visibleDialog = false">
             Disagree
           </v-btn>
-          <v-btn
-            v-if="dialogConfirm.action == 'Pick-up'"
-            color="green darken-1"
-            text
-            @click="pickup()"
-          >
+          <v-btn v-if="dialogConfirm.action == 'Pick-up'" color="green darken-1" text @click="pickup()">
             Agree
           </v-btn>
-          <v-btn
-            v-if="dialogConfirm.action == 'NO Pick-up'"
-            color="green darken-1"
-            text
-            @click="cancelPickup()"
-          >
+          <v-btn v-if="dialogConfirm.action == 'NO Pick-up'" color="green darken-1" text @click="cancelPickup()">
             Agree
           </v-btn>
         </v-card-actions>
@@ -285,7 +248,7 @@ export default {
   }),
   filters: {
     toCODE: function (value) {
-      return "#O" + value.substring(0, 5);
+      return "#" + value.substring(0, 5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {
@@ -321,7 +284,7 @@ export default {
   created() {
     this.getOrderByID();
   },
-  mounted() {},
+  mounted() { },
   methods: {
     async getOrderByID() {
       await OrderAPI.getById(this.$route.params.order_id)
@@ -393,9 +356,11 @@ export default {
 .v-btn {
   margin: 0px 8px !important;
 }
+
 .v-list-item .v-list-item__title {
   font-weight: 600;
 }
+
 .v-card__subtitle,
 .v-card__text,
 .v-card__title {

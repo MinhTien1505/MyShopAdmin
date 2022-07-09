@@ -5,7 +5,7 @@ import ShipperOrders from "../pages/shipper/Orders.vue";
 import ShipperViewOrder from "../pages/shipper/ViewOrder.vue";
 import ShipperPickUp from "../pages/shipper/PickUp.vue";
 import ShipperShipping from "../pages/shipper/Shipping.vue";
-
+import ShipperHistory from "../pages/shipper/History.vue";
 
 const routerShipper = [
     {
@@ -27,6 +27,8 @@ const routerShipper = [
             { path: "pickup", name: "PickUp", component: ShipperPickUp },
             // Show all orders shipping
             { path: "shipping", name: "Shipping", component: ShipperShipping },
+            // Show history
+            { path: "history", name: "History", component: ShipperHistory },
 
             // Error
             { path: "*", name: "PageNotFound", component: PageNotFound },

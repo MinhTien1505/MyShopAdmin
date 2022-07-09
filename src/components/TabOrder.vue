@@ -5,13 +5,7 @@
     </v-overlay>
 
     <v-card-title>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
     </v-card-title>
     <v-data-table :headers="_headers" :items="orders" :search="search">
       <template v-slot:item="row">
@@ -24,63 +18,27 @@
             {{ row.item.total_price | toVND }}
           </td>
           <td @click="goOrder(row.item._id)">
-            <v-chip
-              v-if="row.item.status == 'Pending'"
-              class="ma-2"
-              color="#E56A5E"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Pending'" class="ma-2" color="#E56A5E" dark label>
               {{ row.item.status }}
             </v-chip>
 
-            <v-chip
-              v-if="row.item.status == 'Approved'"
-              class="ma-2"
-              color="#00D17C"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Approved'" class="ma-2" color="#00D17C" dark label>
               {{ row.item.status }}
             </v-chip>
 
-            <v-chip
-              v-if="row.item.status == 'Pick-up'"
-              class="ma-2"
-              color="#932FEA"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Pick-up'" class="ma-2" color="#932FEA" dark label>
               {{ row.item.status }}
             </v-chip>
 
-            <v-chip
-              v-if="row.item.status == 'Delivering'"
-              class="ma-2"
-              color="#0FB7BA"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Delivering'" class="ma-2" color="#0FB7BA" dark label>
               {{ row.item.status }}
             </v-chip>
 
-            <v-chip
-              v-if="row.item.status == 'Received'"
-              class="ma-2"
-              color="#3b8bea"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Received'" class="ma-2" color="#3b8bea" dark label>
               {{ row.item.status }}
             </v-chip>
 
-            <v-chip
-              v-if="row.item.status == 'Cancel'"
-              class="ma-2"
-              color="#92a4a4"
-              dark
-              label
-            >
+            <v-chip v-if="row.item.status == 'Cancel'" class="ma-2" color="#92a4a4" dark label>
               {{ row.item.status }}
             </v-chip>
           </td>
@@ -89,38 +47,20 @@
           </td>
 
           <td v-if="action">
-            <v-btn
-              class="ma-1"
-              v-if="row.item.status == 'Pending'"
-              @click="confirm(row.item._id, 'Approved')"
-              small
-              dark
-              color="#F62D51"
-            >
+            <v-btn class="ma-1" v-if="row.item.status == 'Pending'" @click="confirm(row.item._id, 'Approved')" small
+              dark color="#F62D51">
               <v-icon left>mdi-checkbox-marked-circle</v-icon>
               Approved
             </v-btn>
 
-            <v-btn
-              class="ma-1"
-              v-if="row.item.status == 'Pending'"
-              @click="confirm(row.item._id, 'Cancel')"
-              small
-              dark
-              color="#899878"
-            >
+            <v-btn class="ma-1" v-if="row.item.status == 'Pending'" @click="confirm(row.item._id, 'Cancel')" small dark
+              color="#899878">
               <v-icon left>mdi-cancel</v-icon>
               Cancel
             </v-btn>
 
-            <v-btn
-              class="ma-1"
-              v-if="row.item.status == 'Pick-up'"
-              @click="confirm(row.item._id, 'Delivery')"
-              small
-              dark
-              color="#EACE2A"
-            >
+            <v-btn class="ma-1" v-if="row.item.status == 'Pick-up'" @click="confirm(row.item._id, 'Delivery')" small
+              dark color="#EACE2A">
               <v-icon left>mdi-truck-fast</v-icon>
               Delivery
             </v-btn>
@@ -148,11 +88,7 @@
           <v-btn color="red darken-1" text @click="visibleDialog = false">
             Disagree
           </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="updateStatus(dialogConfirm.status)"
-          >
+          <v-btn color="green darken-1" text @click="updateStatus(dialogConfirm.status)">
             Agree
           </v-btn>
         </v-card-actions>
@@ -224,7 +160,7 @@ export default {
   },
   filters: {
     toCODE: function (value) {
-      return "#O" + value.slice(-5);
+      return "#" + value.slice(-5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {

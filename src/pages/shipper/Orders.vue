@@ -7,13 +7,8 @@
     <v-row>
       <v-card data-app width="100%" class="ma-2" outlined>
         <v-card-title>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details>
+          </v-text-field>
         </v-card-title>
         <v-data-table :headers="headers" :items="data">
           <template v-slot:item="row">
@@ -28,63 +23,27 @@
                 {{ row.item.total_price | toVND }}
               </td>
               <td @click="goOrder(row.item._id)">
-                <v-chip
-                  v-if="row.item.status == 'Pending'"
-                  class="ma-2"
-                  color="#E56A5E"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Pending'" class="ma-2" color="#E56A5E" dark label>
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip
-                  v-if="row.item.status == 'Approved'"
-                  class="ma-2"
-                  color="#00D17C"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Approved'" class="ma-2" color="#00D17C" dark label>
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip
-                  v-if="row.item.status == 'Pick-up'"
-                  class="ma-2"
-                  color="#932FEA"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Pick-up'" class="ma-2" color="#932FEA" dark label>
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip
-                  v-if="row.item.status == 'Delivering'"
-                  class="ma-2"
-                  color="#0FB7BA"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Delivering'" class="ma-2" color="#0FB7BA" dark label>
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip
-                  v-if="row.item.status == 'Received'"
-                  class="ma-2"
-                  color="#3b8bea"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Received'" class="ma-2" color="#3b8bea" dark label>
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip
-                  v-if="row.item.status == 'Cancel'"
-                  class="ma-2"
-                  color="#92a4a4"
-                  dark
-                  label
-                >
+                <v-chip v-if="row.item.status == 'Cancel'" class="ma-2" color="#92a4a4" dark label>
                   {{ row.item.status }}
                 </v-chip>
               </td>
@@ -93,12 +52,7 @@
               </td>
 
               <td>
-                <v-btn
-                  @click="confirm(row.item._id, 'Pick-up')"
-                  small
-                  dark
-                  color="#EACE2A"
-                >
+                <v-btn @click="confirm(row.item._id, 'Pick-up')" small dark color="#EACE2A">
                   <v-icon left>mdi-shopping</v-icon>
                   Pick-up
                 </v-btn>
@@ -122,11 +76,7 @@
               <v-btn color="green darken-1" text @click="visibleDialog = false">
                 Disagree
               </v-btn>
-              <v-btn
-                color="green darken-1"
-                text
-                @click="updateStatus(dialogConfirm.status)"
-              >
+              <v-btn color="green darken-1" text @click="updateStatus(dialogConfirm.status)">
                 Agree
               </v-btn>
             </v-card-actions>
@@ -210,7 +160,7 @@ export default {
   },
   filters: {
     toCODE: function (value) {
-      return "#O" + value.substring(0, 5);
+      return "#" + value.substring(0, 5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {

@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid pa-6">
     <v-row align="center">
-      <h3 class="ma-2">Pick-up Orders</h3>
+      <h3 class="ma-2">Delivered Orders</h3>
     </v-row>
 
     <v-row>
@@ -50,53 +50,13 @@
               <td @click="goOrder(row.item._id)">
                 {{ row.item.date | toDateTime }}
               </td>
-
-              <td>
-                <v-btn @click="confirm(row.item._id, 'NO Pick-up')" small dark color="#F44336">
-                  <v-icon left>mdi-cancel</v-icon>
-                  NO pick-up
-                </v-btn>
-              </td>
             </tr>
           </template>
         </v-data-table>
-
-        <v-dialog v-model="visibleDialog" persistent max-width="290">
-          <v-card>
-            <v-card-title class="text-h5">
-              {{ dialogConfirm.title }}
-            </v-card-title>
-
-            <v-card-text>
-              {{ dialogConfirm.question }}
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="visibleDialog = false">
-                Disagree
-              </v-btn>
-              <v-btn color="green darken-1" text @click="cancelPickup()">
-                Agree
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <v-container v-if="snackbar" class="grey lighten-5">
-          <v-snackbar v-model="snackbar" timeout="2000">
-            {{ snackbar_text }}
-            <template v-slot:action="{ attrs }">
-              <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-                Close
-              </v-btn>
-            </template>
-          </v-snackbar>
-          <v-overlay :value="overlay">
-            <v-progress-circular indeterminate size="64"></v-progress-circular>
-          </v-overlay>
-        </v-container>
       </v-card>
+      <v-overlay :value="overlay">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      </v-overlay>
     </v-row>
   </div>
 </template>
@@ -118,25 +78,11 @@ export default {
         { text: "Total Price", value: "total_price" },
         { text: "Status", value: "status" },
         { text: "Order at", value: "date" },
-        { text: "" },
       ],
-
-      snackbar: false,
-      snackbar_text: "",
-
-      id_selected: "",
-
-      visibleDialog: false,
-      dialogConfirm: {
-        action: "",
-        title: "",
-        question: "",
-        status: "",
-      },
     };
   },
   mounted() {
-    this.getPickUpOrders();
+    this.getShippingOrders();
   },
   filters: {
     toCODE: function (value) {
@@ -169,12 +115,12 @@ export default {
     },
   },
   methods: {
-    async getPickUpOrders() {
+    async getShippingOrders() {
       let token = JSON.parse(sessionStorage.getItem("shipper_login"));
       let config = {
         headers: { Authorization: "bearer " + token },
       };
-      let status = "Pick-up";
+      let status = "Received";
       await OrderAPI.getByShipperAndStatus(status, config)
         .then((response) => {
           this.data = response.data;
@@ -189,38 +135,6 @@ export default {
         name: "ShipperViewOrder",
         params: { order_id: order_id },
       });
-    },
-    confirm(order_id, action) {
-      this.dialogConfirm.action = action;
-      this.id_selected = order_id;
-      this.dialogConfirm.title = `${action} Order`;
-      this.dialogConfirm.question = `Are you sure you want to ${action} this Order?`;
-      if (action == "Delivery") {
-        this.dialogConfirm.status = "Delivering";
-      } else if (action == "NO Pick-up") {
-        this.dialogConfirm.status = "Approved";
-      } else {
-        this.dialogConfirm.status = action;
-      }
-      this.visibleDialog = true;
-    },
-    async cancelPickup() {
-      let token = JSON.parse(sessionStorage.getItem("shipper_login"));
-      let config = {
-        headers: { Authorization: "bearer " + token },
-      };
-
-      await OrderAPI.cancel_pickup(this.id_selected, config)
-        .then((res) => {
-          console.log(res);
-          this.getPickUpOrders();
-          this.visibleDialog = false;
-          this.snackbar_text = `${this.dialogConfirm.title} Successfully!`;
-          this.snackbar = true;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
   },
 };
