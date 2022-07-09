@@ -103,7 +103,7 @@ export default {
   },
   filters: {
     toCODE: function (value) {
-      return "#O" + value.substring(0, 5);
+      return "#" + value.substring(0, 5);
     },
     toVND: function (value) {
       if (typeof value !== "number") {
@@ -136,7 +136,9 @@ export default {
       this.overlay = true;
       await OrderAPI.get()
         .then((response) => {
-          this.data = response.data;
+          this.data = response.data.sort((a, b) => {
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+          });
           this.overlay = false;
         })
         .catch((err) => {

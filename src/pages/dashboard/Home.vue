@@ -3,7 +3,80 @@
     <v-overlay :value="!loaded">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-    <h2 class="text-center mt-5">TOTAL REVENUE STATISTICS</h2>
+    <v-container fluid class="mt-7">
+      <v-row class="d-flex justify-space-between">
+        <v-card class="mx-auto" max-width="344" max-height="120">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-overline">User</div>
+              <v-list-item-title class="text-h5 mb-1">
+                <animated-number :value="totalUsers" :duration="1000" :formatValue="formatNumber" />
+              </v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-avatar tile size="80">
+              <v-icon x-large color="#0AA1DD" style="font-size: 50px">
+                mdi-account-star</v-icon
+              ></v-list-item-avatar
+            >
+          </v-list-item>
+        </v-card>
+        <v-card class="mx-auto" max-width="344" max-height="120">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-overline">Products</div>
+              <v-list-item-title class="text-h5 mb-1">
+                <animated-number :value="totalItems" :duration="1000" :formatValue="formatNumber" />
+              </v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-avatar tile size="80">
+              <v-icon x-large color="#3F4E4F" style="font-size: 50px">
+                mdi-sprout</v-icon
+              ></v-list-item-avatar
+            >
+          </v-list-item>
+        </v-card>
+        <v-card class="mx-auto" max-width="344" max-height="120">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-overline">Order</div>
+              <v-list-item-title class="text-h5 mb-1">
+                <animated-number :value="totalOrders" :duration="1000" :formatValue="formatNumber" />
+              </v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-avatar tile size="80">
+              <v-icon x-large color="#A27B5C" style="font-size: 50px">
+                mdi-cart</v-icon
+              ></v-list-item-avatar
+            >
+          </v-list-item>
+        </v-card>
+        <v-card class="mx-auto" max-width="344" max-height="120">
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-overline">Shipper</div>
+              <v-list-item-title class="text-h5 mb-1">
+                <animated-number :value="totalShippers" :duration="1000" :formatValue="formatNumber" />
+              </v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-avatar tile size="80">
+              <v-icon x-large color="#371B58" style="font-size: 50px">
+                mdi-dump-truck</v-icon
+              ></v-list-item-avatar
+            >
+          </v-list-item>
+        </v-card>
+      </v-row>
+    </v-container>
+    <p
+      class="text-center mt-10 text-overline"
+      style="font-size: 26px !important"
+    >
+      TOTAL REVENUE STATISTICS
+    </p>
     <v-container fluid>
       <v-row>
         <v-col cols="9"></v-col>
@@ -22,7 +95,12 @@
     <h4 class="text-right">Total revenue: {{ total_revenue | toVND }}</h4>
     <bar-chart v-if="loaded" :chartdata="chartdata" :options="options" />
     <v-divider></v-divider>
-    <h2 class="text-center mt-5">STATISTICS OF PRODUCTS SOLD</h2>
+    <p
+      class="text-center mt-10 text-overline"
+      style="font-size: 26px !important"
+    >
+      STATISTICS OF PRODUCTS SOLD
+    </p>
     <pie-chart v-if="loaded" :chartdata="chartdata1" :options="options1" />
   </div>
 </template>
@@ -30,14 +108,19 @@
 <script>
 import OrderAPI from "../../api/OrderAPI";
 import ProductAPI from "../../api/ProductAPI";
-
 import BarChart from "../../chart/BarChart";
 import PieChart from "../../chart/PieChart";
+import AnimatedNumber from "animated-number-vue";
+import UserAPI from "../../api/UserAPI";
 
 export default {
   name: "ChartContainer",
-  components: { BarChart, PieChart },
+  components: { BarChart, PieChart, AnimatedNumber },
   data: () => ({
+    totalItems: 0,
+    totalOrders: 0,
+    totalUsers: 0,
+    totalShippers: 0,
     loaded: false,
     nowYear: "",
     years: ["2020", "2021", "2022", "2023"],
@@ -68,6 +151,7 @@ export default {
     },
   }),
   created() {
+    this.getAllUser();
     const year = new Date().getFullYear();
     this.nowYear = String(year);
     console.log(this.nowYear);
@@ -93,9 +177,22 @@ export default {
     },
   },
   methods: {
+    formatNumber(value) {
+      return value.toFixed(0);
+    },
     getMonthData(date) {
       let dt = new Date(date);
       return dt.getMonth();
+    },
+    async getAllUser() {
+      await UserAPI.get_all()
+        .then((response) => {
+          this.totalUsers = response.data.filter(user => user.position === "customer").length;
+          this.totalShippers = response.data.filter(user => user.position === "shipper").length;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     getYearData(date) {
       let dt = new Date(date);
@@ -110,48 +207,52 @@ export default {
       return color;
     },
     HEX(r, g, b) {
-      var hex = function(x) {
-          x = x.toString(16);
-          if(x.length < 2) return '0' + x;
-          return x.substring(x.length-2, x.length);
+      var hex = function (x) {
+        x = x.toString(16);
+        if (x.length < 2) return "0" + x;
+        return x.substring(x.length - 2, x.length);
       };
       var color = hex(r) + hex(g) + hex(b);
-      return '#' + color;
+      return "#" + color;
     },
     parseRGB(color) {
-      var r = parseInt(color.substring(1,3), 16);
-      var g = parseInt(color.substring(3,5), 16);
-      var b = parseInt(color.substring(5,7), 16);
-      return [r, g, b]
+      var r = parseInt(color.substring(1, 3), 16);
+      var g = parseInt(color.substring(3, 5), 16);
+      var b = parseInt(color.substring(5, 7), 16);
+      return [r, g, b];
     },
     color_ver_gradient(begin, end, num) {
       var color = [];
-      var ratio = 1/num;
+      var ratio = 1 / num;
       var [rb, gb, bb] = this.parseRGB(begin);
       var [re, ge, be] = this.parseRGB(end);
 
-      for(var i = 0; i < num; i++) {
-          var rt = i*ratio
-          var r = Math.ceil(rb * (1 - rt) + re * rt);
-          var g = Math.ceil(gb * (1 - rt) + ge * rt);
-          var b = Math.ceil(bb * (1 - rt) + be * rt);
-          var c = this.HEX(r, g, b);
-          color.push(c);
+      for (var i = 0; i < num; i++) {
+        var rt = i * ratio;
+        var r = Math.ceil(rb * (1 - rt) + re * rt);
+        var g = Math.ceil(gb * (1 - rt) + ge * rt);
+        var b = Math.ceil(bb * (1 - rt) + be * rt);
+        var c = this.HEX(r, g, b);
+        color.push(c);
       }
       return color;
     },
     color_ver_gradient_n(primary, num) {
       var color = [];
       var no_pri = primary.length;
-      var no_perPri = num/no_pri;
+      var no_perPri = num / no_pri;
       var gradient = [];
-      for(var i = 0; i < no_pri - 1; i++) {
-          var begin = primary[i];
-          var end = primary[i + 1];
-          gradient = this.color_ver_gradient(begin, end, no_perPri);
-          color = color.concat(gradient);
+      for (var i = 0; i < no_pri - 1; i++) {
+        var begin = primary[i];
+        var end = primary[i + 1];
+        gradient = this.color_ver_gradient(begin, end, no_perPri);
+        color = color.concat(gradient);
       }
-      gradient = this.color_ver_gradient(primary[no_pri - 1], primary[0], no_perPri);
+      gradient = this.color_ver_gradient(
+        primary[no_pri - 1],
+        primary[0],
+        no_perPri
+      );
       color = color.concat(gradient);
       return color;
     },
@@ -176,6 +277,7 @@ export default {
         .then((res) => {
           try {
             const data = res.data;
+            this.totalOrders = res.data.length;
 
             const date_value = data.map((item) => {
               return { total_price: item.total_price, date: item.updatedAt };
@@ -278,29 +380,20 @@ export default {
     await ProductAPI.get()
       .then((res) => {
         try {
-          const pieData = res.data.map((item) => {
+          this.totalItems = res.data.length;
+          let top5Item = res.data
+            .sort((a, b) => b.quantity_sold - a.quantity_sold)
+            .slice(0, 5);
+          const pieData = top5Item.map((item) => {
             return { name: item.name, quantity_sold: item.quantity_sold };
           });
-          // let listColor = [];
-          // for (let i = 0; i < pieData.length; i++) {
-          //   listColor.push(this.getRandomColor());
-          // }
-
-          var colorGradient = [    
-            //'#00DEFF', 
-            //'#DEFF00',
-            '#FF6347',
-            '#FFFF00',
-            '#40E0D0',
-            '#008080',
-          ];
+          var colorGradient = ["#FF6347", "#FFFF00", "#40E0D0", "#008080"];
           var colors = this.color_ver_gradient_n(colorGradient, pieData.length);
           this.chartdata1 = {
             labels: pieData.map((item) => item.name),
             datasets: [
               {
                 label: "VNĐ",
-                // backgroundColor: listColor,
                 backgroundColor: colors,
                 data: pieData.map((item) => item.quantity_sold),
               },

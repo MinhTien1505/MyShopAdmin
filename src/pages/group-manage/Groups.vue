@@ -32,13 +32,12 @@
                   v-if="row.item.status == 'Enable'"
                   class="ma-2 pl-4 pr-4"
                   color="green"
-                  small
                   text-color="white"
                 >
                   {{ row.item.status }}
                 </v-chip>
 
-                <v-chip v-else class="ma-2 pl-4 pr-4" small text-color="white">
+                <v-chip v-else class="ma-2 pl-4 pr-4" text-color="white">
                   {{ row.item.status }}
                 </v-chip>
               </td>
@@ -103,7 +102,7 @@ export default {
         { text: "Title", value: "title", width: "40%", align: "left" },
         { text: "Price", value: "price", width: "15%", align: "left" },
         { text: "Calo (kCal)", value: "calo", width: "12%", align: "left" },
-        { text: "Status", value: "status", width: "13%", align: "center" },
+        { text: "Status", value: "start", width: "13%", align: "center" },
         { text: "", width: "10%" },
       ],
       search: "",

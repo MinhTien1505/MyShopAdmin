@@ -38,7 +38,7 @@
                   ref="price"
                   :value="total_price | toNum"
                   @input="(value) => (temp_price = value)"
-                  :rules="[() => !!temp_price || 'This field is required']"
+                  :rules="[() =>  !!total_price || !!temp_price || 'This field is required']"
                   :error-messages="errorMessages"
                   label="Price"
                   suffix="vnd"
@@ -140,7 +140,7 @@
         <v-card outlined>
           <v-card-title>
             <v-text-field
-              v-model="search"
+              v-model="searchProducts"
               append-icon="mdi-magnify"
               label="Search"
               single-line
@@ -158,6 +158,7 @@
           <v-data-table
             :headers="headers"
             :items="productList"
+            :search="searchProducts"
             dense
             fixed-header
             height="300px"
@@ -176,7 +177,7 @@
         <v-card outlined>
           <v-card-title>
             <v-text-field
-              v-model="search"
+              v-model="searchMaterials"
               append-icon="mdi-magnify"
               label="Search"
               single-line
@@ -194,6 +195,7 @@
           <v-data-table
             :headers="headers"
             :items="material"
+            :search="searchMaterials"
             dense
             fixed-header
             height="300px"
@@ -262,7 +264,8 @@ export default {
         { text: "Price", value: "price" },
         { text: "Calo", value: "calo" },
       ],
-      search: "",
+      searchProducts: "",
+      searchMaterials: "",
       singleSelect: false,
       addSelected: [],
       removeSelected: [],

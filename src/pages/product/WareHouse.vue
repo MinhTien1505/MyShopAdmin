@@ -51,12 +51,12 @@
             </template>
             <template v-slot:[`item.action`]="{ item }">
               <v-btn
-                color="success"
+                color="primary"
                 class="ma-2 white--text"
                 @click="addQuantity(item)"
               >
-                <v-icon left dark> mdi-plus </v-icon>
-                Add quantity
+                <v-icon left dark> mdi-autorenew </v-icon>
+                Add/Minus quantity
               </v-btn>
             </template>
             <template v-slot:no-data>
@@ -149,14 +149,14 @@ export default {
     async getAllProduct() {
       await ProductAPI.get()
         .then((response) => {
-          this.products = response.data;
+          this.products = response.data.reverse();
         })
         .catch((err) => {
           console.log(err);
         });
     },
     async addQuantity(item) {
-      this.$prompt("Enter quantity you want to add").then((text) => {
+      this.$prompt("Enter quantity you want to add or minus").then((text) => {
         const number = Number(text);
         if (!isNaN(number)) {
           let token = JSON.parse(sessionStorage.getItem("admin_login"));

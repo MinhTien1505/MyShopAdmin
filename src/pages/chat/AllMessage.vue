@@ -16,7 +16,7 @@
         >
           <v-badge overlap left offset-y="27" :value="item.un_read" dot offset-x="17" color="#E41E3F">
             <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
+              <v-img :src="item.avatar || 'https://toigingiuvedep.vn/wp-content/uploads/2021/05/avatar-trang-ngau.jpg'"></v-img>
             </v-list-item-avatar>
           </v-badge>
 
@@ -27,6 +27,9 @@
         </v-list-item>
       </template>
     </v-list>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-card>
 </template>
 
@@ -40,6 +43,7 @@ export default {
   data: () => ({
     socket: io.connect("http://localhost:5000"),
     items: [],
+    loading: false
   }),
   created() {
     this.getAllChat();
@@ -51,7 +55,9 @@ export default {
   methods: {
     ...mapActions(["un_read", "read"]),
     async getAllChat() {
+      this.loading = true;
       await ChatsAPI.getAllChats().then((res) => {
+        this.loading = false;
         res.data.chats.sort((a, b) => {
           return new Date(b.updatedAt) - new Date(a.updatedAt);
         });

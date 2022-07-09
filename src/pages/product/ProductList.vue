@@ -41,6 +41,19 @@
             <template v-slot:[`item.description`]="{ item }">
               {{ item.description.substring(0, 100) + " ..." }}
             </template>
+            <template v-slot:[`item.status`]="{ item }">
+              <v-chip
+                v-if="item.status === 'Enable'"
+                class="ma-2"
+                color="green"
+                text-color="white"
+              >
+                Enable
+              </v-chip>
+              <v-chip v-else class="ma-2" color="red" text-color="white">
+                Disable
+              </v-chip>
+            </template>
             <template v-slot:[`item.action`]="{ item }">
               <v-btn
                 small
@@ -58,10 +71,23 @@
                 dark
                 color="red"
                 depressed
+                v-if="item.status === 'Enable'"
                 @click="updateStatus(item)"
               >
                 <v-icon left>mdi-delete</v-icon>
-                Delete {{ item.action }}
+                Disable {{ item.action }}
+              </v-btn>
+              <v-btn
+                class="mt-2"
+                small
+                dark
+                color="green"
+                depressed
+                v-else
+                @click="updateStatus(item)"
+              >
+                <v-icon left>mdi-delete-restore</v-icon>
+                Enable {{ item.action }}
               </v-btn>
             </template>
             <template v-slot:no-data> No data avaliable </template>
@@ -80,7 +106,7 @@
         {{ text }}
 
         <template v-slot:action="{ attrs }">
-          <v-btn color="red" fab text v-bind="attrs" @click="snackbar = false">
+          <v-btn fab text v-bind="attrs" @click="snackbar = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </template>
@@ -116,17 +142,18 @@ export default {
     snackbar1: true,
     products: [],
     headers: [
-      { text: "NAME", align: "start", width: "12%", value: "name" },
-      { text: "PRICE", align: "start", width: "12%", value: "price" },
-      { text: "IMAGE", align: "center", width: "12%", value: "image" },
+      { text: "NAME", align: "start", width: "10%", value: "name" },
+      { text: "PRICE", align: "start", width: "10%", value: "price" },
+      { text: "IMAGE", align: "center", width: "10%", value: "image" },
       {
         text: "DESCRIPTION",
         align: "start",
         width: "25%",
         value: "description",
       },
-      { text: "CATEGORY", align: "start", width: "12%", value: "category" },
-      { text: "CALO/100G", align: "start", width: "12%", value: "calo" },
+      { text: "CATEGORY", align: "start", width: "10%", value: "category" },
+      { text: "CALO/100G", align: "start", width: "10%", value: "calo" },
+      { text: "STATUS", align: "center", width: "10%", value: "status" },
       { text: "ACTION", align: "center", width: "12%", value: "action" },
     ],
   }),
@@ -152,7 +179,7 @@ export default {
   },
   methods: {
     async getAllProduct() {
-      await ProductAPI.get()
+      await ProductAPI.get_all()
         .then((response) => {
           this.products = response.data.reverse();
           this.overlay = false;
@@ -163,23 +190,28 @@ export default {
     },
     async updateStatus(item) {
       this.$confirm(
-        "Are you sure you want to delete this product?",
-        "Delete product",
+        `Are you sure you want to ${
+          item.status === "Enable" ? "Enable" : "Disable"
+        } this product?`,
+        "Update status product",
         "question"
       ).then(() => {
-        let status = "Disable";
         let token = JSON.parse(sessionStorage.getItem("admin_login"));
         let config = {
           headers: { Authorization: "bearer " + token },
         };
 
-        ProductAPI.update(item._id, { status }, config)
+        ProductAPI.update(
+          item._id,
+          { status: item.status === "Enable" ? "Disable" : "Enable" },
+          config
+        )
           .then((res) => {
             console.log(res);
             this.getAllProduct();
             this.showDialog = false;
             this.snackbar = true;
-            this.text = "Deleted product successfully!";
+            this.text = "Updated status product successfully!";
           })
           .catch((err) => {
             console.log(err);
