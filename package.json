@@ -49,6 +49,9 @@
     "vue-cli-plugin-vuetify": "~2.4.2",
     "vuetify-loader": "^1.7.0"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
