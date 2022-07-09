@@ -50,7 +50,7 @@
     "vuetify-loader": "^1.7.0"
   },
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "eslintConfig": {
     "root": true,
