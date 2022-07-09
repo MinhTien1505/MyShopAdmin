@@ -41,7 +41,8 @@ import { mapActions } from "vuex";
 
 export default {
   data: () => ({
-    socket: io.connect("http://localhost:5000"),
+    // socket: io.connect("http://localhost:5000"),
+    socket: io.connect("https://shopfreshapi.herokuapp.com"),
     items: [],
     loading: false
   }),

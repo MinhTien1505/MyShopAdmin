@@ -91,7 +91,8 @@ import UserAPI from "../../api/UserAPI";
 
 export default {
   data: () => ({
-    socket: io.connect("http://localhost:5000"),
+    // socket: io.connect("http://localhost:5000"),
+    socket: io.connect("https://shopfreshapi.herokuapp.com"),
     message: "",
     user: {},
     chats: [],
