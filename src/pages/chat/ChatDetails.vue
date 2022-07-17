@@ -7,7 +7,7 @@
         </v-avatar>
       </v-badge>
       <v-toolbar-title class="title pl-0 ml-2 mt-n4">
-        {{ this.user.full_name }}
+        {{ this.user.username }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="black" icon class="mt-n5">
@@ -91,7 +91,8 @@ import UserAPI from "../../api/UserAPI";
 
 export default {
   data: () => ({
-    socket: io.connect("http://localhost:5000"),
+    // socket: io.connect("http://localhost:5000"),
+    socket: io.connect("https://shopfreshapi.herokuapp.com"),
     message: "",
     user: {},
     chats: [],

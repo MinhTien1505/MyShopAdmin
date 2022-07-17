@@ -41,7 +41,8 @@ import { mapActions } from "vuex";
 
 export default {
   data: () => ({
-    socket: io.connect("http://localhost:5000"),
+    // socket: io.connect("http://localhost:5000"),
+    socket: io.connect("https://shopfreshapi.herokuapp.com"),
     items: [],
     loading: false
   }),
@@ -65,7 +66,7 @@ export default {
           this.items.push({
             chat_id: chat.user._id,
             avatar: chat.user.avatar,
-            title: chat.user.full_name,
+            title: chat.user.full_name || chat.user.username,
             subtitle: `<span class="text--primary">${
               chat.messages[chat.messages.length - 1].author !== "shop"
                 ? chat.messages[chat.messages.length - 1].data.text
