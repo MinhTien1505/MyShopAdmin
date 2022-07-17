@@ -3,37 +3,31 @@
     <v-card-title>
       <h2>Product List</h2>
       <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
     </v-card-title>
     <div class="container-fluid">
-      <div class="text-right">
-        <v-btn
-          color="success"
-          class="white--text"
-          to="/dashboard/create-product"
-        >
+      <div class="d-flex justify-end align-middle">
+        <v-btn color="success" class="white--text m-1" to="/dashboard/create-product">
           <v-icon left dark> mdi-plus </v-icon>
-          New product
+          Create
         </v-btn>
+
+        <ImportCSV @reload_product="getAllProduct" />
+        <ExportCSV />
+
       </div>
       <v-row class="mt-1">
         <v-col cols="12">
-          <v-data-table
-            :headers="headers"
-            :items="products"
-            :search="search"
-            sort-by="calories"
-            max-witdh="100%"
-            class="elevation-2 mytable"
-          >
+          <v-data-table :headers="headers" :items="products" :search="search" sort-by="calories" max-witdh="100%"
+            class="elevation-2 mytable">
             <template v-slot:[`item.price`]="{ item }">
-              {{ item.price | toVND }}
+              <div v-if="item.on_sale">
+                <span class="remove-price">{{ item.price | toVND }}</span>
+                {{ sale_price(item.price, item.discount_type, item.discount) | toVND }}
+              </div>
+              <div v-else>
+                {{ item.price | toVND }}
+              </div>
             </template>
             <template v-slot:[`item.image`]="{ item }">
               <v-img width="150px" height="150px" :src="item.image"> </v-img>
@@ -42,12 +36,7 @@
               {{ item.description.substring(0, 100) + " ..." }}
             </template>
             <template v-slot:[`item.status`]="{ item }">
-              <v-chip
-                v-if="item.status === 'Enable'"
-                class="ma-2"
-                color="green"
-                text-color="white"
-              >
+              <v-chip v-if="item.status === 'Enable'" class="ma-2" color="green" text-color="white">
                 Enable
               </v-chip>
               <v-chip v-else class="ma-2" color="red" text-color="white">
@@ -55,37 +44,16 @@
               </v-chip>
             </template>
             <template v-slot:[`item.action`]="{ item }">
-              <v-btn
-                small
-                dark
-                color="primary"
-                depressed
-                @click="editProduct(item)"
-              >
+              <v-btn small dark color="primary" depressed @click="editProduct(item)">
                 <v-icon left>mdi-pencil</v-icon>
                 Edit {{ item.action }}
               </v-btn>
-              <v-btn
-                class="mt-2"
-                small
-                dark
-                color="red"
-                depressed
-                v-if="item.status === 'Enable'"
-                @click="updateStatus(item)"
-              >
+              <v-btn class="mt-2" small dark color="red" depressed v-if="item.status === 'Enable'"
+                @click="updateStatus(item)">
                 <v-icon left>mdi-delete</v-icon>
                 Disable {{ item.action }}
               </v-btn>
-              <v-btn
-                class="mt-2"
-                small
-                dark
-                color="green"
-                depressed
-                v-else
-                @click="updateStatus(item)"
-              >
+              <v-btn class="mt-2" small dark color="green" depressed v-else @click="updateStatus(item)">
                 <v-icon left>mdi-delete-restore</v-icon>
                 Enable {{ item.action }}
               </v-btn>
@@ -97,12 +65,7 @@
       <v-overlay :value="overlay">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
-      <v-snackbar
-        v-model="snackbar"
-        color="success"
-        :multi-line="true"
-        timeout="2000"
-      >
+      <v-snackbar v-model="snackbar" color="success" :multi-line="true" timeout="2000">
         {{ text }}
 
         <template v-slot:action="{ attrs }">
@@ -111,13 +74,8 @@
           </v-btn>
         </template>
       </v-snackbar>
-      <v-snackbar
-        v-model="snackbar1"
-        color="success"
-        v-if="this.$route.params.message"
-        timeout="2000"
-        :multi-line="true"
-      >
+      <v-snackbar v-model="snackbar1" color="success" v-if="this.$route.params.message" timeout="2000"
+        :multi-line="true">
         {{ this.$route.params.message }}
 
         <template v-slot:action="{ attrs }">
@@ -132,6 +90,8 @@
 
 <script>
 import ProductAPI from "../../api/ProductAPI";
+import ImportCSV from "../../components/ImportCSV.vue";
+import ExportCSV from "../../components/ExportCSV.vue";
 export default {
   data: () => ({
     overlay: true,
@@ -189,23 +149,12 @@ export default {
         });
     },
     async updateStatus(item) {
-      this.$confirm(
-        `Are you sure you want to ${
-          item.status === "Enable" ? "Enable" : "Disable"
-        } this product?`,
-        "Update status product",
-        "question"
-      ).then(() => {
+      this.$confirm(`Are you sure you want to ${item.status === "Enable" ? "Enable" : "Disable"} this product?`, "Update status product", "question").then(() => {
         let token = JSON.parse(sessionStorage.getItem("admin_login"));
         let config = {
           headers: { Authorization: "bearer " + token },
         };
-
-        ProductAPI.update(
-          item._id,
-          { status: item.status === "Enable" ? "Disable" : "Enable" },
-          config
-        )
+        ProductAPI.update(item._id, { status: item.status === "Enable" ? "Disable" : "Enable" }, config)
           .then((res) => {
             console.log(res);
             this.getAllProduct();
@@ -222,11 +171,28 @@ export default {
       const id = value._id;
       this.$router.push(`/dashboard/product-list/${id}`);
     },
+    sale_price(origin_price, discount_type, discount) {
+      const origin = Number(origin_price);
+
+      if (discount_type === "%") {
+        return origin - origin * discount / 100;
+      }
+
+      let result = origin - discount;
+      return result > 0 ? result : 0;
+    }
   },
   created() {
     this.getAllProduct();
   },
+  components: { ImportCSV, ExportCSV }
 };
 </script>
 
-<style></style>
+<style>
+.remove-price {
+  display: block;
+  text-decoration: line-through;
+  opacity: 0.4;
+}
+</style>

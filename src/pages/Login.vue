@@ -9,36 +9,16 @@
         <form @submit.prevent="submitForm" class="login100-form validate-form">
           <span class="login100-form-title"> Login </span>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Valid email is required: ex@abc.xyz"
-          >
-            <input
-              class="input100"
-              type="text"
-              name="email"
-              placeholder="Username"
-              required
-              v-model="username"
-            />
+          <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+            <input class="input100" type="text" name="email" placeholder="Username" required v-model="username" />
             <span class="focus-input100"></span>
             <span class="symbol-input100">
               <i class="fa fa-user" aria-hidden="true"></i>
             </span>
           </div>
 
-          <div
-            class="wrap-input100 validate-input"
-            data-validate="Password is required"
-          >
-            <input
-              class="input100"
-              type="password"
-              name="pass"
-              placeholder="Password"
-              required
-              v-model="password"
-            />
+          <div class="wrap-input100 validate-input" data-validate="Password is required">
+            <input class="input100" type="password" name="pass" placeholder="Password" required v-model="password" />
             <span class="focus-input100"></span>
             <span class="symbol-input100">
               <i class="fa fa-lock" aria-hidden="true"></i>
@@ -90,6 +70,7 @@ export default {
           if (res.data.role == "Admin") {
             let admin_login = JSON.stringify(res.data.accessToken);
             sessionStorage.setItem("admin_login", admin_login);
+            sessionStorage.setItem("user_id", res.data.user_id);
             this.$router.push({ name: "Home" });
             this.$notify({
               group: "foo",
@@ -127,6 +108,7 @@ export default {
 <style scoped>
 @import "../../public/assets_login/css/util.css";
 @import "../../public/assets_login/css/main.css";
+
 .vue-notification {
   padding: 20px;
   margin: 0 5px 5px;

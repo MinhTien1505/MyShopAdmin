@@ -7,14 +7,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">*Username: </label>
             <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                v-model="user.username"
-                @keyup="checkUsername()"
-                id="username"
-                required
-              />
+              <input type="text" class="form-control" v-model="user.username" @keyup="checkUsername()" id="username"
+                required />
               <p class="error-msg" id="username-msg">This is required</p>
             </div>
           </div>
@@ -22,14 +16,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">*Password: </label>
             <div class="col-sm-8">
-              <input
-                type="password"
-                class="form-control"
-                v-model="user.password"
-                @keyup="checkPassword()"
-                id="password"
-                required
-              />
+              <input type="password" class="form-control" v-model="user.password" @keyup="checkPassword()" id="password"
+                required />
               <p class="error-msg" id="password-msg">This is required</p>
             </div>
           </div>
@@ -37,14 +25,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">*Confirm Password: </label>
             <div class="col-sm-8">
-              <input
-                type="password"
-                class="form-control"
-                v-model="confirm_password"
-                @keyup="checkPassword()"
-                id="confirm-password"
-                required
-              />
+              <input type="password" class="form-control" v-model="confirm_password" @keyup="checkPassword()"
+                id="confirm-password" required />
               <p class="error-msg" id="confirm-msg">This is required</p>
             </div>
           </div>
@@ -52,14 +34,8 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">Role: </label>
             <div class="col-sm-8">
-              <input
-                type="radio"
-                class="radio-input"
-                value="shipper"
-                v-model="user.position"
-                @change="check()"
-                :checked="user.position == 'shipper'"
-              />
+              <input type="radio" class="radio-input" value="shipper" v-model="user.position" @change="check()"
+                :checked="user.position == 'shipper'" />
               <label for="shipper">Shipper</label>
             </div>
           </div>
@@ -67,25 +43,14 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">Full Name: </label>
             <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                v-model="user.full_name"
-              />
+              <input type="text" class="form-control" v-model="user.full_name" />
             </div>
           </div>
 
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">*Email: </label>
             <div class="col-sm-8">
-              <input
-                type="email"
-                class="form-control"
-                v-model="user.email"
-                @keyup="checkEmail()"
-                id="email"
-                required
-              />
+              <input type="email" class="form-control" v-model="user.email" @keyup="checkEmail()" id="email" required />
               <p class="error-msg" id="email-msg">This is required</p>
             </div>
           </div>
@@ -93,11 +58,7 @@
           <div class="form-group row">
             <label class="col-sm-4 col-form-label">Birthdate: </label>
             <div class="col-sm-8">
-              <input
-                type="text"
-                class="form-control"
-                v-model="user.birthdate"
-              />
+              <input type="text" class="form-control" v-model="user.birthdate" />
             </div>
           </div>
 
@@ -117,13 +78,7 @@
 
           <div class="text-right p-3">
             <v-btn class="ma-2" outlined @click="cancel()"> Cancel </v-btn>
-            <v-btn
-              class="ma-2"
-              depressed
-              color="#FF8D9A"
-              @click="submit()"
-              :disabled="isDisabled"
-            >
+            <v-btn class="ma-2" depressed color="#FF8D9A" @click="submit()" :disabled="isDisabled">
               Create
             </v-btn>
           </div>
@@ -132,35 +87,16 @@
         <v-col cols="5">
           <h3 class="pb-4 pt-4"></h3>
           <div>
-            <img
-              v-if="previewImage == ''"
-              id="avatar-preview"
-              src="../../../public/assets/assets/img/avatar-placeholder.png"
-            />
-            <img
-              v-else
-              id="avatar-preview"
-              @click="selectImage"
-              :src="`${previewImage}`"
-            />
+            <img v-if="previewImage == ''" id="avatar-preview"
+              src="../../../public/assets/assets/img/avatar-placeholder.png" />
+            <img v-else id="avatar-preview" @click="selectImage" :src="`${previewImage}`" />
           </div>
           <div class="text-center">
-            <label
-              class="upload-img"
-              for="upload-photo"
-              style="backgroud-color: #675e55"
-            >
+            <label class="upload-img" for="upload-photo" style="backgroud-color: #675e55">
               <i class="fas fa-upload"></i> Upload avatar here!
             </label>
-            <input
-              type="file"
-              name="photo"
-              id="upload-photo"
-              accept="image/*"
-              ref="fileInput"
-              @input="pickFile"
-              @change="selectedFile"
-            />
+            <input type="file" name="photo" id="upload-photo" accept="image/*" ref="fileInput" @input="pickFile"
+              @change="selectedFile" />
           </div>
         </v-col>
       </v-row>
@@ -340,24 +276,25 @@ export default {
           console.log(error.response.data.message);
           this.overlay = false;
         });
-      await uploadFileToCloudinary(this.user.avatar, "avatars").then(
-        (fileResponse) => {
-          this.user.avatar = fileResponse.url;
-          console.log(this.user);
-          UserAPI.createShipper(this.user)
-            .then((res) => {
-              this.overlay = false;
-              this.$router.push({
-                name: "ListUser",
-                params: { message: res.data.message },
-              });
-            })
-            .catch((error) => {
-              this.overlay = false;
-              console.log(error);
-            });
-        }
-      );
+
+      if (this.user.avatar) {
+        const res_upload = await uploadFileToCloudinary(this.user.avatar, "avatars");
+        this.user.avatar = res_upload.url;
+      }
+
+      console.log(this.user);
+      UserAPI.createShipper(this.user)
+        .then((res) => {
+          this.overlay = false;
+          this.$router.push({
+            name: "ListUser",
+            params: { message: res.data.message },
+          });
+        })
+        .catch((error) => {
+          this.overlay = false;
+          console.log(error);
+        });
     },
     cancel() {
       this.$router.push({ name: "ListUser" });

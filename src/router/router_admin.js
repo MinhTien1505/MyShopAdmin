@@ -36,6 +36,7 @@ import EditPost from "../pages/blogs/EditPost.vue";
 // Message manage
 import AllMessage from "../pages/chat/AllMessage.vue"
 import ChatDetails from "../pages/chat/ChatDetails.vue"
+import ChangeStockDetail from "../pages/product/ChangeStockDetail.vue";
 
 const routerAdmin = [
   {
@@ -112,7 +113,8 @@ const routerAdmin = [
       },
       // Manage chat
       { path: "chat", name: "chat", component: AllMessage },
-      { path: "chat/:id", name: "chatDetails", component: ChatDetails }
+      { path: "chat/:id", name: "chatDetails", component: ChatDetails },
+      { path: "stock/:id", name: "StockDetail", component: ChangeStockDetail },
     ],
   },
   { path: "*", name: "ShipperPageNotFound", component: PageNotFound },

@@ -16,4 +16,7 @@ export default {
   update(id, new_product, config) {
     return api.patch(`${endpoint}/${id}`, new_product, config);
   },
+  bulkImport(products, config) {
+    return api.post(`${endpoint}/bulk-import`, products, config);
+  },
 }

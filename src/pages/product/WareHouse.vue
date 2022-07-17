@@ -3,79 +3,51 @@
     <v-card-title>
       <h2>Warehouse</h2>
       <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
+      <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
     </v-card-title>
     <div class="container-fluid">
       <v-row class="mt-1">
         <v-col cols="12">
-          <v-data-table
-            :headers="headers"
-            :items="products"
-            :search="search"
-            sort-by="calories"
-            max-witdh="100%"
-            class="elevation-2 mytable"
-          >
+          <v-data-table :headers="headers" :items="products" :search="search" sort-by="calories" max-witdh="100%"
+            class="elevation-2 mytable">
             <template v-slot:[`item.price`]="{ item }">
-              {{ item.price | toVND }}
+              <div v-if="item.on_sale">
+                <span class="remove-price">{{ item.price | toVND }}</span>
+                {{ sale_price(item.price, item.discount_type, item.discount) | toVND }}
+              </div>
+              <div v-else>
+                {{ item.price | toVND }}
+              </div>
             </template>
             <template v-slot:[`item.image`]="{ item }">
               <v-img width="150px" height="150px" :src="item.image"> </v-img>
             </template>
             <template v-slot:[`item.quantity`]="{ item }">
-              <v-chip
-                v-if="item.quantity_remaining == 0"
-                class="ma-2 pl-4 pr-4"
-                color="red"
-                small
-                text-color="white"
-              >
+              <v-chip v-if="item.quantity_remaining == 0" class="ma-2 pl-4 pr-4" color="red" small text-color="white">
                 OUT OF STOCK
               </v-chip>
 
-              <v-chip
-                v-else
-                class="ma-2 pl-4 pr-4"
-                small
-                color="green"
-                text-color="white"
-              >
+              <v-chip v-else class="ma-2 pl-4 pr-4" small color="green" text-color="white">
                 IN STOCK
               </v-chip>
             </template>
             <template v-slot:[`item.action`]="{ item }">
-              <v-btn
-                color="primary"
-                class="ma-2 white--text"
-                @click="addQuantity(item)"
-              >
-                <v-icon left dark> mdi-autorenew </v-icon>
-                Add/Minus quantity
+              <v-btn color="primary" class="ma-2 white--text" @click="addQuantity(item)">
+                Add/Minus
+              </v-btn>
+              <v-btn color="secondary" class="ma-2 white--text" @click="viewDetail(item._id)">
+                Detail
               </v-btn>
             </template>
             <template v-slot:no-data>
               <v-overlay :value="overlay">
-                <v-progress-circular
-                  indeterminate
-                  size="64"
-                ></v-progress-circular>
+                <v-progress-circular indeterminate size="64"></v-progress-circular>
               </v-overlay>
             </template>
           </v-data-table>
         </v-col>
       </v-row>
-      <v-snackbar
-        v-model="snackbar"
-        :color="colorSnackbar"
-        :multi-line="true"
-        timeout="2000"
-      >
+      <v-snackbar v-model="snackbar" :color="colorSnackbar" :multi-line="true" timeout="2000">
         {{ text }}
 
         <template v-slot:action="{ attrs }">
@@ -90,6 +62,7 @@
 
 <script>
 import ProductAPI from "../../api/ProductAPI";
+import WarehouseAPI from "../../api/WarehouseAPI";
 
 export default {
   data: () => ({
@@ -174,6 +147,14 @@ export default {
           )
             .then((res) => {
               console.log(res);
+              let user_id = sessionStorage.getItem("user_id");
+              const newStock = {
+                product: item._id,
+                stock_change: number,
+                make_by: user_id,
+              };
+              WarehouseAPI.insertStock(newStock, config);
+
               this.getAllProduct();
               this.colorSnackbar = "success";
               this.text = "Added quantity successfully!";
@@ -189,6 +170,19 @@ export default {
         }
       });
     },
+    viewDetail(id) {
+      this.$router.push(`/dashboard/stock/${id}`);
+    },
+    sale_price(origin_price, discount_type, discount) {
+      const origin = Number(origin_price);
+
+      if (discount_type === "%") {
+        return origin - origin * discount / 100;
+      }
+
+      let result = origin - discount;
+      return result > 0 ? result : 0;
+    }
   },
   created() {
     this.getAllProduct();
@@ -196,4 +190,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
